@@ -15,3 +15,5 @@ use Illuminate\Support\Facades\Route;
 Route::post('/register', [UserController::class, 'register'])->name('register');
 route::post('/login', [UserController::class, 'login'])->name('login');
 route::get('/logout', [UserController::class, 'logout'])->name('logout');
+
+Route::resource('auctions', 'App\Http\Controllers\API\AuctionController');
