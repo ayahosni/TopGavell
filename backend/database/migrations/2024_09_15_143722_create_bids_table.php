@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->decimal('bid_amount', 10, 2);
             $table->timestamp('bid_time')->useCurrent();
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('customer_id')->constrained('customers')->onDelete('cascade');
             $table->foreignId('auction_id')->constrained('auctions')->onDelete('cascade');
         });
     }
