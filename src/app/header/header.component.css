@@ -1,0 +1,55 @@
+/* Navbar Styles */
+.navbar .navbar-content {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+}
+.navbar-menu {
+    display: flex;
+    margin: 0;
+}
+.navbar-menu li:not(:first-child) {
+    margin-left: 40px;
+}
+.logo {
+    transform: rotateX(20deg);
+}
+a {
+    padding: 5px;
+    border-radius: 5px;
+}
+.active {
+    background-color: #d1a713; 
+    color: #f5f7f8;
+}
+.signup-btn {
+    margin-left: 10px;
+}
+.navbar-logo {
+    color: #f5f7f8;
+    font-size: 20px;
+    letter-spacing: .5px;
+    text-transform: uppercase;
+}
+.gavel {
+    color: #d1a713;
+    font-weight: 900;
+    font-size: 22px;
+}
+.hero {
+    width: 70%;
+    margin: auto;
+    background-color: #f5f7f8;
+    border-bottom: 1px solid #d1a713;
+    height: 300px;
+    border-radius: 5px;
+    margin-top: -16%;
+
+}
+.hero img {
+
+    border-radius: 5px;
+    /* width: 400px; */
+    height: 290px;
+    margin: 5px 1px;
+}
