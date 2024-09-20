@@ -1,5 +1,5 @@
 /* Hero Section Styles */
-.hero {
+/* .hero {
     background-image: url(../../assets/images/background2.jpeg);
     background-size: cover;
     background-repeat: no-repeat;
@@ -14,7 +14,7 @@
     background: rgba(0, 0, 0, 0.5);
     width: 100%;
     height: 100%;
-}
+} */
 .search-bar {
     background-color: rgba(251, 251, 250, .7);
     width: 70%;
@@ -190,7 +190,7 @@
   /* Top Auctions Styles */
   .top-auctions-content {
     margin: 50px 0px;
-    background-color: #eaeaea;
+    background-color: #fff;
     padding: 10px 0px;
   }
  .top-auctions-content .category-title {
@@ -238,4 +238,49 @@
     color: var(--dark-color);
     font-weight: 600;
 
+  }
+  /* Hero2 Styles */
+  .hero2 {
+    width: 80%;
+    height: 300px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin: auto;
+    border-radius: 5px;
+    margin-bottom: 50px;
+    margin-top: -150px;
+    background-color: #fff;
+    border-bottom: 2px solid var(--accent-color);
+  }
+  .hero-content {
+    display: flex;
+    justify-content: space-between;
+  }
+  .hero-content img {
+    width: 400px;
+    margin: 5px;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+  }
+  .hero-info .find {
+    padding: 20px;
+  }
+  .search-container {
+    display: flex;
+    border: 1px solid #b1b1b1;
+    border-radius: 5px;
+    overflow: hidden;
+    width: 550px; 
+    z-index: 99;
+    margin-right: 30px;
+  }
+  .search-container .map {
+    color: var(--accent-color);
+    line-height: 30px;
+  }
+  .search-container input {
+    border: none;
+    padding: 15px 20px;
+    flex: 1;
+    font-size: 16px;
+    outline: none;
   }

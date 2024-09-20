@@ -4,13 +4,22 @@
     justify-content: space-between;
     padding: 20px;
 }
-.navbar {
+/* .navbar {
     position: fixed;
     top: 0px;
     left: 0px;
     z-index: 100;
     background-color: #fff;
     width: 100%;
+} */
+.navbar {
+    z-index: -1;
+    height: 300px;
+    background-color: #45474b;
+    width: 100%;
+    color: var(--background-color);
+    border-bottom-right-radius: 5px;
+    border-bottom-left-radius: 5px;
 }
 .navbar-menu {
     display: flex;
@@ -20,24 +29,29 @@
     margin-left: 40px;
 }
 
-a {
+.navbar a {
     padding: 5px;
     border-radius: 5px;
+    color: var(--background-color);
 }
 .active {
-    color: #000000;
+    color: var(--background-color);
+    background-color: var(--btn-color);
 }
 .signup-btn {
     margin-left: 10px;
     background-color: var(--btn-color);
     color: var(--background-color);
 }
-.signup-btn:hover, .login-btn:hover {
-    background-color: var(--dark-color);
+.login-btn {
+    color: var(--background-color);
+}
+.login-btn:hover {
+    background-color: var(--btn-color);
     color: var(--background-color);
 }
 .navbar-logo {
-    color: #000000;
+    color: var(--background-color);
     font-size: 22px;
     letter-spacing: .5px;
     text-transform: uppercase;

@@ -16,6 +16,8 @@ export class RegisterComponent {
   email: string = '';
   password: string = '';
   confirmPassword: string = '';
+  phone: string = ''; 
+  address: string = '';
 
   constructor(private router: Router) {}
 
@@ -28,7 +30,9 @@ export class RegisterComponent {
     console.log('Registration successful:', {
       name: this.name,
       email: this.email,
-      password: this.password
+      password: this.password,
+      phone: this.phone,
+      address: this.address
     });
 
     this.router.navigate(['/login']); 
