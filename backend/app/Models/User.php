@@ -49,10 +49,7 @@ class User extends Authenticatable
         return $this->hasMany(Auction::class);
     }
 
-    public function bids()
-    {
-        return $this->hasMany(Bid::class);
-    }
+   
     protected function customer(){
         return $this->hasMany(Customer::class); 
     }

@@ -13,4 +13,9 @@ class Auction extends Model
     {
         return $this->morphMany(Comment::class, 'commentable');
     }
+
+    public function bid()
+    {
+        return $this->hasMany(Bid::class);
+    }
 }
