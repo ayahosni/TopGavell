@@ -21,7 +21,7 @@ route::get('/logout', [UserController::class, 'logout'])->name('logout');
 
 // Route::resource('bid', 'App\Http\Controllers\API\BidController');
 Route::apiResource("/bid", BidController::class);
-route::get('/bidsOfAuction', [BidController::class, 'bidsOfAuction'])->name('bidsOfAucction');
+route::get('/bidsOfAuction/{auc}', [BidController::class, 'bidsOfAuction'])->name('bidsOfAucction');
 
 
 // GET|HEAD        api/bid ....................................... bid.index › API\BidController@index

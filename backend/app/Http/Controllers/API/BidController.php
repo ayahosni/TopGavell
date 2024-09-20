@@ -21,10 +21,10 @@ class BidController extends Controller
     }
 
 
-    public function bidsOfAuction(Auction $auction)
+    public function bidsOfAuction($auction)
     {
         //
-        $bids = Bid::where('auction_id','=',$auction->id)->get();
+        $bids = Bid::where('auction_id','=',$auction)->get();
 
         return new BidResource($bids);
     }
