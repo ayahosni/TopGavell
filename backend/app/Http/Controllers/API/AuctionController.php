@@ -46,12 +46,19 @@ class AuctionController extends Controller
                 'bid_increment' => ['required','integer'],
                 'auction_start_time' => ['required','date'],
                 'auction_end_time' => ['required','date','after:auction_start_time'],
-                'item_media' => ['nullable','string'],
+                'item_media' => ['nullable','file'],
                 'item_country' => ['required','string'],
             ]);
             if ($validation->fails()) {
                         return response()->json($validation->messages(), 400);
-                    }else{
+                    }else{ 
+                        if ($request->hasFile('item_media')) {
+                        $file = $request->file('item_media');
+                        $filename = time() . '.' . $file->getClientOriginalExtension();
+                        $file->move(public_path('uploads/item_media'), $filename);
+                        $data['item_media']  = $filename; 
+                        // $data->save();
+                    }
             $auction = Auction::create($data);
             return response()->json([
                         'message' => 'Auction added successfully ',
@@ -59,9 +66,10 @@ class AuctionController extends Controller
                     ]);
 
                     }           
-   
+                  
         }    
-
+        
+        
 
     /**
      * Update the specified resource in storage.
@@ -80,14 +88,20 @@ class AuctionController extends Controller
                 'bid_increment' => ['required','integer'],
                 'auction_start_time' => ['required','date'],
                 'auction_end_time' => ['required','date','after:auction_start_time'],
-                'item_media' => ['nullable','string'],
+                'item_media' => ['nullable','file'],
                 'item_country' => ['required','string'],
         ]);
     
         if ($validation->fails()) {
             return response()->json($validation->messages(), 400);
         }
-    
+        if ($request->hasFile('item_media')) {
+            $file = $request->file('item_media');
+            $filename = time() . '.' . $file->getClientOriginalExtension();
+            $file->move(public_path('uploads/item_media'), $filename);
+            $data['item_media']  = $filename; 
+        }
+
         $auction->update($data);
     
         return response()->json([
@@ -107,4 +121,7 @@ class AuctionController extends Controller
             'message' => 'Auction deleted successfully'
         ]);
     }
+
+
+
 }
