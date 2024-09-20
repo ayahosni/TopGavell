@@ -7,29 +7,31 @@ import { BidsComponent } from './bids/bids.component';
 import { ContactComponent } from './contact/contact.component';
 import { HomeComponent } from './home/home.component';
 import { FormsModule } from '@angular/forms';  // Import FormsModule
-
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [
     RouterOutlet, CommonModule, RouterLink, RouterLinkActive, HeaderComponent,
-    FooterComponent, BidsComponent, ContactComponent, HomeComponent, FormsModule
+    FooterComponent, FontAwesomeModule, BidsComponent, ContactComponent, HomeComponent, FormsModule
   ],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  styleUrls: ['./app.component.css']  // Fix from styleUrl to styleUrls
 })
 export class AppComponent implements OnInit {
   showHeader: boolean = true;
+  showFooter: boolean = true;  // Add showFooter property
 
   constructor(private router: Router) {}
 
   ngOnInit(): void {
-
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
- 
-        this.showHeader = !(this.router.url === '/login' || this.router.url === '/register');
+        const hideHeaderFooterRoutes = ['/login', '/register'];  // Define routes for hiding both header and footer
+
+        this.showHeader = !hideHeaderFooterRoutes.includes(this.router.url);
+        this.showFooter = !hideHeaderFooterRoutes.includes(this.router.url);
       }
     });
   }
