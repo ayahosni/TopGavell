@@ -14,9 +14,10 @@ return new class extends Migration
         Schema::create('bids', function (Blueprint $table) {
             $table->id();
             $table->decimal('bid_amount', 10, 2);
-            $table->timestamp('bid_time')->useCurrent();
+            $table->timestamp('bid_time')->useCurrent();            
             $table->foreignId('customer_id')->constrained('customers')->onDelete('cascade');
             $table->foreignId('auction_id')->constrained('auctions')->onDelete('cascade');
+            $table->timestamps();
         });
     }
 
