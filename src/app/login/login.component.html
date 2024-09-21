@@ -1,4 +1,4 @@
-<h1><span class="gavel">T</span>opGavel</h1>
+<h1><a routerLink="/"><span class="gavel">T</span>opGavel</a></h1>
 <div class="login-container">
     <div class="welcome">Welcome Back</div>
     <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
@@ -34,7 +34,7 @@
         </div>
       </div>
   
-      <button type="submit" class="login-btn btn-primary" [disabled]="loginForm.invalid">
+      <button type="submit" class="login-form-btn btn-primary" [disabled]="loginForm.invalid">
         Sign In
       </button>
       <span class="forgot"><a href="#">Forgot Password?</a></span>
