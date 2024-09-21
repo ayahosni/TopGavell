@@ -9,17 +9,19 @@ class Comment extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['comment_text', 'user_id'];
+    protected $fillable = ['user_id', 'auction_id', 'comment_text'];
 
+    // A comment belongs to a user
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
     public function commentable()
     {
         return $this->morphTo();
     }
 
-    public function customer()
-    {
-        return $this->belongsTo(Customer::class);
-    }
+   
 
     public function auction()
     {

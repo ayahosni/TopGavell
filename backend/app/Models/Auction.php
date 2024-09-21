@@ -23,7 +23,10 @@ class Auction extends Model
         'item_media',
         'item_country',
     ];
-
+    public function customer()
+    {
+        return $this->belongsTo(Customer::class);
+    }
 
     public function comments()
     {
@@ -39,4 +42,8 @@ class Auction extends Model
     {
         return $this->hasMany(Bid::class);
     }
+    // public function comments()
+    // {
+    //     return $this->hasMany(Comment::class);
+    // }
 }
