@@ -17,5 +17,4 @@ route::post('/login', [UserController::class, 'login'])->name('login');
 route::get('/logout', [UserController::class, 'logout'])->name('logout');
 
 Route::resource('auctions', 'App\Http\Controllers\API\AuctionController');
-Route::resource('auctions', 'App\Http\Controllers\API\AuctionController');
 
