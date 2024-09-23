@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Models\Category;
+use App\Models\Customer;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 
@@ -18,9 +20,8 @@ class AuctionFactory extends Factory
     public function definition(): array
     {
         return [
-            //
-            'customer_id' => '1',//Customer::inRandomOrder()->first()->id, // Ensure you have customers in your database
-            'category_id' => '1',//Category::inRandomOrder()->first()->id, // Ensure you have categories in your database
+            'customer_id' => Customer::factory(),
+            'category_id' => Category::factory(),
             'item_name' => $this->faker->words(3, true),
             'item_description' => $this->faker->paragraph,
             'starting_bid' => $this->faker->randomFloat(2, 100, 1000), // Random starting bid between 100 and 1000

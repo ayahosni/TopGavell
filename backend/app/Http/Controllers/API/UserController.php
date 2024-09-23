@@ -14,10 +14,6 @@ use Illuminate\Validation\ValidationException;
 
 class UserController extends Controller
 {
-    function __construct()
-    {
-        $this->middleware('auth')->except('register','login');
-    }
     /**
      * Display a listing of the resource.
      */
@@ -96,6 +92,13 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      */
+    public function notLoggedIn(User $user)
+    {
+        return response()->json([
+            'message' => 'Please Login First',
+        ]);
+    }
+
     public function show(User $user)
     {
         //

@@ -20,6 +20,7 @@ class Auction extends Model
         'bid_increment',
         'auction_start_time',
         'auction_end_time',
+        'auction_actual_end_time',
         'item_media',
         'item_country',
     ];

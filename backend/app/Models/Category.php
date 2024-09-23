@@ -8,6 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Category extends Model
 {
     use HasFactory;
+    protected $fillable = [
+        'name'
+    ];
     public function auctions()
     {
         return $this->hasMany(Auction::class);
