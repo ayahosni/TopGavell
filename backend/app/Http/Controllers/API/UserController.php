@@ -74,8 +74,8 @@ class UserController extends Controller
         return response()->json([
             'message' => 'User successfully logged in',
             'user' => new CustomerRescource($cust),
-            'token' => $user->createToken($request->device_name)->plainTextToken,
-        ]);
+/*             'token' => $user->createToken($request->device_name)->plainTextToken,
+ */        ]);
     }
 
     #######################################################################################################

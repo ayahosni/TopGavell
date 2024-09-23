@@ -1,36 +1,34 @@
 import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
-import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';  
+import { FormsModule, ReactiveFormsModule, FormBuilder, Validators, FormGroup } from '@angular/forms';
+import { Router } from '@angular/router';
+import { AuthService } from '../auth.service';
 import { CommonModule } from '@angular/common';
-import { AuthService } from '../auth.service'; 
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, RouterLink,FormsModule],
-  providers: [AuthService], 
+  imports: [FormsModule, ReactiveFormsModule, CommonModule],
+  providers: [AuthService],
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css'] 
+  styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
-  loginForm: any; 
-  email: string = '';
-  password: string = '';
+  loginForm: FormGroup;
 
-  constructor(private router: Router, private fb: FormBuilder, private authService: AuthService) {
+  constructor(private fb: FormBuilder, private router: Router, private authService: AuthService) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
-      password: ['', Validators.required],
+      password: ['', [Validators.required, Validators.minLength(6)]]
     });
   }
 
   onSubmit() {
+    console.log(this.loginForm.value); // سجل القيم المدخلة
     if (this.loginForm.valid) {
       this.authService.login(this.loginForm.value).subscribe({
         next: (response) => {
           console.log('Login successful', response);
-          this.router.navigate(['/']); 
+          this.router.navigate(['/']);
         },
         error: (error) => {
           console.error('Login failed', error);
@@ -38,7 +36,6 @@ export class LoginComponent {
         }
       });
     } else {
-      console.log('Invalid form submission');
       alert('Please fill in all fields correctly.');
     }
   }
