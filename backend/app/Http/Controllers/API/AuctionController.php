@@ -36,7 +36,7 @@ class AuctionController extends Controller
       'bid_increment' => ['required', 'integer'],
       'auction_start_time' => ['required', 'date', 'after:now'],
       'auction_end_time' => ['required', 'date', 'after:auction_start_time'],
-      'item_media' => ['nullable', 'file'],
+      'item_media' => ['nullable', 'image'],
       'item_country' => ['required', 'string'],
     ]);
     if ($validation->fails()) {
@@ -51,7 +51,7 @@ class AuctionController extends Controller
       $file = $request->file('item_media');
       $filename = time() . '.' . $file->getClientOriginalExtension();
       $file->move(public_path('uploads/item_media'), $filename);
-      $data['item_media']  = $filename;
+      $data['item_media'] = $filename; // حفظ اسم الصورة في قاعدة البيانات
     }
 
     $auction = Auction::create($data);
