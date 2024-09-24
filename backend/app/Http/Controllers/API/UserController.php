@@ -62,7 +62,7 @@ class UserController extends Controller
             [
                 'email' => 'required|email',
                 'password' => 'required',
-                'device_name' => 'required',
+                // 'device_name' => 'required',
             ]
         );
         if ($validation->fails()) {
@@ -76,7 +76,7 @@ class UserController extends Controller
         return response()->json([
             'message' => 'User successfully logged in',
             'user' => new CustomerRescource($cust),
-            'token' => $user->createToken($request->device_name)->plainTextToken,
+            'token' => $user->createToken('auth_token')->plainTextToken,
         ]);
     }
 

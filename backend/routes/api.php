@@ -11,15 +11,12 @@ route::get('/login', [UserController::class, 'notLoggedIn'])->name('login');
 route::post('/login', [UserController::class, 'login'])->name('login');
 
 
-Route::apiresource('auction', AuctionController::class);
 route::middleware('auth:sanctum')->group(function () {
+  Route::apiresource('auction', AuctionController::class);
   
   route::get('/logout', [UserController::class, 'logout'])->name('logout');
   Route::apiResource('user', UserController::class);
-  
-
   // route::get('/bidsOfAuction/{auc}', [BidController::class, 'bidsOfAuction'])->name('bidsOfAucction');
-  
   Route::apiResource('{auction}/bid', BidController::class);
 });
 

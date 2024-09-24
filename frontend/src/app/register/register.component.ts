@@ -16,6 +16,7 @@ export class RegisterComponent {
   registerForm: FormGroup; 
 
   constructor(private fb: FormBuilder, private authService: AuthService, private router: Router) {
+    
     this.registerForm = this.fb.group({
       name: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
@@ -28,9 +29,6 @@ export class RegisterComponent {
   }
 
   onSubmit() {
-    console.log(this.registerForm.value.password)
-    console.log(this.registerForm.value.password_confirmation)
-
     if (this.registerForm.invalid) {
       return;
     }
@@ -42,12 +40,10 @@ export class RegisterComponent {
     
     this.authService.register(this.registerForm.value).subscribe({
       next: (data) => {
-        console.log(data);
+        this.router.navigate(['/']);
       },
       error: (error) => {
-        if (error.error.password) {
-          console.log('Error:', error.error);
-        }
+        console.log('Error:', error.error);
       }
     })
   }
