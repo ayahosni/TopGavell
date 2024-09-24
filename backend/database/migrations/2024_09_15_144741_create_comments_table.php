@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('auction_id')->constrained('auctions')->onDelete('cascade');
             $table->text('comment_text');
+            $table->morphs('commentable'); 
             $table->timestamps();
         });
     }
