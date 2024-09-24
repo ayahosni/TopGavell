@@ -18,6 +18,10 @@ return new class extends Migration
             $table->enum('notification_type', ['System', 'Email', 'SMS']);
             $table->text('content');
             $table->timestamp('time_sent')->useCurrent();
+            $table->timestamp('read_at')->nullable(); 
+            $table->timestamps();
+            $table->string('notifiable_type');
+            $table->unsignedBigInteger('notifiable_id');
         });
     }
 
