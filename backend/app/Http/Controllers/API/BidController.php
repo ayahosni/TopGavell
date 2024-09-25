@@ -14,18 +14,15 @@ use Illuminate\Support\Facades\Validator;
 
 class BidController extends Controller
 {
+  public function __construct() {
+    $this->middleware('auth:sanctum')->only('store','update','destroy');
+  }
+  
   public function index($auction)
   {
     $auction = Auction::findOrFail($auction);
     return BidResource::collection($auction->bids);
   }
-  // public function bidsOfAuction($auction)
-  // {
-  //     //
-  //     $bids = Bid::where('auction_id','=',$auction)->get();
-
-  //     return new BidResource($bids);
-  // }
 
   public function store(Request $request, $auction)
   {
@@ -58,36 +55,11 @@ class BidController extends Controller
     $data = $request->all();
     $customer = Customer::where('user_id', Auth::id())->first();
     $data['customer_id'] = $customer->id;
-    $data['auction_id']=$auction->id;
+    $data['auction_id'] = $auction->id;
     Bid::create($data);
     return response()->json([
       'message' => 'Your bid is Added successfully',
       'auction' => new AuctionResource($auction)
-    ],200);
-  }
-
-  /**
-   * Display the specified resource.
-   */
-  public function show($auction , $bid)
-  {
-    $auction = Auction::findOrFail($auction);
-    return new BidResource($auction->$bid);
-  }
-
-  /**
-   * Update the specified resource in storage.
-   */
-  public function update(Request $request, Bid $bid)
-  {
-    //
-  }
-
-  /**
-   * Remove the specified resource from storage.
-   */
-  public function destroy(Bid $bid)
-  {
-    //
+    ], 200);
   }
 }

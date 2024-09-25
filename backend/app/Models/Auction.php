@@ -9,8 +9,6 @@ class Auction extends Model
 {
     use HasFactory;
 
-
-
     protected $fillable = [
         'customer_id',
         'category_id',
@@ -31,11 +29,11 @@ class Auction extends Model
 
     public function comments()
     {
-        
         return $this->morphMany(Comment::class, 'commentable');
     }
 
-    public function Category(){
+    public function Category()
+    {
         return $this->belongsTo(Category::class);
     }
 
@@ -43,8 +41,4 @@ class Auction extends Model
     {
         return $this->hasMany(Bid::class);
     }
-    // public function comments()
-    // {
-    //     return $this->hasMany(Comment::class);
-    // }
 }

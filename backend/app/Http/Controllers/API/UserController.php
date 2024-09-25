@@ -14,18 +14,16 @@ use Illuminate\Validation\ValidationException;
 
 class UserController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    public function __construct()
+    {
+        $this->middleware('auth:sanctum')->only('store', 'update', 'destroy');
+    }
+
     public function index()
     {
         return CustomerRescource::collection(Customer::all());
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    
     public function register(Request $request)
     {
         $data = $request->all();
@@ -49,7 +47,7 @@ class UserController extends Controller
             'message' => 'User successfully registered',
             'user' => new CustomerRescource($cust),
             'token' => $user->createToken('auth_token')->plainTextToken,
-        ], 201);
+        ], 200);
     }
 
     #######################################################################################################    
@@ -61,6 +59,7 @@ class UserController extends Controller
             [
                 'email' => 'required|email',
                 'password' => 'required',
+                // 'device_name' => 'required',
             ]
         );
         if ($validation->fails()) {
@@ -68,12 +67,14 @@ class UserController extends Controller
         }
         $user = User::where('email', $request->email)->first();
         if (! $user || ! Hash::check($request->password, $user->password)) {
-            return response()->json(['message' => 'Invalid credentials'], 401);
+            return response()->json(['message' => 'Invalid credentials'], 400);
         }
         $cust = Customer::where('user_id', $user->id)->first();
         return response()->json([
             'message' => 'User successfully logged in',
             'user' => new CustomerRescource($cust),
+            'token' => $user->createToken('auth_token')->plainTextToken,
+        ]);
 /*             'token' => $user->createToken($request->device_name)->plainTextToken,
  */        ]);
     }
@@ -94,7 +95,7 @@ class UserController extends Controller
     {
         return response()->json([
             'message' => 'Please Login First',
-        ]);
+        ],401);
     }
 
     public function show(User $user)

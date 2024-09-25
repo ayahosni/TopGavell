@@ -9,15 +9,21 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [FormsModule, ReactiveFormsModule, CommonModule],
   providers: [AuthService],
+  imports: [FormsModule, ReactiveFormsModule, CommonModule],
+  providers: [AuthService],
   templateUrl: './login.component.html',
+  styleUrls: ['./login.component.css']
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
   loginForm: FormGroup;
+  loginForm: FormGroup;
 
+  constructor(private fb: FormBuilder, private router: Router, private authService: AuthService) {
   constructor(private fb: FormBuilder, private router: Router, private authService: AuthService) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(6)]]
       password: ['', [Validators.required, Validators.minLength(6)]]
     });
   }

@@ -29,13 +29,12 @@ import { Observable } from 'rxjs';
 
 export class AuthService {
 
-  // private Url = 'http://172.18.0.5:80/api'; // ===> Docker Url
-  private Url = 'http://localhost:8000/api'; // ===> Localhost Url
+  private Url = 'http://172.18.0.5:80/api'; // ===> Docker Url
+  // private Url = 'http://localhost:8000/api'; // ===> Localhost Url
 
   constructor(private http: HttpClient) { }
 
   register(userData: any): Observable<any> {
-
     return this.http.post(`${this.Url}/register`, userData);
   }
 
