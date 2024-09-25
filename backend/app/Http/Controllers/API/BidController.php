@@ -58,19 +58,24 @@ class BidController extends Controller
     $customer = Customer::where('user_id', Auth::id())->first();
     $data['customer_id'] = $customer->id;
     $data['auction_id'] = $auction->id;
-    Bid::create($data);
+    $bid=Bid::create($data);
     $owner = $auction->user;
 
-    // Example notification content for a bid
-    $message = 'A new bid has been placed on your auction.';
-    $type = 'System';
 
-    // Notification::send($owner, new AuctionNotification($auction, $message, $type));
+    // Get the customer who owns the auction
+    $customer = $auction->customer;
+    
+    // Check if customer exists and retrieve the related user (auction owner)
+    if ($customer && $customer->user) {
+        $owner = $customer->user;
 
-    // event(new AuctionCommentedOrBidPlaced($auction, auth()->user(), 'bid'));
-    // $auc = Auction::find($auction);
-    $owner = $auction->user;
-    $owner->notify(new NewBidNotification($auction, $bid));
+        // Notify the owner about the new comment
+        $owner->notify(new NewBidNotification($auction, $bid));
+    } else {
+        // Handle the case where the customer or user is not found
+        return response()->json(['error' => 'Auction owner not found'], 404);
+    }
+ 
 
     return response()->json([
       'message' => 'Your bid is Added successfully',

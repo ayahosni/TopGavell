@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 use App\Models\User;
+use App\Http\Controllers\API\NotificationController;
+
 
 Route::post('/register', [UserController::class, 'register'])->name('register');
 route::get('/login', [UserController::class, 'notLoggedIn'])->name('login');
@@ -38,16 +40,7 @@ Route::post('/sanctum/token',function (Request $request){
     return $user->createToken($request->device_name)->plainTextToken;
 });
 
-use App\Http\Controllers\API\NotificationController;
-// Route::get('/notifications', [NotificationController::class, 'getNotifications'])
-//     ->middleware('auth:sanctum');
-
-    // Route::get('/notifications', [UserController::class, 'showNotifications'])
-    // ->middleware('auth:sanctum');
-
-
     Route::middleware('auth:sanctum')->group(function () {
         Route::get('/notifications', [NotificationController::class, 'index']);
-        Route::patch('/notifications/{id}/read', [NotificationController::class, 'markAsRead']);
     });
     

@@ -13,26 +13,20 @@ class NotificationController extends Controller
     {
         $notifications = $request->user()->unreadNotifications;
 
-        return response()->json($notifications);
+        // Assuming 'data' is the key containing the notification data
+        $notificationData = $notifications->map(function ($notification) {
+            return [
+                'id' => $notification->id,
+                'data' => $notification->data,
+                'created_at' => $notification->created_at,
+            ];
+        });
+    
+        return response()->json($notificationData);
     }
 
-    /**
-     * Mark a notification as read.
-     *
-     * @param  string  $id
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function markAsRead(Request $request, $id)
-    {
-        $notification = $request->user()->notifications()->find($id);
 
-        if (!$notification) {
-            return response()->json(['error' => 'Notification not found'], 404);
-        }
 
-        $notification->markAsRead();
-
-        return response()->json(['message' => 'Notification marked as read']);
-    }
+    
     
 }

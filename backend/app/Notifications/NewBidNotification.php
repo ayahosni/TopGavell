@@ -35,10 +35,9 @@ class NewBidNotification extends Notification
     public function toArray(object $notifiable): array
     {
         return [
-            'auction_id' => $this->auction->id,
-            'bid_id' => $this->bid->id,
-            'amount' => $this->bid->amount,
-            'message' => 'A new bid has been placed on your auction.',
-        ];
+            'auction' => $this->auction->item_name,
+            "user"=>$this->bid->customer->user->name ."placed a bid on your auction",
+            "bid_amount"=>$this->bid->bid_amount];
     }
+ 
 }
