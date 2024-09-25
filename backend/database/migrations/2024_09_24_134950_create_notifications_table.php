@@ -11,18 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('notifications', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->foreignId('auction_id')->nullable()->constrained('auctions')->onDelete('cascade');
-            $table->enum('notification_type', ['System', 'Email', 'SMS']);
-            $table->text('content');
-            $table->timestamp('time_sent')->useCurrent();
-            $table->timestamp('read_at')->nullable(); 
-            $table->timestamps();
-            $table->string('notifiable_type');
-            $table->unsignedBigInteger('notifiable_id');
-        });
+        Schema::create('notifications', function (Blueprint $table) 
+        {
+                   $table->string('id')->unique;
+                   $table->string('type');
+                   $table->text('data');
+                   $table->timestamp('read_at')->nullable();
+                   $table->morphs('notifiable'); 
+                          $table->timestamps();
+               });
+       
     }
 
     /**

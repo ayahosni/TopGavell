@@ -18,7 +18,12 @@ class UserController extends Controller
     {
         $this->middleware('auth:sanctum')->only('store', 'update', 'destroy');
     }
+    public function showNotifications()
+    {
+        $notifications = Auth::user()->notifications; // Fetch notifications for the logged-in user
 
+        // return view('notifications.index', compact('notifications'));
+    }
     public function index()
     {
         return CustomerRescource::collection(Customer::all());

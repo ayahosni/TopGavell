@@ -10,6 +10,9 @@ use Illuminate\Http\Request;
 use App\Http\Resources\CommentResource;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+// use App\Events\AuctionCommentedOrBidPlaced;
+use App\Notifications\NewCommentNotification;
+use Illuminate\Support\Facades\Notification;
 
 class CommentController extends Controller
 {
@@ -27,25 +30,81 @@ class CommentController extends Controller
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
+    // public function store(Request $request, $auctionid)
+    // {
+    //     $validation = Validator::make($request->all(), [
+    //         'comment_text' => 'required|string|min:3|max:255'
+    //     ]);
+    //     if ($validation->fails()) {
+    //         return response()->json($validation->messages(), 400);
+    //     }
+    //     $auction = Auction::findOrFail($auctionid);
+    //     $comment = $auction->comments()->create([
+    //         'comment_text' => $request->comment_text,
+    //         'auction_id' => $auctionid,
+    //         'user_id' => Auth::id()
+    //     ]);
+
+    //     $owner = $auction->user_id; // Assuming auction owner is related to auction
+
+    // // Example notification content for a comment
+    // $message = 'A new comment has been added to your auction.';
+    // $type = 'System'; // Define the notification type
+    // // $auction = Auction::find($auctionId);
+    // $owner = $auction->user;
+    // $owner->notify(new NewCommentNotification($auction, $comment));
+
+    // // Notification::send($owner, new AuctionNotification($auction, $message, $type));
+
+    //     // event(new AuctionCommentedOrBidPlaced($auction, auth()->user(), 'comment'));
+
+    //     return response()->json([
+    //         'comment' => new CommentResource($comment)
+    //     ], 200);
+    // }
+
+
     public function store(Request $request, $auctionid)
     {
+        // Validate the comment input
         $validation = Validator::make($request->all(), [
-            'comment_text' => 'required|string|min:3|max:255'
+            'comment_text' => 'required|string|min:3|max:255',
         ]);
+    
         if ($validation->fails()) {
             return response()->json($validation->messages(), 400);
         }
+    
+        // Find the auction
         $auction = Auction::findOrFail($auctionid);
+    
+        // Create the comment for the auction
         $comment = $auction->comments()->create([
             'comment_text' => $request->comment_text,
             'auction_id' => $auctionid,
-            'user_id' => Auth::id()
+            'user_id' => Auth::id(),
         ]);
+    
+        // Get the customer who owns the auction
+        $customer = $auction->customer;
+    
+        // Check if customer exists and retrieve the related user (auction owner)
+        if ($customer && $customer->user) {
+            $owner = $customer->user;
+    
+            // Notify the owner about the new comment
+            $owner->notify(new NewCommentNotification($auction, $comment));
+        } else {
+            // Handle the case where the customer or user is not found
+            return response()->json(['error' => 'Auction owner not found'], 404);
+        }
+    
+        // Return the created comment as a resource
         return response()->json([
-            'comment' => new CommentResource($comment)
+            'comment' => new CommentResource($comment),
         ], 200);
     }
-
+    
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
     public function update(Request $request, $auctionid, $commentId)

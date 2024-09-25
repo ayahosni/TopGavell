@@ -11,6 +11,8 @@ use App\Http\Resources\BidResource;
 use App\Models\Customer;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use App\Notifications\NewBidNotification;
+use Illuminate\Support\Facades\Notification;
 
 class BidController extends Controller
 {
@@ -57,6 +59,19 @@ class BidController extends Controller
     $data['customer_id'] = $customer->id;
     $data['auction_id'] = $auction->id;
     Bid::create($data);
+    $owner = $auction->user;
+
+    // Example notification content for a bid
+    $message = 'A new bid has been placed on your auction.';
+    $type = 'System';
+
+    // Notification::send($owner, new AuctionNotification($auction, $message, $type));
+
+    // event(new AuctionCommentedOrBidPlaced($auction, auth()->user(), 'bid'));
+    // $auc = Auction::find($auction);
+    $owner = $auction->user;
+    $owner->notify(new NewBidNotification($auction, $bid));
+
     return response()->json([
       'message' => 'Your bid is Added successfully',
       'auction' => new AuctionResource($auction)
