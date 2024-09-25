@@ -3,6 +3,7 @@ namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
+use Illuminate\Notifications\Messages\MailMessage;
 
 class NewCommentNotification extends Notification
 {
@@ -24,7 +25,7 @@ class NewCommentNotification extends Notification
      */
     public function via(object $notifiable): array
     {
-        return ['database'];
+        return ['database', 'mail']; 
     }
 
     /**
@@ -38,5 +39,22 @@ class NewCommentNotification extends Notification
             'auction' => $this->auction->item_name,
             "user"=>$this->comment->user->name ."commented on your auction",
             "content"=>$this->comment->comment_text];
+    }
+    /**
+
+    * Get the mail representation of the notification.
+     *
+     * @param  mixed  $notifiable
+     * @return \Illuminate\Notifications\Messages\MailMessage
+     */
+    public function toMail(object $notifiable): MailMessage
+    {
+        return (new MailMessage)
+            ->subject('New Comment on Your Auction: ' . $this->auction->item_name)
+            ->greeting('Hello ' . $notifiable->name . ',')
+            ->line($this->comment->user->name . ' commented on your auction: ' . $this->auction->item_name)
+            ->line('Comment: ' . $this->comment->comment_text)
+            ->action('View Auction', url('/auctions/' . $this->auction->id))
+            ->line('Thank you for using our auction platform!');
     }
 }

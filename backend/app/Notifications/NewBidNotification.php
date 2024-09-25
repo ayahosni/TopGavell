@@ -3,6 +3,7 @@ namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
+use Illuminate\Notifications\Messages\MailMessage;
 
 class NewBidNotification extends Notification
 {
@@ -24,7 +25,7 @@ class NewBidNotification extends Notification
      */
     public function via(object $notifiable): array
     {
-        return ['database'];
+        return ['database', 'mail'];
     }
 
     /**
@@ -36,8 +37,24 @@ class NewBidNotification extends Notification
     {
         return [
             'auction' => $this->auction->item_name,
-            "user"=>$this->bid->customer->user->name ."placed a bid on your auction",
+            "user"=>$this->bid->customer->user->name ." placed a bid on your auction",
             "bid_amount"=>$this->bid->bid_amount];
     }
- 
+        /**
+
+    * Get the mail representation of the notification.
+    *
+    * @param  mixed  $notifiable
+    * @return \Illuminate\Notifications\Messages\MailMessage
+    */
+   public function toMail(object $notifiable): MailMessage
+   {
+       return (new MailMessage)
+           ->subject('New Bid on Your Auction: ' . $this->auction->item_name)
+           ->greeting('Hello ' . $notifiable->name . ',')
+           ->line($this->bid->customer->user->name . ' placed a bid on your auction: ' . $this->auction->item_name)
+           ->line('bid: ' . $this->bid->bid_amount)
+           ->action('View Auction', url('/auctions/' . $this->auction->id))
+           ->line('Thank you for using our auction platform!');
+   }
 }
