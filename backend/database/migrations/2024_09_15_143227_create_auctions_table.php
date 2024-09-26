@@ -22,7 +22,7 @@ return new class extends Migration
             $table->timestamp('auction_start_time');
             $table->timestamp('auction_end_time');
             $table->timestamp('auction_actual_end_time');
-            $table->enum('auction_status', ['Open', 'Closed'])->default('closed');
+            $table->enum('auction_status', ['Open', 'Closed'])->default('Closed');
             $table->string('item_media')->nullable();
             $table->string('item_country');
             $table->timestamps();
