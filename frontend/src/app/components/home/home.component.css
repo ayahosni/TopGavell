@@ -1,0 +1,289 @@
+/* Hero Section Styles */
+.hero {
+    background-image: url(../../assets/images/background2.jpeg);
+    background-size: cover;
+    background-repeat: no-repeat;
+    width: 100%;
+    height: 100vh;
+    position: relative;
+    border-bottom: 10px solid var(--accent-color);
+}
+.hero::after {
+    content: '';
+    position: absolute;
+    background: rgba(0, 0, 0, 0.5);
+    width: 100%;
+    height: 100%;
+}
+.search-bar {
+    background-color: rgba(251, 251, 250, .7);
+    width: 70%;
+    height: 300px;
+    border-radius: 10px;
+    position: absolute;
+    top: 100px;
+    left: 15%;
+    margin-top: 50px; 
+    z-index: 99;
+  } 
+  .search-title {
+    text-align: center;
+    /* color: var(--dark-color); */
+  }
+  .search-title h1 {
+    margin-top: 20px;
+    font-weight: 500;
+  }
+  .search-container {
+    margin: auto;
+    display: flex;
+    border: 1px solid #b1b1b1;
+    border-radius: 5px;
+    overflow: hidden;
+    width: 600px; 
+    z-index: 99;
+  }
+  .search-container .map {
+    color: var(--accent-color);
+    line-height: 30px;
+  }
+  .search-container input {
+    border: none;
+    padding: 15px 20px;
+    flex: 1;
+    font-size: 16px;
+    outline: none;
+  }
+  
+  .search-container button {
+    background-color: var(--btn-color);
+    border-top-left-radius: 0px;
+    border-bottom-left-radius: 0px;
+    color: var(--background-color);
+    border: none;
+    padding: 10px 30px;
+    cursor: pointer;
+    font-size: 16px;
+    outline: none;
+  }
+  
+  .search-container button:hover {
+    background-color: var(--dark-color);
+  }
+  .search-container i {
+    padding: 10px;
+    font-size: 20px;
+    color: #777;
+    background-color: white;
+  }
+  .find {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0px;
+  }
+  .find div:not(:first-child) {
+    margin-left: 50px;
+
+  }
+  .find div {
+    text-align: center;
+    font-size: 20px;
+    color: var(--dark-color);
+    cursor: pointer;
+    font-weight: 600;
+    border-bottom: 1px solid var(--dark-color);
+  }
+  /* Categories Section Styles */
+  .categories-content {
+    margin-top: 50px;
+  }
+  .categories {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    cursor: pointer;
+  }
+  .categories img {
+    width: 150px;
+    border-radius: 50%;
+  }
+  .categories p {
+    text-align: center;
+  }
+  /* Selling Section Styles */
+  .selling {
+    background-color: var(--dark-color);
+    padding: 20px;
+    border-radius: 10px;
+    color: var(--background-color);
+    margin-top: 20px;
+  }
+  .selling .btn {
+    color: var(--background-color);
+    background-color: var(--accent-color);
+    border-radius: 0px;
+    padding: 10px;
+  }
+  .selling h3 {
+    font-weight: 500;
+    font-size: 24px;
+    margin: 0;
+  }
+  /* Opening Auction Styles */
+  .auctions {
+    margin-top: 50px;
+  }
+  .auctions .auction-items {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+  .auctions .category-title {
+    margin-bottom: 20px;
+  }
+  .auctions .auction-items .auction-item {
+    margin-bottom: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    position: relative;
+    transition: transform .5s ease-out;
+  }
+  .auctions .auction-items .auction-item:hover {
+    transform: scale(1.02);
+  }
+  .auctions img {
+    width: 250px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    cursor: pointer;
+  }
+  .auction-info {
+    padding: 10px;
+  }
+  .auction-time-out {
+    position: absolute;
+    top: 201px;
+    padding: 7px;
+    background-color: var(--accent-color);
+    border-top-right-radius: 5px;
+    color: var(--background-color);
+    width: 70%;
+  }
+  .auctions i {
+    color: var(--accent-color);
+    margin-right: 5px;
+  }
+  .category-name {
+    color: var(--dark-color);
+    margin-top: 0px;
+  }
+  .auctions .item-location {
+    color: gray;
+  }
+  .auctions .auction-end-date {
+    color: var(--dark-color);
+  }
+  .item-description {
+    display: flex;
+    justify-content: space-between;
+  }
+  .item-price {
+    color: var(--accent-color);
+  }
+  /* Top Auctions Styles */
+  .top-auctions-content {
+    margin: 50px 0px;
+    background-color: #fff;
+    padding: 10px 0px;
+  }
+ .top-auctions-content .category-title {
+    margin-bottom: 20px;
+  }
+  .top-auctions {
+    display: flex;
+    justify-content: space-between;
+  }
+  .top-auctions img {
+    border-radius: 10px;
+    width: 550px;
+  }
+  .top-auction {
+    position: relative;
+    max-width: 530px;
+  }
+  .top-auction-winner {
+    background-color: var(--accent-color);
+    position: absolute;
+    top: 0px;
+    width: 100%;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+  }
+  .top-auction-winner img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 1px solid var(--dark-color);
+    padding: 2px;
+    margin-right: 20px;
+  }
+  .winner-info {
+    display: flex;
+  }
+  .winner-name {
+    font-size: 20px;
+    color: var(--dark-color);
+  }
+  .top-auction .price {
+    color: var(--dark-color);
+    font-weight: 600;
+
+  }
+  /* Hero2 Styles */
+  /* .hero2 {
+    width: 80%;
+    height: 300px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin: auto;
+    border-radius: 5px;
+    margin-bottom: 50px;
+    margin-top: -150px;
+    background-color: #fff;
+    border-bottom: 2px solid var(--accent-color);
+  }
+  .hero-content {
+    display: flex;
+    justify-content: space-between;
+  }
+  .hero-content img {
+    width: 400px;
+    margin: 5px;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+  }
+  .hero-info .find {
+    padding: 20px;
+  }
+  .search-container {
+    display: flex;
+    border: 1px solid #b1b1b1;
+    border-radius: 5px;
+    overflow: hidden;
+    width: 550px; 
+    z-index: 99;
+    margin-right: 30px;
+  }
+  .search-container .map {
+    color: var(--accent-color);
+    line-height: 30px;
+  }
+  .search-container input {
+    border: none;
+    padding: 15px 20px;
+    flex: 1;
+    font-size: 16px;
+    outline: none;
+  } */

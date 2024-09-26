@@ -1,24 +1,35 @@
 import { CommonModule } from '@angular/common';
+import { Router, RouterLink, RouterLinkActive, NavigationEnd, RouterOutlet } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { provideHttpClient } from '@angular/common/http';
-import { Router, RouterLink, RouterLinkActive, NavigationEnd, RouterOutlet } from '@angular/router';
-import { HeaderComponent } from './header/header.component';
-import { FooterComponent } from './footer/footer.component';
-import { BidsComponent } from './bids/bids.component';
-import { ContactComponent } from './contact/contact.component';
-import { HomeComponent } from './home/home.component';
-import { FormsModule } from '@angular/forms';  // Import FormsModule
+import { FormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { BidsComponent } from './components/bids/bids.component';
+import { HomeComponent } from './components/home/home.component';
+import { HeaderComponent } from './components/header/header.component';
+import { FooterComponent } from './components/footer/footer.component';
+import { ContactComponent } from './components/contact/contact.component';
+import { AuctionsComponent } from './components/auctions/auctions.component';
+
 
 
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [
-    RouterOutlet, CommonModule, RouterLink, RouterLinkActive, HeaderComponent,
-    FooterComponent, FontAwesomeModule, BidsComponent, ContactComponent, HomeComponent, FormsModule
+    RouterOutlet,
+    CommonModule,
+    RouterLink,
+    RouterLinkActive,
+    FontAwesomeModule,
+    FormsModule,
+    BidsComponent,
+    HomeComponent,
+    HeaderComponent,
+    FooterComponent,
+    ContactComponent,
+    AuctionsComponent
   ],
-
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']  
 })
@@ -31,7 +42,7 @@ export class AppComponent implements OnInit {
   ngOnInit(): void {
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
-        const hideHeaderFooterRoutes = ['/login', '/register'];  // Define routes for hiding both header and footer
+        const hideHeaderFooterRoutes = ['/login', '/register'];  // تعريف المسارات لإخفاء كل من الهيدر والفوتر
 
         this.showHeader = !hideHeaderFooterRoutes.includes(this.router.url);
         this.showFooter = !hideHeaderFooterRoutes.includes(this.router.url);
@@ -40,4 +51,5 @@ export class AppComponent implements OnInit {
   }
 }
 
+// لا تنسى استخدام AppProviders في main.ts
 export const AppProviders = [provideHttpClient()];

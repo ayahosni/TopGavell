@@ -1,0 +1,13 @@
+button {
+    background-color: #4CAF50; /* لون الخلفية */
+    color: white; /* لون النص */
+    padding: 10px 20px; /* المسافات حول النص */
+    border: none; /* إزالة الحدود */
+    cursor: pointer; /* تغيير مؤشر الفأرة عند المرور على الزر */
+    font-size: 16px; /* حجم النص */
+  }
+  
+  button:hover {
+    background-color: #45a049; /* لون الخلفية عند المرور بالفأرة */
+  }
+  

@@ -33,7 +33,6 @@ class UserController extends Controller
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'phone_number' => ['required'],
-            'address' => ['required'],
         ]);
         if ($validation->fails()) {
             return response()->json($validation->messages(), 400);
@@ -77,7 +76,6 @@ class UserController extends Controller
             'token' => $user->createToken('auth_token')->plainTextToken,
         ]);
     }
-
     #######################################################################################################
 
     public function logout(Request $request)
@@ -94,7 +92,7 @@ class UserController extends Controller
     {
         return response()->json([
             'message' => 'Please Login First',
-        ],401);
+        ], 401);
     }
 
     public function show(User $user)
