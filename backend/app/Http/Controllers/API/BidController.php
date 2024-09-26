@@ -38,7 +38,7 @@ public function store(Request $request, $auctionId)
     // Check if the auction is closed
     if ($auction->auction_status === "Closed") {
         return response()->json([
-            "message" => "You can no longer participate in this auction. This auction is closed.",
+            "message" => "You can't participate in this auction. This auction is closed.",
         ], 400);
     }
 

@@ -38,4 +38,30 @@ class VerificationController extends Controller
         $this->middleware('signed')->only('verify');
         $this->middleware('throttle:6,1')->only('verify', 'resend');
     }
+  
+    /**
+     * Mark the authenticated user's email address as verified.
+     */
+    public function verify(EmailVerificationRequest $request)
+    {
+        $request->fulfill();  // Mark email as verified
+
+        return response()->json(['message' => 'Email verified successfully.']);
+    }
+
+    /**
+     * Resend the email verification notification.
+     */
+    public function resend(Request $request)
+    {
+        if ($request->user()->hasVerifiedEmail()) {
+            return response()->json(['message' => 'Email already verified.'], 400);
+        }
+
+        $request->user()->sendEmailVerificationNotification();
+
+        return response()->json(['message' => 'Verification email resent successfully.']);
+    }
 }
+
+

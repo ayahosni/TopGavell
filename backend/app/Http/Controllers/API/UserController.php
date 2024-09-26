@@ -11,6 +11,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Auth\Events\Registered;
+use Illuminate\Auth\Events\Verified;
 
 class UserController extends Controller
 {
@@ -43,11 +45,19 @@ class UserController extends Controller
         $data['user_id'] = $user->id;
         $cust = Customer::create($data);
 
+        // event(new Registered($user));
+        $user->sendEmailVerificationNotification();
+
+        // Respond to the client
         return response()->json([
-            'message' => 'User successfully registered',
-            'user' => new CustomerRescource($cust),
-            'token' => $user->createToken('auth_token')->plainTextToken,
-        ], 200);
+            'message' => 'Registered successfully! Please check your email to verify your account.'
+        ], 201);
+    
+        // return response()->json([
+        //     'message' => 'User successfully registered',
+        //     'user' => new CustomerRescource($cust),
+        //     'token' => $user->createToken('auth_token')->plainTextToken,
+        // ], 200);
     }
 
     #######################################################################################################    

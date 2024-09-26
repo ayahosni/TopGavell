@@ -10,10 +10,11 @@ use Laravel\Sanctum\HasApiTokens;
 use App\Notifications\NewCommentNotification;
 use App\Notifications\NewbidNotification;
  
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     use HasFactory, Notifiable, HasApiTokens;
 
