@@ -21,24 +21,25 @@ Route::apiResource('user', UserController::class);
 Route::apiresource('auction', AuctionController::class);
 Route::apiResource('{auction}/bids', BidController::class);
 Route::apiResource('{auction}/comments', CommentController::class);
+Route::get('/auction-status', [AuctionController::class, 'updateAuctionStatus']);
 
-Route::post('/sanctum/token',function (Request $request){
-    $request->validate([
-        'email' => 'required|email',
-        'password' => 'required',
-        'device_name' => 'required',
-    ]);
+// Route::post('/sanctum/token',function (Request $request){
+//     $request->validate([
+//         'email' => 'required|email',
+//         'password' => 'required',
+//         'device_name' => 'required',
+//     ]);
  
-    $user = User::where('email', $request->email)->first();
+//     $user = User::where('email', $request->email)->first();
  
-    if (! $user || ! Hash::check($request->password, $user->password)) {
-        throw ValidationException::withMessages([
-            'email' => ['The provided credentials are incorrect.'],
-        ]);
-    }
+//     if (! $user || ! Hash::check($request->password, $user->password)) {
+//         throw ValidationException::withMessages([
+//             'email' => ['The provided credentials are incorrect.'],
+//         ]);
+//     }
  
-    return $user->createToken($request->device_name)->plainTextToken;
-});
+//     return $user->createToken($request->device_name)->plainTextToken;
+// });
 
     Route::middleware('auth:sanctum')->group(function () {
         Route::get('/notifications', [NotificationController::class, 'index']);

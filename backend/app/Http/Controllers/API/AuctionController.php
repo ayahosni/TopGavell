@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Http\Resources\AuctionResource;
 use App\Models\Customer;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 class AuctionController extends Controller
 {
@@ -113,4 +114,19 @@ class AuctionController extends Controller
       'message' => 'Auction deleted successfully'
     ]);
   }
+
+
+public function updateAuctionStatus()
+{
+    $currentTime = Carbon::now();
+
+    Auction::where('auction_start_time', '<=', $currentTime)
+        ->where('auction_end_time', '>', $currentTime)
+        ->where('auction_status', 'Closed')
+        ->update(['auction_status' => 'Open']);
+
+    Auction::where('auction_end_time', '<=', $currentTime)
+        ->where('auction_status', 'Open')
+        ->update(['auction_status' => 'Closed']);
+}
 }

@@ -6,6 +6,7 @@ use App\Models\Auction;
 use App\Policies\AuctionPolicy;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
+use App\Observers\AuctionObserver;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -24,5 +25,10 @@ class AppServiceProvider extends ServiceProvider
     {
         //
         Gate::policy(Auction::class, AuctionPolicy::class);
+
+
+    Auction::observe(AuctionObserver::class);
+
+
     }
 }

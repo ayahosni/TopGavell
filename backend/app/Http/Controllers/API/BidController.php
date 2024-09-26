@@ -26,62 +26,7 @@ class BidController extends Controller
     return BidResource::collection($auction->bids);
   }
 
-  // public function store(Request $request, $auction)
-  // {
-  //   $auction = Auction::findOrFail($auction);
-  //   if ($auction->auction_status === "Closed") {
-  //     return response()->json([
-  //       "message" => "You can no longer participate in this auction. This auction has ended",
-  //     ], 400);
-  //   }
-  //   $startingBid = $auction->starting_bid;
-  //   $bidIncrement = $auction->bid_increment;
-  //   $currentMaxBid = Bid::where('auction_id', $auction->id)->max('bid_amount') ?? null;
-  //   $minBidAmount = $currentMaxBid
-  //     ? $currentMaxBid + $bidIncrement
-  //     : $startingBid;
-  //   $validation = Validator::make($request->all(), [
-  //     'bid_amount' => [
-  //       'required',
-  //       'numeric',
-  //       function ($attribute, $value, $fail) use ($minBidAmount) {
-  //         if ($value < $minBidAmount) {
-  //           $fail("The bid amount must be at least $minBidAmount.");
-  //         }
-  //       },
-  //     ],
-  //   ]);
-  //   if ($validation->fails()) {
-  //     return response()->json($validation->messages(), 400);
-  //   }
-  //   $data = $request->all();
-  //   $customer = Customer::where('user_id', Auth::id())->first();
-  //   $data['customer_id'] = $customer->id;
-  //   $data['auction_id'] = $auction->id;
-  //   $bid=Bid::create($data);
-  //   $owner = $auction->user;
-
-
-  //   // Get the customer who owns the auction
-  //   $customer = $auction->customer;
-    
-  //   // Check if customer exists and retrieve the related user (auction owner)
-  //   if ($customer && $customer->user) {
-  //       $owner = $customer->user;
-
-  //       // Notify the owner about the new comment
-  //       $owner->notify(new NewBidNotification($auction, $bid));
-  //   } else {
-  //       // Handle the case where the customer or user is not found
-  //       return response()->json(['error' => 'Auction owner not found'], 404);
-  //   }
- 
-
-  //   return response()->json([
-  //     'message' => 'Your bid is Added successfully',
-  //     'auction' => new AuctionResource($auction)
-  //   ], 200);
-  // }
+  
 
   public function store(Request $request, $auctionId)
   {
