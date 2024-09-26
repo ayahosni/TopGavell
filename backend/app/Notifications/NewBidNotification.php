@@ -37,7 +37,7 @@ class NewBidNotification extends Notification
     {
         return [
             'auction' => $this->auction->item_name,
-            "user"=>$this->bid->customer->user->name ." placed a bid on your auction",
+            "user"=>$this->bid->customer->user->name ." placed a bid on this auction",
             "bid_amount"=>$this->bid->bid_amount];
     }
         /**
@@ -52,7 +52,7 @@ class NewBidNotification extends Notification
        return (new MailMessage)
            ->subject('New Bid on Your Auction: ' . $this->auction->item_name)
            ->greeting('Hello ' . $notifiable->name . ',')
-           ->line($this->bid->customer->user->name . ' placed a bid on your auction: ' . $this->auction->item_name)
+           ->line($this->bid->customer->user->name . ' placed a bid on this auction: ' . $this->auction->item_name)
            ->line('bid: ' . $this->bid->bid_amount)
            ->action('View Auction', url('/auctions/' . $this->auction->id))
            ->line('Thank you for using our auction platform!');

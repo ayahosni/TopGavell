@@ -26,60 +26,140 @@ class BidController extends Controller
     return BidResource::collection($auction->bids);
   }
 
-  public function store(Request $request, $auction)
-  {
-    $auction = Auction::findOrFail($auction);
-    if ($auction->auction_status === "Closed") {
-      return response()->json([
-        "message" => "You can no longer participate in this auction. This auction has ended",
-      ], 400);
-    }
-    $startingBid = $auction->starting_bid;
-    $bidIncrement = $auction->bid_increment;
-    $currentMaxBid = Bid::where('auction_id', $auction->id)->max('bid_amount') ?? null;
-    $minBidAmount = $currentMaxBid
-      ? $currentMaxBid + $bidIncrement
-      : $startingBid;
-    $validation = Validator::make($request->all(), [
-      'bid_amount' => [
-        'required',
-        'numeric',
-        function ($attribute, $value, $fail) use ($minBidAmount) {
-          if ($value < $minBidAmount) {
-            $fail("The bid amount must be at least $minBidAmount.");
-          }
-        },
-      ],
-    ]);
-    if ($validation->fails()) {
-      return response()->json($validation->messages(), 400);
-    }
-    $data = $request->all();
-    $customer = Customer::where('user_id', Auth::id())->first();
-    $data['customer_id'] = $customer->id;
-    $data['auction_id'] = $auction->id;
-    $bid=Bid::create($data);
-    $owner = $auction->user;
+  // public function store(Request $request, $auction)
+  // {
+  //   $auction = Auction::findOrFail($auction);
+  //   if ($auction->auction_status === "Closed") {
+  //     return response()->json([
+  //       "message" => "You can no longer participate in this auction. This auction has ended",
+  //     ], 400);
+  //   }
+  //   $startingBid = $auction->starting_bid;
+  //   $bidIncrement = $auction->bid_increment;
+  //   $currentMaxBid = Bid::where('auction_id', $auction->id)->max('bid_amount') ?? null;
+  //   $minBidAmount = $currentMaxBid
+  //     ? $currentMaxBid + $bidIncrement
+  //     : $startingBid;
+  //   $validation = Validator::make($request->all(), [
+  //     'bid_amount' => [
+  //       'required',
+  //       'numeric',
+  //       function ($attribute, $value, $fail) use ($minBidAmount) {
+  //         if ($value < $minBidAmount) {
+  //           $fail("The bid amount must be at least $minBidAmount.");
+  //         }
+  //       },
+  //     ],
+  //   ]);
+  //   if ($validation->fails()) {
+  //     return response()->json($validation->messages(), 400);
+  //   }
+  //   $data = $request->all();
+  //   $customer = Customer::where('user_id', Auth::id())->first();
+  //   $data['customer_id'] = $customer->id;
+  //   $data['auction_id'] = $auction->id;
+  //   $bid=Bid::create($data);
+  //   $owner = $auction->user;
 
 
-    // Get the customer who owns the auction
-    $customer = $auction->customer;
+  //   // Get the customer who owns the auction
+  //   $customer = $auction->customer;
     
-    // Check if customer exists and retrieve the related user (auction owner)
-    if ($customer && $customer->user) {
-        $owner = $customer->user;
+  //   // Check if customer exists and retrieve the related user (auction owner)
+  //   if ($customer && $customer->user) {
+  //       $owner = $customer->user;
 
-        // Notify the owner about the new comment
-        $owner->notify(new NewBidNotification($auction, $bid));
-    } else {
-        // Handle the case where the customer or user is not found
-        return response()->json(['error' => 'Auction owner not found'], 404);
-    }
+  //       // Notify the owner about the new comment
+  //       $owner->notify(new NewBidNotification($auction, $bid));
+  //   } else {
+  //       // Handle the case where the customer or user is not found
+  //       return response()->json(['error' => 'Auction owner not found'], 404);
+  //   }
  
 
-    return response()->json([
-      'message' => 'Your bid is Added successfully',
-      'auction' => new AuctionResource($auction)
-    ], 200);
+  //   return response()->json([
+  //     'message' => 'Your bid is Added successfully',
+  //     'auction' => new AuctionResource($auction)
+  //   ], 200);
+  // }
+
+  public function store(Request $request, $auctionId)
+  {
+      // Fetch the auction or throw a 404 error if not found
+      $auction = Auction::findOrFail($auctionId);
+  
+      // Check if the auction is closed
+      if ($auction->auction_status === "Closed") {
+          return response()->json([
+              "message" => "You can no longer participate in this auction. This auction has ended.",
+          ], 400);
+      }
+  
+      // Get the starting bid and bid increment details
+      $startingBid = $auction->starting_bid;
+      $bidIncrement = $auction->bid_increment;
+  
+      // Get the current highest bid on the auction, if available
+      $currentMaxBid = Bid::where('auction_id', $auction->id)->max('bid_amount') ?? null;
+  
+      // Determine the minimum bid amount required
+      $minBidAmount = $currentMaxBid ? $currentMaxBid + $bidIncrement : $startingBid;
+  
+      // Validate the bid amount to ensure it's at least the minimum required
+      $validation = Validator::make($request->all(), [
+          'bid_amount' => [
+              'required',
+              'numeric',
+              function ($attribute, $value, $fail) use ($minBidAmount) {
+                  if ($value < $minBidAmount) {
+                      $fail("The bid amount must be at least $minBidAmount.");
+                  }
+              },
+          ],
+      ]);
+  
+      // Return validation error messages if the validation fails
+      if ($validation->fails()) {
+          return response()->json($validation->messages(), 400);
+      }
+  
+      // Get the authenticated customer's ID
+      $customer = Customer::where('user_id', Auth::id())->first();
+      if (!$customer) {
+          return response()->json(['error' => 'Customer not found.'], 404);
+      }
+  
+      // Create the new bid
+      $data = $request->all();
+      $data['customer_id'] = $customer->id;
+      $data['auction_id'] = $auction->id;
+      $bid = Bid::create($data);
+  
+      // Notify all previous bidders about the new bid
+      $previousBidders = Bid::where('auction_id', $auction->id)
+                            ->where('customer_id', '!=', $customer->id) // Exclude the current bidder
+                            ->with('customer.user') // Ensure the customer relationship is loaded with user
+                            ->get()
+                            ->pluck('customer.user');
+  
+      if ($previousBidders->isNotEmpty()) {
+          Notification::send($previousBidders, new NewBidNotification($auction, $bid));
+      }
+  
+      // Notify the auction owner if they exist
+      $owner = $auction->customer->user ?? null; // Get the auction owner's user
+      if ($owner) {
+          $owner->notify(new NewBidNotification($auction, $bid));
+      } else {
+          return response()->json(['error' => 'Auction owner not found.'], 404);
+      }
+  
+      // Return success response
+      return response()->json([
+          'message' => 'Your bid has been added successfully.',
+          'auction' => new AuctionResource($auction),
+      ], 200);
   }
+  
+
 }
