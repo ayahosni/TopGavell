@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 use App\Models\User;
 use App\Http\Controllers\API\NotificationController;
+use App\Http\Controllers\Auth\VerificationController;
 
 
 Route::post('/register', [UserController::class, 'register'])->name('register');
@@ -30,14 +31,21 @@ Route::get('/auction-status', [AuctionController::class, 'updateAuctionStatus'])
         Route::get('/notifications', [NotificationController::class, 'index']);
     });
     
-    use App\Http\Controllers\Auth\VerificationController;
 
-    // Email Verification Routes
-    Route::get('/email/verify/{id}/{hash}', [VerificationController::class, 'verify'])
-        // ->middleware(['auth:api', 'signed'])
-        ->name('verification.verify');
+    // // Email Verification Routes
+    // Route::get('/email/verify/{id}/{hash}', [VerificationController::class, 'verify'])
+    //     // ->middleware(['auth:api', 'signed'])
+    //     ->name('verification.verify');
     
     Route::post('/email/verification-notification', [VerificationController::class, 'resend'])
         // ->middleware(['auth:api', 'throttle:6,1'])
         ->name('verification.send');
     
+
+        Route::middleware('auth:api')->group(function () {
+            // Protected routes that require token authentication
+            Route::get('/email/verify/{id}/{hash}', [VerificationController::class, 'verify'])
+                ->middleware('signed')
+                ->name('verification.verify');
+        });
+        
