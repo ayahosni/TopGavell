@@ -23,10 +23,10 @@ class AuctionObserver
             ->first();
 
           // If a last bid exists and it was made within the last 2 minutes of the auction
-          if ($lastBid && $lastBid->created_at >= $auction->auction_end_time->copy()->subMinutes(2)) {
-            // Delay the auction end time by 2 minutes
-            $auction->auction_end_time = $auction->auction_end_time->addMinutes(2);
+        //   if ($lastBid && $lastBid->created_at >= $auction->auction_end_time->copy()->subMinutes(2)) {
+        //     // Delay the auction end time by 2 minutes
+        //     $auction->auction_end_time = $auction->auction_end_time->addMinutes(2);
         
-        }
+        // }
     }
 }
