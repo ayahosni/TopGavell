@@ -116,7 +116,7 @@ class AuctionController extends Controller
   }
 
 
-public function updateAuctionStatu()
+public function updateAuctionStatus()
 {
     $currentTime = Carbon::now();
 
