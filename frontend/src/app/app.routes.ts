@@ -1,16 +1,16 @@
 import { Routes } from '@angular/router';
-import { HomeComponent } from './home/home.component';
-import { AuctionsComponent } from './auctions/auctions.component';
-import { ContactComponent } from './contact/contact.component';
-import { BidsComponent } from './bids/bids.component';
-import { LoginComponent } from './login/login.component';
-import { RegisterComponent } from './register/register.component';
-import { DashboardComponent } from './dashboard/dashboard.component';
+import { HomeComponent } from './components/home/home.component';
+import { AuctionsComponent } from './components//auctions/auctions.component';
+import { ContactComponent } from './components/contact/contact.component';
+import { BidsComponent } from './components/bids/bids.component';
+import { LoginComponent } from './components/login/login.component';
+import { RegisterComponent } from './components/register/register.component';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
 
 
 export const routes: Routes = [
     {path: '', component:HomeComponent},
-    { path: 'dashboard', component: DashboardComponent }, 
+    {path: 'dashboard', component: DashboardComponent}, 
     {path: 'auctions', component:AuctionsComponent},
     {path: 'bids', component: BidsComponent},
     {path: 'contact', component: ContactComponent},

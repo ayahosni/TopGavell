@@ -1,0 +1,64 @@
+<form [formGroup]="auctionForm" (ngSubmit)="onSubmit()" enctype="multipart/form-data" style="padding-top: 200px;">
+  
+  <label for="category_id">Category ID</label>
+  <input id="category_id" formControlName="category_id" type="number" required>
+  <div *ngIf="auctionForm.get('category_id')?.invalid && (auctionForm.get('category_id')?.touched || auctionForm.get('category_id')?.dirty)">
+    <small class="error">Category ID is required.</small>
+  </div>
+
+  <label for="item_name">Item Name</label>
+  <input id="item_name" formControlName="item_name" type="text" required>
+  <div *ngIf="auctionForm.get('item_name')?.invalid && (auctionForm.get('item_name')?.touched || auctionForm.get('item_name')?.dirty)">
+    <small class="error">Item Name is required.</small>
+  </div>
+
+  <label for="item_description">Item Description</label>
+  <textarea id="item_description" formControlName="item_description" required></textarea>
+  <div *ngIf="auctionForm.get('item_description')?.invalid && (auctionForm.get('item_description')?.touched || auctionForm.get('item_description')?.dirty)">
+    <small class="error">Item Description is required.</small>
+  </div>
+
+  <label for="starting_bid">Starting Bid</label>
+  <input id="starting_bid" formControlName="starting_bid" type="number" required>
+  <div *ngIf="auctionForm.get('starting_bid')?.invalid && (auctionForm.get('starting_bid')?.touched || auctionForm.get('starting_bid')?.dirty)">
+    <small class="error">Starting Bid is required.</small>
+  </div>
+
+  <label for="bid_increment">Bid Increment</label>
+  <input id="bid_increment" formControlName="bid_increment" type="number" required>
+  <div *ngIf="auctionForm.get('bid_increment')?.invalid && (auctionForm.get('bid_increment')?.touched || auctionForm.get('bid_increment')?.dirty)">
+    <small class="error">Bid Increment is required.</small>
+  </div>
+
+  <label for="auction_start_time">Auction Start Time</label>
+  <input id="auction_start_time" formControlName="auction_start_time" type="datetime-local" required>
+  <div *ngIf="auctionForm.get('auction_start_time')?.invalid && (auctionForm.get('auction_start_time')?.touched || auctionForm.get('auction_start_time')?.dirty)">
+    <small class="error">Auction Start Time is required.</small>
+  </div>
+
+  <label for="auction_end_time">Auction End Time</label>
+  <input id="auction_end_time" formControlName="auction_end_time" type="datetime-local" required>
+  <div *ngIf="auctionForm.get('auction_end_time')?.invalid && (auctionForm.get('auction_end_time')?.touched || auctionForm.get('auction_end_time')?.dirty)">
+    <small class="error">Auction End Time is required.</small>
+  </div>
+
+  <label for="item_media">Item Media</label>
+  <input id="item_media" formControlName="item_media" type="file" (change)="onFileChange($event)" required>
+  <div *ngIf="auctionForm.get('item_media')?.invalid && (auctionForm.get('item_media')?.touched || auctionForm.get('item_media')?.dirty)">
+    <small class="error">Item Media is required.</small>
+  </div>
+
+  <label for="item_country">Item Country</label>
+  <input id="item_country" formControlName="item_country" type="text" required>
+  <div *ngIf="auctionForm.get('item_country')?.invalid && (auctionForm.get('item_country')?.touched || auctionForm.get('item_country')?.dirty)">
+    <small class="error">Item Country is required.</small>
+  </div>
+
+  <button type="submit" [disabled]="auctionForm.invalid">Create Auction</button>
+</form>
+
+<div *ngFor="let auction of auctions">
+  <h3>{{ auction.item_name }}</h3>
+  <p>{{ auction.item_description }}</p>
+  <img *ngIf="auction.item_media" [src]="auction.item_media" alt="{{ auction.item_name }}" width="200">
+</div>

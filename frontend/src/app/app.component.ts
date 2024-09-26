@@ -1,15 +1,16 @@
 import { CommonModule } from '@angular/common';
+import { Router, RouterLink, RouterLinkActive, NavigationEnd, RouterOutlet } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { provideHttpClient } from '@angular/common/http';
-import { Router, RouterLink, RouterLinkActive, NavigationEnd, RouterOutlet } from '@angular/router';
-import { HeaderComponent } from './header/header.component';
-import { FooterComponent } from './footer/footer.component';
-import { BidsComponent } from './bids/bids.component';
-import { ContactComponent } from './contact/contact.component';
-import { AuctionsComponent } from './auctions/auctions.component'; // تأكد من أن المسار صحيح
-import { HomeComponent } from './home/home.component';
-import { FormsModule } from '@angular/forms';  // استيراد FormsModule
+import { FormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+
+import { HeaderComponent } from './components/header/header.component';
+import { FooterComponent } from './components/footer/footer.component';
+import { BidsComponent } from './components/bids/bids.component';
+import { ContactComponent } from './components/contact/contact.component';
+import { HomeComponent } from './components/home/home.component';
+import { AuctionsComponent } from './components//auctions/auctions.component';
 
 @Component({
   selector: 'app-root',
@@ -19,14 +20,14 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     CommonModule,
     RouterLink,
     RouterLinkActive,
+    FontAwesomeModule,
+    FormsModule,
+    BidsComponent,
+    HomeComponent,
     HeaderComponent,
     FooterComponent,
-    FontAwesomeModule,
-    BidsComponent,
     ContactComponent,
-    HomeComponent,
-    FormsModule,
-    AuctionsComponent // تأكد من إدراج AuctionsComponent
+    AuctionsComponent
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']  

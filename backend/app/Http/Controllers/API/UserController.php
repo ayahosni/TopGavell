@@ -75,10 +75,7 @@ class UserController extends Controller
             'user' => new CustomerRescource($cust),
             'token' => $user->createToken('auth_token')->plainTextToken,
         ]);
-/*             'token' => $user->createToken($request->device_name)->plainTextToken,
- */        ]);
     }
-
     #######################################################################################################
 
     public function logout(Request $request)
@@ -95,7 +92,7 @@ class UserController extends Controller
     {
         return response()->json([
             'message' => 'Please Login First',
-        ],401);
+        ], 401);
     }
 
     public function show(User $user)

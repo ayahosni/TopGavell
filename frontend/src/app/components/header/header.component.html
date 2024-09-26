@@ -1,0 +1,24 @@
+
+<nav class="navbar">
+    <div class="navbar-content container">
+      <a routerLinke="/">
+        <div class="navbar-logo">
+        <span><span class="gavel">T</span>opgavel</span>
+        </div>
+     </a>
+  
+      <ul class="navbar-menu">
+        <li><a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Home</a></li>
+        <li><a routerLink="/auctions" routerLinkActive="active">Start a new Auction</a></li>
+        <li><a routerLink="/bids" routerLinkActive="active">Bids</a></li>
+        <li><a routerLink="/contact" routerLinkActive="active">Contact Us</a></li>
+      </ul>
+
+      <div class="navbar-buttons">
+        <button class="btn login-btn" routerLink="/login">Login</button>
+        <button class="btn signup-btn" routerLink="/register">Sign Up</button>
+      </div>
+    </div>
+  </nav>
+
+  
