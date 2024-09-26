@@ -21,6 +21,7 @@ Route::apiResource('user', UserController::class);
 Route::apiresource('auction', AuctionController::class);
 Route::apiResource('{auction}/bids', BidController::class);
 Route::apiResource('{auction}/comments', CommentController::class);
+
 Route::get('/auction-status', [AuctionController::class, 'updateAuctionStatus']);
 
 // Route::post('/sanctum/token',function (Request $request){

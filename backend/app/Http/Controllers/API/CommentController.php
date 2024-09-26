@@ -10,7 +10,6 @@ use Illuminate\Http\Request;
 use App\Http\Resources\CommentResource;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
-// use App\Events\AuctionCommentedOrBidPlaced;
 use App\Notifications\NewCommentNotification;
 use Illuminate\Support\Facades\Notification;
 
@@ -29,39 +28,6 @@ class CommentController extends Controller
     }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-
-    // public function store(Request $request, $auctionid)
-    // {
-    //     $validation = Validator::make($request->all(), [
-    //         'comment_text' => 'required|string|min:3|max:255'
-    //     ]);
-    //     if ($validation->fails()) {
-    //         return response()->json($validation->messages(), 400);
-    //     }
-    //     $auction = Auction::findOrFail($auctionid);
-    //     $comment = $auction->comments()->create([
-    //         'comment_text' => $request->comment_text,
-    //         'auction_id' => $auctionid,
-    //         'user_id' => Auth::id()
-    //     ]);
-
-    //     $owner = $auction->user_id; // Assuming auction owner is related to auction
-
-    // // Example notification content for a comment
-    // $message = 'A new comment has been added to your auction.';
-    // $type = 'System'; // Define the notification type
-    // // $auction = Auction::find($auctionId);
-    // $owner = $auction->user;
-    // $owner->notify(new NewCommentNotification($auction, $comment));
-
-    // // Notification::send($owner, new AuctionNotification($auction, $message, $type));
-
-    //     // event(new AuctionCommentedOrBidPlaced($auction, auth()->user(), 'comment'));
-
-    //     return response()->json([
-    //         'comment' => new CommentResource($comment)
-    //     ], 200);
-    // }
 
 
     public function store(Request $request, $auctionid)
@@ -141,3 +107,5 @@ class CommentController extends Controller
         ], 200);
     }
 }
+
+
