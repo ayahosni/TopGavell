@@ -32,10 +32,7 @@ Route::get('/auction-status', [AuctionController::class, 'updateAuctionStatus'])
     });
     
 
-    // // Email Verification Routes
-    // Route::get('/email/verify/{id}/{hash}', [VerificationController::class, 'verify'])
-    //     // ->middleware(['auth:api', 'signed'])
-    //     ->name('verification.verify');
+
     
     Route::post('/email/verification-notification', [VerificationController::class, 'resend'])
         // ->middleware(['auth:api', 'throttle:6,1'])
@@ -45,7 +42,7 @@ Route::get('/auction-status', [AuctionController::class, 'updateAuctionStatus'])
         Route::middleware('auth:api')->group(function () {
             // Protected routes that require token authentication
             Route::get('/email/verify/{id}/{hash}', [VerificationController::class, 'verify'])
-                ->middleware('signed')
+                // ->middleware('signed')
                 ->name('verification.verify');
         });
         
