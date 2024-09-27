@@ -43,16 +43,42 @@ class VerificationController extends Controller
     /**
      * Mark the authenticated user's email address as verified.
      */
+    // public function verify(EmailVerificationRequest $request)
+    // {
+    //     $request->fulfill();  // Mark email as verified
+
+    //     return response()->json(['message' => 'Email verified successfully.']);
+    // }
+
+    // /**
+    //  * Resend the email verification notification.
+    //  */
+    // public function resend(Request $request)
+    // {
+    //     if ($request->user()->hasVerifiedEmail()) {
+    //         return response()->json(['message' => 'Email already verified.'], 400);
+    //     }
+
+    //     $request->user()->sendEmailVerificationNotification();
+
+    //     return response()->json(['message' => 'Verification email resent successfully.']);
+    // }
+
     public function verify(EmailVerificationRequest $request)
     {
-        $request->fulfill();  // Mark email as verified
+        if (!$request->validateHash()) {
+            return response()->json(['message' => 'Invalid verification link.'], 403);
+        }
 
-        return response()->json(['message' => 'Email verified successfully.']);
+        if ($request->user()->hasVerifiedEmail()) {
+            return response()->json(['message' => 'Email already verified.'], 400);
+        }
+
+        $request->fulfill();
+
+        return response()->json(['message' => 'Email verified successfully.'], 200);
     }
 
-    /**
-     * Resend the email verification notification.
-     */
     public function resend(Request $request)
     {
         if ($request->user()->hasVerifiedEmail()) {
@@ -61,7 +87,7 @@ class VerificationController extends Controller
 
         $request->user()->sendEmailVerificationNotification();
 
-        return response()->json(['message' => 'Verification email resent successfully.']);
+        return response()->json(['message' => 'Verification email resent.'], 200);
     }
 }
 
