@@ -10,6 +10,8 @@ import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { ContactComponent } from './components/contact/contact.component';
 import { AuctionsComponent } from './components/auctions/auctions.component';
+import { CommentsComponent } from './components/comments/comments.component';
+
 
 
 
@@ -28,7 +30,8 @@ import { AuctionsComponent } from './components/auctions/auctions.component';
     HeaderComponent,
     FooterComponent,
     ContactComponent,
-    AuctionsComponent
+    AuctionsComponent,
+    CommentsComponent
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']  
