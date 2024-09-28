@@ -24,7 +24,7 @@ Route::apiResource('user', UserController::class);
 
 Route::apiresource('auction', AuctionController::class);
 Route::get('/active-auctions', [AuctionController::class, 'showActiveAuctions']);
-Route::get('/auction-status', [AuctionController::class, 'updateAuctionStatus']);
+// Route::get('/auction-status', [AuctionController::class, 'updateAuctionStatus']);
 Route::get('/auctions/search-by-category', [AuctionController::class, 'searchByCategory']);
 
 

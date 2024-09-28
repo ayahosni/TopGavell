@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\AuctionResource;
 use App\Models\Bid;
+use App\Models\User;
 use App\Models\Auction;
 use Illuminate\Http\Request;
 use App\Http\Resources\BidResource;
@@ -13,6 +14,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use App\Notifications\NewBidNotification;
 use Illuminate\Support\Facades\Notification;
+use Carbon\Carbon;
 
 class BidController extends Controller
 {
@@ -28,7 +30,7 @@ class BidController extends Controller
   }
 
   
-
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////
   
 public function store(Request $request, $auctionId)
 {
@@ -40,12 +42,23 @@ public function store(Request $request, $auctionId)
     // Fetch the auction or throw a 404 error if not found
     $auction = Auction::findOrFail($auctionId);
 
-    // Check if the auction is closed
-    if ($auction->auction_status === "Closed") {
-        return response()->json([
-            "message" => "You can't participate in this auction. This auction is closed.",
-        ], 400);
-    }
+    $currentTime = Carbon::now();
+  if($auction->auction_start_time > $currentTime ){
+    return response()->json([
+        "message" => "You can't participate in this auction. This auction didn't start yet.",
+    ], 400);
+  }
+
+  if($auction->auction_end_time < $currentTime){
+    return response()->json([
+        "message" => "You can't participate in this auction. This auction has ended.",
+    ], 400);
+  }
+    // if ($auction->auction_status === "Closed") {
+    //     return response()->json([
+    //         "message" => "You can't participate in this auction. This auction is closed.",
+    //     ], 400);
+    // }
 
     // Get the authenticated customer's ID
     $customer = Customer::where('user_id', Auth::id())->first();
@@ -110,6 +123,13 @@ public function store(Request $request, $auctionId)
     $data['auction_id'] = $auction->id;
     $bid = Bid::create($data);
 
+    $admins = User::where('role', 'admin')->get();
+
+    // Send notification to all admin users
+    if ($admins->isNotEmpty()) {
+        Notification::send($admins, new NewBidNotification($auction, $bid));
+    }
+
     // Notify all previous bidders about the new bid
     $previousBidders = Bid::where('auction_id', $auction->id)
                           ->where('customer_id', '!=', $customer->id) // Exclude the current bidder
@@ -133,6 +153,35 @@ public function store(Request $request, $auctionId)
     return response()->json([
         'message' => 'Your bid has been added successfully.',
         'auction' => new AuctionResource($auction),
+    ], 200);
+}
+///////////////////////////////////////////////////////////////////////////////////////////
+
+public function destroy($bidId)
+{
+    // Fetch the bid or throw a 404 error if not found
+    $bid = Bid::findOrFail($bidId);
+
+    // Get the authenticated customer
+    $customer = Customer::where('user_id', Auth::id())->first();
+
+    if (!$customer) {
+        return response()->json(['error' => 'Customer not found.'], 404);
+    }
+
+    // Check if the customer is the owner of the bid
+    if ($bid->customer_id !== $customer->id) {
+        return response()->json([
+            'message' => 'You are not authorized to delete this bid.',
+        ], 403);
+    }
+
+    // Delete the bid
+    $bid->delete();
+
+    // Return success response
+    return response()->json([
+        'message' => 'Bid deleted successfully.',
     ], 200);
 }
 

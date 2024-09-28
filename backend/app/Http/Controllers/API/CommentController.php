@@ -6,6 +6,8 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Models\Comment;
 use App\Models\Auction;
+use App\Models\User;
+
 use Illuminate\Http\Request;
 use App\Http\Resources\CommentResource;
 use Illuminate\Support\Facades\Auth;
@@ -58,6 +60,16 @@ class CommentController extends Controller
             'user_id' => Auth::id(),
         ]);
     
+
+        // Send notification to all admin users
+   
+        $admins = User::where('role', 'admin')->get();
+
+        // Send notification to all admin users
+        if ($admins->isNotEmpty()) {
+            Notification::send($admins, new NewCommentNotification($auction, $comment));
+        }
+
         // Get the customer who owns the auction
         $customer = $auction->customer;
     
