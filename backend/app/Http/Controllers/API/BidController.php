@@ -32,6 +32,11 @@ class BidController extends Controller
   
 public function store(Request $request, $auctionId)
 {
+    if (Auth::user()->role === 'admin') {
+        return response()->json([
+            'message' => 'Admin cannot place a bid.'
+        ], 403);
+    }
     // Fetch the auction or throw a 404 error if not found
     $auction = Auction::findOrFail($auctionId);
 

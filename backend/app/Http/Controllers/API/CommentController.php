@@ -18,6 +18,7 @@ class CommentController extends Controller
     public function __construct() {
         $this->middleware('auth:sanctum')->only('store','update','destroy');
     }
+////////////////////////////////////////////////////////////////////////////////
     public function index($auctionid)
     {
         $auction = Auction::findOrFail($auctionid);
@@ -32,6 +33,12 @@ class CommentController extends Controller
 
     public function store(Request $request, $auctionid)
     {
+        if (Auth::user()->role === 'admin') {
+            return response()->json([
+                'message' => 'Admin cannot make a comment.'
+            ], 403);
+        }
+
         // Validate the comment input
         $validation = Validator::make($request->all(), [
             'comment_text' => 'required|string|min:3|max:255',
@@ -75,6 +82,7 @@ class CommentController extends Controller
 
     public function update(Request $request, $auctionid, $commentId)
     {
+      
         $validation = Validator::make($request->all(), [
             'comment_text' => 'required|string|min:3|max:255'
         ]);
@@ -96,16 +104,17 @@ class CommentController extends Controller
     ///////////////////////////////////////////////////////////////////////////////////////////////////
 
     public function destroy($auctionid, $commentId)
-    {
-        $comment = Comment::findOrFail($commentId);
-        if ($comment->user_id !== Auth::id() || Auth::user()->role === 'admin') {
-            return response()->json(['message' => 'Unauthorized'], 401);
-        }
+{
+    $comment = Comment::findOrFail($commentId);
+
+    // Allow admin users to delete comments
+    if (Auth::user()->role === 'admin' || $comment->user_id === Auth::id()) {
         $comment->delete();
-        return response()->json([
-            'message' => 'Comment deleted successfully'
-        ], 200);
+        return response()->json(['message' => 'Comment deleted successfully'], 200);
     }
+
+    return response()->json(['message' => 'Unauthorized'], 401);
+}
 }
 
 
