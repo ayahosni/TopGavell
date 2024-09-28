@@ -19,29 +19,31 @@ route::post('/login', [UserController::class, 'login'])->name('login');
 route::get('/logout', [UserController::class, 'logout'])->name('logout')->middleware('auth:sanctum');
 
 Route::apiResource('user', UserController::class);
+
+
 Route::apiresource('auction', AuctionController::class);
+Route::get('/active-auctions', [AuctionController::class, 'showActiveAuctions']);
+Route::get('/auction-status', [AuctionController::class, 'updateAuctionStatus']);
+Route::get('/auctions/search-by-category', [AuctionController::class, 'searchByCategory']);
+
+
 Route::apiResource('{auction}/bids', BidController::class);
 Route::apiResource('{auction}/comments', CommentController::class);
 
-Route::get('/auction-status', [AuctionController::class, 'updateAuctionStatus']);
-
-
-
-    Route::middleware('auth:sanctum')->group(function () {
+Route::middleware('auth:sanctum')->group(function () {
         Route::get('/notifications', [NotificationController::class, 'index']);
     });
     
 
 
     
-    Route::post('/email/verification-notification', [VerificationController::class, 'resend'])
+Route::post('/email/verification-notification', [VerificationController::class, 'resend'])
         // ->middleware(['auth:api', 'throttle:6,1'])
         ->name('verification.send');
     
 
-        Route::middleware('auth:api')->group(function () {
-            // Protected routes that require token authentication
-            Route::get('/email/verify/{id}/{hash}', [VerificationController::class, 'verify'])
+Route::middleware('auth:api')->group(function () {
+Route::get('/email/verify/{id}/{hash}', [VerificationController::class, 'verify'])
                 // ->middleware('signed')
                 ->name('verification.verify');
         });

@@ -21,14 +21,37 @@ class AuctionController extends Controller
   {
     return AuctionResource::collection(Auction::all());
   }
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
   public function show(Auction $auction)
   {
     return new AuctionResource($auction);
   }
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  //show active auction
+
+  public function showActiveAuctions()
+  {
+      $currentTime = Carbon::now();
+  
+      // Query to get auctions where current time is within the auction start and end times
+      $activeAuctions = Auction::where('auction_start_time', '<=', $currentTime)
+                               ->where('auction_end_time', '>=', $currentTime)
+                               ->get();
+  
+      return AuctionResource::collection($activeAuctions);
+  }
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   public function store(Request $request)
   {
+    if (Auth::user()->role === 'admin') {
+      return response()->json([
+          'message' => 'Admin cannot create an auction.'
+      ], 403);
+  }
     $data = $request->all();
 
     $validation = Validator::make($request->all(), [
@@ -56,7 +79,7 @@ class AuctionController extends Controller
       $file = $request->file('item_media');
       $filename = time() . '.' . $file->getClientOriginalExtension();
       $file->move(public_path('uploads/item_media'), $filename);
-      $data['item_media'] = $filename; // حفظ اسم الصورة في قاعدة البيانات
+      $data['item_media'] = $filename; 
     }
 
     $auction = Auction::create($data);
@@ -66,9 +89,13 @@ class AuctionController extends Controller
       'auction' => new AuctionResource($auction)
     ],200);
   }
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   public function update(Request $request, Auction $auction)
   {
+    if (auth()->id() !== $auction->user_id) {
+      return response()->json(['message' => 'Unauthorized'], 403);
+  }
     $data = $request->all();
 
     $validation = Validator::make($request->all(), [
@@ -102,6 +129,7 @@ class AuctionController extends Controller
       'auction' => new AuctionResource($auction)
     ]);
   }
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   /**
    * Remove the specified resource from storage.
@@ -115,6 +143,7 @@ class AuctionController extends Controller
     ]);
   }
 
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 public function updateAuctionStatus()
 {
@@ -129,4 +158,25 @@ public function updateAuctionStatus()
         ->where('auction_status', 'Open')
         ->update(['auction_status' => 'Closed']);
 }
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+public function searchByCategory(Request $request)
+{
+    $categoryId = $request->input('category_id');
+
+    // Validate the category_id to ensure it's provided and exists in the categories table
+    $validation = Validator::make($request->all(), [
+        'category_id' => ['required', 'exists:categories,id'],
+    ]);
+
+    if ($validation->fails()) {
+        return response()->json($validation->messages(), 400);
+    }
+
+    // Fetch auctions that belong to the provided category
+    $auctions = Auction::where('category_id', $categoryId)->get();
+
+    // Return the auctions as a collection using the AuctionResource
+    return AuctionResource::collection($auctions);
+}
+
 }
