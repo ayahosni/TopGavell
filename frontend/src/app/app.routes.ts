@@ -1,23 +1,27 @@
+
+import { PaymentVerificationComponent } from './components/payment-verification/payment-verification.component';
 import { Routes } from '@angular/router';
 import { HomeComponent } from './components/home/home.component';
-import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { AuctionsComponent } from './components/auctions/auctions.component';
-import { BidsComponent } from './components/bids/bids.component';
 import { ContactComponent } from './components/contact/contact.component';
+import { BidComponent } from './components/bids/bids.component';
 import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
-import { CommentsComponent } from './components/comments/comments.component';
-
-
+import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { AddAuctionComponent } from './components/add-auction/add-auction.component';
+import { GuidesComponent } from './components/guides/guides.component';
 
 export const routes: Routes = [
     {path: '', component:HomeComponent},
-    {path: 'dashboard', component: DashboardComponent}, 
     {path: 'auctions', component:AuctionsComponent},
-    {path: 'auction/:id', component:CommentsComponent},
-    {path: 'bids', component: BidsComponent},
+    {path: 'bids', component: BidComponent},
     {path: 'contact', component: ContactComponent},
     {path: 'login', component: LoginComponent},
-    {path: 'register', component: RegisterComponent}
+    {path: 'register', component: RegisterComponent},
+    // { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+    { path: 'dashboard', component: DashboardComponent }, 
+    {path: 'addAuction', component: AddAuctionComponent},
+    {path: 'guides', component: GuidesComponent},
+    {path: 'payment-verification', component: PaymentVerificationComponent},
 
 ];

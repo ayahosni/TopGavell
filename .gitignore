@@ -2,3 +2,4 @@ docker/
 docker-compose.yml
 .env
 .env.example
+old.frontend/

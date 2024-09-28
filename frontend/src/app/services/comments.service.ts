@@ -7,8 +7,8 @@ import { ActivatedRoute } from '@angular/router';
   providedIn: 'root',
 })
 export class CommentsService {
-  private apiUrl = 'http://172.18.0.2:80/api'; // ===> Docker Url
-  // private apiUrl = 'http://localhost:8000/api'; 
+/*   private apiUrl = 'http://172.18.0.2:80/api'; // ===> Docker Url
+ */   private apiUrl = 'http://localhost:8000/api'; 
 
   constructor(private http: HttpClient){}
 

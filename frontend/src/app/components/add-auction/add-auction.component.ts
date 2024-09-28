@@ -1,24 +1,23 @@
 import { Component, OnInit } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router'; // RouterLink غير ضروري هنا
 import { CommonModule } from '@angular/common';
 import { AuctionService } from '../../services/auction.service';
 
 @Component({
-  selector: 'app-auctions',
+  selector: 'app-add-auction',
   standalone: true,
-  imports: [FormsModule, ReactiveFormsModule, CommonModule], // أزل RouterLink
-  templateUrl: './auctions.component.html',
-  styleUrls: ['./auctions.component.css']
+  templateUrl: './add-auction.component.html',  // بدون الحاجة إلى إضافة 'auctions' إذا كان الملف في نفس المجلد
+  styleUrls: ['./add-auction.component.css'],
+  imports: [FormsModule, ReactiveFormsModule, CommonModule]
 })
-export class AuctionsComponent implements OnInit {
+export class AddAuctionComponent implements OnInit {
   auctionForm: FormGroup;
   auctions: any[] = [];
   selectedAuctionId: number | null = null; // Property to track selected auction ID
 
-
-  constructor(private fb: FormBuilder, private auctionService: AuctionService, private router: Router) { // أضف Router هنا
+  constructor(private fb: FormBuilder, private auctionService: AuctionService, private router: Router) {
     this.auctionForm = this.fb.group({
       category_id: ['', Validators.required],
       item_name: ['', Validators.required],
@@ -40,14 +39,10 @@ export class AuctionsComponent implements OnInit {
     this.auctionService.getAllAuctions().subscribe({
       next: (data: any[]) => {
         this.auctions = data;  // تخزين البيانات في مصفوفة auctions
-    
-        console.log('Auctions:', typeof this.auctions);  // طباعة المزادات للتحقق
-      
+        console.log('Auctions:', this.auctions);  // طباعة المزادات للتحقق
       },
-
       error: (err) => {
         console.error('Error loading auctions:', err);
-        
       }
     });
   }
@@ -64,6 +59,7 @@ export class AuctionsComponent implements OnInit {
         return;
       }
 
+      // يتم تحديث قيمة item_media لتكون الملف نفسه بدلاً من بيانات الصورة
       this.auctionForm.patchValue({
         item_media: file
       });
@@ -81,10 +77,11 @@ export class AuctionsComponent implements OnInit {
       }
     });
 
+    // Call the service to create auction
     this.auctionService.createAuction(formData).subscribe({
       next: (data) => {
         console.log('Auction created:', data);
-        this.loadAuctions(); 
+        this.loadAuctions(); // إعادة تحميل المزادات بعد إنشاء مزايدة جديدة
         this.auctionForm.reset(); // إعادة تعيين النموذج بعد النجاح
       },
       error: (error) => {
@@ -104,4 +101,3 @@ export class AuctionsComponent implements OnInit {
     // Call your bid service here
   }
 }
-

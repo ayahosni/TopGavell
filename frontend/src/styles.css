@@ -83,11 +83,8 @@
   margin: 5px 0 15px;
   box-sizing: border-box;
 }
-
-
 input {
   outline: none;
-
 }
 /*   
 .btn:disabled {
@@ -166,4 +163,7 @@ padding: 10px;
   margin-top: 20px;
   font-size: 24px;
   color: var(--dark-color);
+}
+.gavel {
+  color: var(--accent-color);
 }
