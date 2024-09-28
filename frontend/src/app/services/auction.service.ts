@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
-import { map, catchError } from 'rxjs/operators';
+import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -9,68 +9,79 @@ import { map, catchError } from 'rxjs/operators';
 export class AuctionService {
   private apiUrl = 'http://localhost:8000/api/auction'; 
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
-  private getToken(): string | null { 
-    return localStorage.getItem('token');
+  private getAuthHeaders(): HttpHeaders | null {
+    const token = localStorage.getItem('auth_token');
+    if (token) {
+      return new HttpHeaders({
+        'Authorization': `Bearer ${token}`, 
+        'Content-Type': 'application/json',
+      });
+    }
+    return null; 
+  }
+
+
+  private handleError(error: HttpErrorResponse) {
+    let errorMessage = 'An error occurred.';
+    if (error.error instanceof ErrorEvent) {
+
+      errorMessage = `Error: ${error.error.message}`;
+    } else {
+
+      if (error.status === 401) {
+        errorMessage = 'Authentication error: Token is missing or invalid. Please log in again.';
+      } else {
+        errorMessage = `Error code: ${error.status}, Message: ${error.message}`;
+      }
+    }
+    return throwError(errorMessage);
   }
 
   createAuction(auctionData: any): Observable<any> {
-    const token = this.getToken();
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`,
-    });
-    return this.http.post(this.apiUrl, auctionData, { headers }).pipe(
-      catchError(err => {
-        console.error('Error creating auction:', err);
-        return of(null);
-      })
-    );
+    const headers = this.getAuthHeaders();
+    if (!headers) {
+      return throwError('Token is missing. Please log in.');
+    }
+    return this.http.post(this.apiUrl, auctionData, { headers })
+      .pipe(catchError(this.handleError)); 
   }
 
   getAllAuctions(): Observable<any[]> {
-    return this.http.get<any>(this.apiUrl).pipe(
-      map((response: any) => {
-        console.log('API Response:', response); 
-        return Array.isArray(response.data) ? response.data : [];
-      }),
-      catchError(err => {
-        console.error('Error fetching auctions:', err);
-        return of([]);
-      })
-    );
+    const headers = this.getAuthHeaders();
+    if (!headers) {
+      return throwError('Token is missing. Please log in.');
+    }
+    return this.http.get<any[]>(this.apiUrl, { headers })
+      .pipe(catchError(this.handleError)); 
   }
-  
-  // جلب مزايدة معينة بواسطة ID
+
+
   getAuctionById(id: string): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/${id}`);
+    const headers = this.getAuthHeaders();
+    if (!headers) {
+      return throwError('Token is missing. Please log in.');
+    }
+    return this.http.get<any>(`${this.apiUrl}/${id}`, { headers })
+      .pipe(catchError(this.handleError)); 
   }
 
-  // تحديث مزايدة
   updateAuction(id: string, auctionData: any): Observable<any> {
-    const token = this.getToken();
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`,
-    });
-    return this.http.put(`${this.apiUrl}/${id}`, auctionData, { headers }).pipe(
-      catchError(err => {
-        console.error('Error updating auction:', err);
-        return of(null);
-      })
-    );
+    const headers = this.getAuthHeaders();
+    if (!headers) {
+      return throwError('Token is missing. Please log in.');
+    }
+    return this.http.put(`${this.apiUrl}/${id}`, auctionData, { headers })
+      .pipe(catchError(this.handleError)); 
   }
 
-  // حذف مزايدة
   deleteAuction(id: string): Observable<any> {
-    const token = this.getToken();
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`,
-    });
-    return this.http.delete(`${this.apiUrl}/${id}`, { headers }).pipe(
-      catchError(err => {
-        console.error('Error deleting auction:', err);
-        return of(null);
-      })
-    );
+    const headers = this.getAuthHeaders();
+    if (!headers) {
+      return throwError('Token is missing. Please log in.');
+    }
+    return this.http.delete(`${this.apiUrl}/${id}`, { headers })
+      .pipe(catchError(this.handleError));
   }
 }

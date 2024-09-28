@@ -1,0 +1,79 @@
+<div class="container auction-details">
+  
+    <div class="auction-content">
+      <!-- Left Side: Item Image Gallery -->
+      <div class="image-gallery">
+        <div class="main-image">
+          <img [src]="currentImage" alt="Item Image">
+        </div>
+  
+        <div class="thumbnail-container">
+          <img *ngFor="let image of images" [src]="image" (click)="changeImage(image)" class="thumbnail">
+        </div>
+      </div>
+  
+      <!-- Right Side: Item Details and Bidding -->
+      <div class="item-details">
+        <h3>1 OZ. Fine Silver .999 Silver ~ One Dollar With Stand (den)</h3>
+        <p><strong>{{ auctionTime }}</strong></p>
+        <p class="current-bid">Current Bid: $25.00</p>
+        <p>10 Bids</p>
+        <p>Item #10828</p>
+  
+        <button routerLink="/payment-verification" class="btn bid-button">Bid Now</button>
+  
+        <div class="shipping-info">
+          <p><strong>Shipping Available</strong></p>
+          <p>Everett, MA 02149</p>
+        </div>
+  
+        <div class="pickup-info">
+          <p><strong>When to Pickup</strong></p>
+          <ul>
+            <li>Sunday, 9/29, 11:00 am - 3:00 pm EDT</li>
+            <li>Monday, 9/30, 10:00 am - 12:00 pm EDT</li>
+          </ul>
+        </div>
+        <div class="ask-btn">
+            <button (click)="openPopup()">Ask a Question</button>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Item Description -->
+    <div class="item-description">
+      <h4>Item Description</h4>
+      <p>
+        This auction features a beautifully detailed bird figurine, <br> showcasing intricate feather patterns and lifelike craftsmanship. <br> Its graceful design makes it a <br> perfect decorative piece for collectors and nature lovers alike.
+      </p>
+    </div>
+  </div>
+
+  <!-- Ask a Question Popup -->
+  <div *ngIf="isPopupOpen" id="askQuestionPopup" class="popup">
+    <div class="popup-content">
+      <span (click)="closePopup()" class="close">&times;</span>
+      
+      <h4>Item: Floral Art In Bamboo-Style Frame</h4>
+      
+      <form>
+        <label for="name">Your Name</label>
+        <input type="text" id="name" name="name" [(ngModel)]="formData.name" value="Nour Ahmed">
+        
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" [(ngModel)]="formData.email" value="norabotaleb25@gmail.com">
+        
+        <label for="phone">Phone</label>
+        <input type="text" id="phone" name="phone" [(ngModel)]="formData.phone" value="(100) 947-6744">
+        
+        <label for="subject">Subject</label>
+        <input type="text" id="subject" name="subject" [(ngModel)]="formData.subject" value="Floral Art In Bamboo-Style Frame">
+        
+        <label for="message">Message</label>
+        <textarea id="message" name="message" rows="4" [(ngModel)]="formData.message" placeholder="Type your message..."></textarea>
+        
+        <button type="submit" class="btn">Submit</button>
+      </form>
+    </div>
+  </div>
+  

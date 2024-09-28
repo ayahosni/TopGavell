@@ -1,0 +1,55 @@
+
+<div class="hero-title">
+    <h2 class=" container form-title">Thank you for participating in <span class="gavel">T</span>OPGAVEL's online auctions<br> Join the Auction Revolution, Showcase Your Exceptional Items and Connect with Enthusiastic Bidders</h2> 
+
+</div>
+<div class="container add-auction-form">
+
+  <form>
+    <label for="item_name">Item Name</label>
+    <input id="item_name" formControlName="item_name" type="text" required>
+    
+    <label for="item_description">Item Description</label>
+    <textarea id="item_description" formControlName="item_description" required></textarea>
+    
+    <label for="starting_bid">Starting Bid</label>
+    <input id="starting_bid" formControlName="starting_bid" type="number" required>
+    
+    <label for="bid_increment">Bid Increment</label>
+    <input id="bid_increment" formControlName="bid_increment" type="number" required>
+    
+    <label for="auction_start_time">Auction Start Time</label>
+    <input id="auction_start_time" formControlName="auction_start_time" type="datetime-local" required>
+    
+    <label for="auction_end_time">Auction End Time</label>
+    <input id="auction_end_time" formControlName="auction_end_time" type="datetime-local" required>
+    
+    <label for="item_media">Item Media</label>
+    <input id="item_media" type="file">
+    
+    <label for="item_country">Country</label>
+    <input id="item_country" formControlName="item_country" type="text" required>
+     <!-- Conditions Section -->
+     <div class="conditions">
+        <h2>Terms and Conditions</h2>
+         <ul>
+          <h3>By proceeding with the creation of an auction on our platform, you agree to the following terms and conditions</h3>
+          <li>You must be at least 18 years of age to create an auction on this platform. By submitting your auction for approval, you confirm that you meet this age requirement and acknowledge that we may request additional documentation to verify your age if necessary.</li>
+          <li>All items listed for auction must fully comply with local, national, and international laws. </li>
+          <li>You are required to provide complete and accurate information about the item being auctioned, including its name, description, condition, origin, and any relevant history or documentation.</li>
+          <li>As the seller, you are responsible for ensuring the item's safe handling and shipment to the winning bidder upon the auction’s completion.</li>
+          <li>Once you have submitted your auction, it will undergo a review by our team to ensure that it complies with our guidelines and legal requirements.</li>
+          <label>
+            <input  type="checkbox" required> <p class="agree-conditions"> I agree to the terms and conditions</p>
+          </label>
+        </ul>
+      </div>
+    
+    <button type="submit" routerLink="/auctions">Create Auction</button>
+  </form>
+</div>
+
+
+  
+
+  
