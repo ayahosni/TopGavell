@@ -16,11 +16,11 @@ return new class extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->string('password');
-            $table->string('api_token', 80)->unique()->nullable();
+            $table->string('OTP')->unique()->nullable();
             $table->rememberToken();
             $table->enum('role', ['admin', 'customer', 'moderator'])->default('customer');
             $table->string('profile_picture')->nullable();
-            $table->timestamp('email_verified_at')->nullable();
+            $table->boolean('is_email_verified')->default(false);
             $table->timestamps();
         });
 

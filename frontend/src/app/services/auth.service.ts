@@ -56,9 +56,4 @@ export class AuthService {
   logOut(): void {
     localStorage.removeItem('user');
   }
-
-  verifyEmail(id: string, hash: string): Observable<any> {
-    const url = `${this.Url}/email/verify/${id}/${hash}`;
-    return this.http.get(url);
-  }
 }

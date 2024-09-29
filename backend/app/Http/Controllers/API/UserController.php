@@ -4,15 +4,14 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CustomerRescource;
+use App\Mail\OtpMail;
 use App\Models\Customer;
 use App\Models\User;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\ValidationException;
-use Illuminate\Auth\Events\Registered;
-use Illuminate\Auth\Events\Verified;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 
 class UserController extends Controller
 {
@@ -39,19 +38,45 @@ class UserController extends Controller
         if ($validation->fails()) {
             return response()->json($validation->messages(), 400);
         }
-
+        $otp = random_int(100000, 999999); // Generate a 6-digit OTP
         $data['password'] = Hash::make($data['password']);
+        $data['OTP'] = $otp;
         $user = User::create($data);
         $data['user_id'] = $user->id;
         $cust = Customer::create($data);
 
-        $user->sendEmailVerificationNotification();
+        // $user->sendEmailVerificationNotification();
+        Mail::to($user->email)->send(new OtpMail($otp));
 
         return response()->json([
             'message' => 'Registered successfully! Please check your email to verify your account.',
             'user' => new CustomerRescource($cust),
             'token' => $user->createToken('auth_token')->plainTextToken,
         ], 200);
+    }
+
+    public function email_verify(Request $request)
+    {
+        $data = $request->all();
+        $validation = Validator::make($request->all(), [
+            'email' => 'required|email',
+            'otp' => 'required|integer',
+        ]);
+        if ($validation->fails()) {
+            return response()->json($validation->messages(), 400);
+        }
+
+        $user = User::where('email', $request->email)->first();
+        $otp = $data['otp'];
+        if ($user && $user->OTP == $otp) {
+            $user->OTP = null;
+            $user->is_email_verified = true;
+            $user->save();
+            return response()->json(['message' => 'Email verified successfully.']);
+        }
+        return response()->json([
+            'message' => 'Invalid OTP.',
+        ], 400);
     }
 
     #######################################################################################################    
@@ -119,20 +144,4 @@ class UserController extends Controller
     {
         //
     }
-
-    public function verifyEmail($token)
-    {
-        $user = User::where('api_token', $token)->first();
-    
-        if (!$user) {
-            return response()->json(['message' => 'Invalid verification token'], 400);
-        }
-    
-        $user->email_verified_at = now();
-        $user->email_verification_token = null;  // Clear the token after verification
-        $user->save();
-    
-        return response()->json(['message' => 'Email verified successfully'], 200);
-    }
-    
 }

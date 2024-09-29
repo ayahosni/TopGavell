@@ -7,16 +7,17 @@ use App\Http\Controllers\API\BidController;
 use App\Http\Controllers\API\CommentController;
 use App\Http\Controllers\API\NotificationController;
 use App\Http\Controllers\API\PaymentController;
+use App\Http\Controllers\OTPController;
 use App\Http\Controllers\Auth\VerificationController;
 
 
 Route::post('/register', [UserController::class, 'register'])->name('register');
+Route::post('email_verify', [UserController::class,'email_verify'])->name('email_verify');
 route::get('/login', [UserController::class, 'notLoggedIn'])->name('login');
 route::post('/login', [UserController::class, 'login'])->name('login');
 route::get('/logout', [UserController::class, 'logout'])->name('logout')->middleware('auth:sanctum');
 
 Route::apiResource('user', UserController::class);
-// Route::get('email_verify/{user}', UserController::class,'email_verify')->name('email_verify');
 
 
 Route::apiresource('auction', AuctionController::class);
@@ -32,15 +33,19 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/notifications', [NotificationController::class, 'index']);
 });
 
-Route::post('/email/verification-notification', [VerificationController::class, 'resend'])
-        // ->middleware(['auth:api', 'throttle:6,1'])
-        ->name('verification.send');
+// Route::post('/email/verification-notification', [VerificationController::class, 'resend'])
+//         // ->middleware(['auth:api', 'throttle:6,1'])
+//         ->name('verification.send');
 
-Route::middleware('auth:api')->group(function () {
-        Route::get('/email/verify/{id}/{hash}', [VerificationController::class, 'verify'])
-                // ->middleware('signed')
-                ->name('verification.verify');
-});
+// Route::middleware('auth:api')->group(function () {
+//         Route::get('/email/verify/{id}/{hash}', [VerificationController::class, 'verify'])
+//                 // ->middleware('signed')
+//                 ->name('verification.verify');
+// });
+
+
+// Route::post('send-otp', [OTPController::class, 'sendOtp']);
+// Route::post('verify-otp', [OTPController::class, 'verifyOtp']);
 
 
 
