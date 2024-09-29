@@ -1,0 +1,9 @@
+
+<!-- <h1 style="padding:100px;">Verification link have been sent to <span style="color: blue;"> {{ userData.email }} </span> Please verify your email address to continue</h1> -->
+<div class="container mt-4">
+  <div class="alert"
+  [ngClass]="verificationStatus === 'Email verified successfully!' ? 'alert-success' : 'alert-danger'"
+  role="alert">
+    {{ verificationStatus }}
+  </div>
+</div>

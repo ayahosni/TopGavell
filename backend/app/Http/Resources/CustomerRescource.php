@@ -18,6 +18,7 @@ class CustomerRescource extends JsonResource
             "id" => $this->user->id,
             "name" => $this->user->name,
             "email" => $this->user->email,
+            "email_verified_at" => $this->user->email_verified_at,
             'phone_number' => $this->phone_number,
             'address' => $this->address
         ];

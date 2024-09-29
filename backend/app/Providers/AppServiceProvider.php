@@ -27,7 +27,7 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(Auction::class, AuctionPolicy::class);
 
 
-    Auction::observe(AuctionObserver::class);
+    // Auction::observe(AuctionObserver::class);
 
 
     }

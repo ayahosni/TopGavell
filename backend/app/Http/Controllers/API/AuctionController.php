@@ -13,19 +13,20 @@ use Carbon\Carbon;
 use App\Models\User;
 
 use App\Notifications\NewAuctionNotification;
-use Illuminate\Support\Facades\Notification; 
+use Illuminate\Support\Facades\Notification;
 
 class AuctionController extends Controller
 {
-  public function __construct() {
-    $this->middleware('auth:sanctum')->only('store','update','destroy');
+  public function __construct()
+  {
+    $this->middleware('auth:sanctum')->only('store', 'update', 'destroy');
   }
 
   public function index()
   {
     return AuctionResource::collection(Auction::all());
   }
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
   public function show(Auction $auction)
@@ -38,41 +39,41 @@ class AuctionController extends Controller
 
   public function showActiveAuctions()
   {
-      $currentTime = Carbon::now();
-  
-      // Query to get auctions where current time is within the auction start and end times
-      $activeAuctions = Auction::where('auction_start_time', '<=', $currentTime)
-                               ->where('auction_end_time', '>=', $currentTime)
-                               ->get();
-  
-      return AuctionResource::collection($activeAuctions);
-  }
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////
+    $currentTime = Carbon::now();
 
-public function store(Request $request)
-{
+    // Query to get auctions where current time is within the auction start and end times
+    $activeAuctions = Auction::where('auction_start_time', '<=', $currentTime)
+      ->where('auction_end_time', '>=', $currentTime)
+      ->get();
+
+    return AuctionResource::collection($activeAuctions);
+  }
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  public function store(Request $request)
+  {
     if (Auth::user()->role === 'admin') {
-        return response()->json([
-            'message' => 'Admin cannot create an auction.'
-        ], 403);
+      return response()->json([
+        'message' => 'Admin cannot create an auction.'
+      ], 403);
     }
 
     $data = $request->all();
 
     $validation = Validator::make($request->all(), [
-        'category_id' => ['required', 'exists:categories,id'],
-        'item_name' => ['required', 'string', 'min:4', 'max:75'],
-        'item_description' => ['required', 'string', 'min:15', 'max:255'],
-        'starting_bid' => ['required', 'integer'],
-        'bid_increment' => ['required', 'integer'],
-        'auction_start_time' => ['required', 'date', 'after:now'],
-        'auction_end_time' => ['required', 'date', 'after:auction_start_time'],
-        'item_media' => ['nullable', 'image'],
-        'item_country' => ['required', 'string'],
+      'category_id' => ['required', 'exists:categories,id'],
+      'item_name' => ['required', 'string', 'min:4', 'max:75'],
+      'item_description' => ['required', 'string', 'min:15', 'max:255'],
+      'starting_bid' => ['required', 'integer'],
+      'bid_increment' => ['required', 'integer'],
+      'auction_start_time' => ['required', 'date', 'after:now'],
+      'auction_end_time' => ['required', 'date', 'after:auction_start_time'],
+      'item_media' => ['nullable', 'image'],
+      'item_country' => ['required', 'string'],
     ]);
 
     if ($validation->fails()) {
-        return response()->json($validation->messages(), 400);
+      return response()->json($validation->messages(), 400);
     }
 
     $customer = Customer::where('user_id', Auth::id())->first();
@@ -81,10 +82,10 @@ public function store(Request $request)
     $data['item_media'] = null;
 
     if ($request->hasFile('item_media')) {
-        $file = $request->file('item_media');
-        $filename = time() . '.' . $file->getClientOriginalExtension();
-        $file->move(public_path('uploads/item_media'), $filename);
-        $data['item_media'] = $filename; 
+      $file = $request->file('item_media');
+      $filename = time() . '.' . $file->getClientOriginalExtension();
+      $file->move(public_path('uploads/item_media'), $filename);
+      $data['item_media'] = $filename;
     }
 
     $auction = Auction::create($data);
@@ -94,30 +95,30 @@ public function store(Request $request)
 
     // Send notification to all admin users
     if ($admins->isNotEmpty()) {
-        Notification::send($admins, new NewAuctionNotification($auction));
+      Notification::send($admins, new NewAuctionNotification($auction));
     }
 
     return response()->json([
-        'message' => 'Auction Created successfully',
-        'auction' => new AuctionResource($auction)
+      'message' => 'Auction Created successfully',
+      'auction' => new AuctionResource($auction)
     ], 200);
-}
+  }
 
   /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   public function update(Request $request, Auction $auction)
   {
-    if (auth()->id() !== $auction->user_id) {
+    if (Auth::id() !== $auction->user_id) {
       return response()->json(['message' => 'Unauthorized'], 403);
-  }
+    }
     $data = $request->all();
 
     $validation = Validator::make($request->all(), [
       'category_id' => ['required', 'exists:categories,id'],
       'item_name' => ['required', 'string', 'min:4', 'max:75'],
       'item_description' => ['required', 'string', 'min:15', 'max:255'],
-      'starting_bid' => ['required','decimal:10,2'],
-      'bid_increment' => ['required','decimal:10,2'],
+      'starting_bid' => ['required', 'decimal:10,2'],
+      'bid_increment' => ['required', 'decimal:10,2'],
       'starting_bid' => ['required', 'integer'],
       'bid_increment' => ['required', 'integer'],
       'auction_start_time' => ['required', 'date'],
@@ -150,50 +151,50 @@ public function store(Request $request)
    */
   public function destroy(Auction $auction)
   {
-    
+
     $user = Auth::user();
 
     // Check if the user is either the owner of the auction or an admin
     if ($user->role === 'admin' || $user->id === $auction->customer->user_id) {
-        // Proceed to delete the auction
-        $auction->delete();
+      // Proceed to delete the auction
+      $auction->delete();
 
-        return response()->json([
-            'message' => 'Auction deleted successfully'
-        ], 200);
+      return response()->json([
+        'message' => 'Auction deleted successfully'
+      ], 200);
     }
     return response()->json([
       'message' => 'Unauthorized.'
-  ], 403);
+    ], 403);
   }
 
   /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// public function updateAuctionStatus()
-// {
-//     $currentTime = Carbon::now();
+  // public function updateAuctionStatus()
+  // {
+  //     $currentTime = Carbon::now();
 
-//     Auction::where('auction_start_time', '<=', $currentTime)
-//         ->where('auction_end_time', '>', $currentTime)
-//         ->where('auction_status', 'Closed')
-//         ->update(['auction_status' => 'Open']);
+  //     Auction::where('auction_start_time', '<=', $currentTime)
+  //         ->where('auction_end_time', '>', $currentTime)
+  //         ->where('auction_status', 'Closed')
+  //         ->update(['auction_status' => 'Open']);
 
-//     Auction::where('auction_end_time', '<=', $currentTime)
-//         ->where('auction_status', 'Open')
-//         ->update(['auction_status' => 'Closed']);
-// }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-public function searchByCategory(Request $request)
-{
+  //     Auction::where('auction_end_time', '<=', $currentTime)
+  //         ->where('auction_status', 'Open')
+  //         ->update(['auction_status' => 'Closed']);
+  // }
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  public function searchByCategory(Request $request)
+  {
     $categoryId = $request->input('category_id');
 
     // Validate the category_id to ensure it's provided and exists in the categories table
     $validation = Validator::make($request->all(), [
-        'category_id' => ['required', 'exists:categories,id'],
+      'category_id' => ['required', 'exists:categories,id'],
     ]);
 
     if ($validation->fails()) {
-        return response()->json($validation->messages(), 400);
+      return response()->json($validation->messages(), 400);
     }
 
     // Fetch auctions that belong to the provided category
@@ -201,6 +202,5 @@ public function searchByCategory(Request $request)
 
     // Return the auctions as a collection using the AuctionResource
     return AuctionResource::collection($auctions);
-}
-
+  }
 }

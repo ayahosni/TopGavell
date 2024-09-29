@@ -45,19 +45,13 @@ class UserController extends Controller
         $data['user_id'] = $user->id;
         $cust = Customer::create($data);
 
-        // event(new Registered($user));
         $user->sendEmailVerificationNotification();
 
-        // Respond to the client
         return response()->json([
-            'message' => 'Registered successfully! Please check your email to verify your account.'
-        ], 201);
-    
-        // return response()->json([
-        //     'message' => 'User successfully registered',
-        //     'user' => new CustomerRescource($cust),
-        //     'token' => $user->createToken('auth_token')->plainTextToken,
-        // ], 200);
+            'message' => 'Registered successfully! Please check your email to verify your account.',
+            'user' => new CustomerRescource($cust),
+            'token' => $user->createToken('auth_token')->plainTextToken,
+        ], 200);
     }
 
     #######################################################################################################    
@@ -77,7 +71,7 @@ class UserController extends Controller
         }
         $user = User::where('email', $request->email)->first();
         if (! $user || ! Hash::check($request->password, $user->password)) {
-            return response()->json(['message' => 'Invalid credentials'], 400);
+            return response()->json(['message' => 'Invalid Username or Password'], 400);
         }
         $cust = Customer::where('user_id', $user->id)->first();
         return response()->json([
@@ -125,4 +119,20 @@ class UserController extends Controller
     {
         //
     }
+
+    public function verifyEmail($token)
+    {
+        $user = User::where('api_token', $token)->first();
+    
+        if (!$user) {
+            return response()->json(['message' => 'Invalid verification token'], 400);
+        }
+    
+        $user->email_verified_at = now();
+        $user->email_verification_token = null;  // Clear the token after verification
+        $user->save();
+    
+        return response()->json(['message' => 'Email verified successfully'], 200);
+    }
+    
 }

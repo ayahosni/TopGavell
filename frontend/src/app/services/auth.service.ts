@@ -1,51 +1,64 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators'; 
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  // private Url = 'http://172.18.0.5:80/api'; // ===> Docker Url
-  private Url = 'http://localhost:8000/api'; // ===> Localhost Url
+  // private Url = 'http://172.18.0.5:80/api'; // ===> Docker URL
+  private Url = 'http://localhost:8000/api'; // ===> Localhost URL
 
   constructor(private http: HttpClient) { }
 
   register(userData: any): Observable<any> {
-    return this.http.post(`${this.Url}/register`, userData);
-  }
-
-  login(userData: any): Observable<any> {
-    return this.http.post(`${this.Url}/login`, userData).pipe(
+    return this.http.post(`${this.Url}/register`, userData).pipe(
       map((response: any) => {
         if (response && response.token) {
-          localStorage.setItem('userToken', response.token);
+          const userData = {
+            token: response.token,
+            email_verified_at : response.user.email_verified_at,
+            email: response.user.email,
+            name: response.user.name
+          };
+          localStorage.setItem('user', JSON.stringify(userData));
         }
         return response;
       })
     );
   }
 
-  createAuction(auctionData: any): Observable<any> {
-    const headers = this.getAuthHeaders(); 
-    return this.http.post(`${this.Url}/auction`, auctionData, { headers });
+
+  logIn(userData: any): Observable<any> {
+    return this.http.post(`${this.Url}/login`, userData).pipe(
+      map((response: any) => {
+        if (response && response.token) {
+          const userData = {
+            token: response.token,
+            email_verified_at : response.user.email_verified_at,
+            email: response.user.email,
+            name: response.user.name
+          };
+          localStorage.setItem('user', JSON.stringify(userData));
+        }
+        return response;
+      })
+    );
   }
 
-  getAllData(): Observable<any> {
-    return this.http.get(`${this.Url}/auction`);
+  isLoggedIn(): boolean {
+    const user = localStorage.getItem('user');
+    return user !== null;
+  }
+  
+  logOut(): void {
+    localStorage.removeItem('user');
   }
 
-  logout(): void {
-    localStorage.removeItem('userToken'); 
-  }
-
-  private getAuthHeaders(): HttpHeaders {
-    const token = localStorage.getItem('userToken'); 
-    return new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}` 
-    });
+  verifyEmail(id: string, hash: string): Observable<any> {
+    const url = `${this.Url}/email/verify/${id}/${hash}`;
+    return this.http.get(url);
   }
 }

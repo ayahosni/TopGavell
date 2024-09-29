@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\VerifiesEmails;
 use App\Http\Requests\EmailVerificationRequest;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Request;
 
 class VerificationController extends Controller
 {
@@ -39,7 +42,7 @@ class VerificationController extends Controller
         $this->middleware('signed')->only('verify');
         $this->middleware('throttle:6,1')->only('verify', 'resend');
     }
-  
+
     /**
      * Mark the authenticated user's email address as verified.
      */
@@ -64,19 +67,34 @@ class VerificationController extends Controller
     //     return response()->json(['message' => 'Verification email resent successfully.']);
     // }
 
-    public function verify(EmailVerificationRequest $request)
+    // public function verify(EmailVerificationRequest $request)
+    // {
+    //     if (!$request->validateHash()) {
+    //         return response()->json(['message' => 'Invalid verification link.'], 403);
+    //     }
+
+    //     if ($request->user()->hasVerifiedEmail()) {
+    //         return response()->json(['message' => 'Email already verified.'], 400);
+    //     }
+
+    //     $request->fulfill();
+
+    //     return response()->json(['message' => 'Email verified successfully.'], 200);
+    // }
+    public function verify($id, $hash)
     {
-        if (!$request->validateHash()) {
-            return response()->json(['message' => 'Invalid verification link.'], 403);
+        // Find the user by ID
+        $user = User::findOrFail($id);
+
+        // Check if the verification hash matches
+        if (!Hash::check($user->email, $hash)) {
+            return response()->json(['message' => 'Invalid verification link.'], 400);
         }
 
-        if ($request->user()->hasVerifiedEmail()) {
-            return response()->json(['message' => 'Email already verified.'], 400);
-        }
+        // Mark the user's email as verified
+        $user->markEmailAsVerified();
 
-        $request->fulfill();
-
-        return response()->json(['message' => 'Email verified successfully.'], 200);
+        return response()->json(['message' => 'Email verified successfully.']);
     }
 
     public function resend(Request $request)
@@ -90,5 +108,3 @@ class VerificationController extends Controller
         return response()->json(['message' => 'Verification email resent.'], 200);
     }
 }
-
-

@@ -2,23 +2,38 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { provideHttpClient } from '@angular/common/http';
 import { Router, RouterLink, RouterLinkActive, NavigationEnd, RouterOutlet } from '@angular/router';
-import { HeaderComponent } from './header/header.component';
-import { FooterComponent } from './footer/footer.component';
-import { BidsComponent } from './bids/bids.component';
-import { ContactComponent } from './contact/contact.component';
-import { HomeComponent } from './home/home.component';
-import { DashboardComponent } from './dashboard/dashboard.component';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';  
+import { HeaderComponent } from './components/header/header.component';
+import { FooterComponent } from './components/footer/footer.component';
+import { BidsComponent } from './components/bids/bids.component';
+import { ContactComponent } from './components/contact/contact.component';
+import { HomeComponent } from './components/home/home.component';
+
+import { AuctionsComponent } from './components/auctions/auctions.component'; 
+import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { FormsModule } from '@angular/forms';  
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { GuidesComponent } from './guides/guides.component';
+import { GuidesComponent } from './components/guides/guides.component';
+import { EmailVerficationComponent } from './components/email-verfication/email-verfication.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [
-
-    RouterOutlet, CommonModule, RouterLink, RouterLinkActive, HeaderComponent,
-    FooterComponent, FontAwesomeModule, BidsComponent, ContactComponent, HomeComponent, FormsModule,  GuidesComponent
+    CommonModule,
+    RouterOutlet,
+    RouterLink,
+    RouterLinkActive,
+    HeaderComponent,
+    FooterComponent,
+    FontAwesomeModule,
+    BidsComponent,
+    ContactComponent,
+    HomeComponent,
+    AuctionsComponent,
+    FormsModule,
+    GuidesComponent,
+    DashboardComponent,
+    EmailVerficationComponent
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']  

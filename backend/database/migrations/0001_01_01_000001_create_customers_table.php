@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->string('phone_number');
             $table->text('address');
-            $table->timestamp('email_verified_at')->nullable();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->enum('document_type', ['Passport', 'ID', 'Driving License'])->nullable();
             $table->string('document_file')->nullable();
