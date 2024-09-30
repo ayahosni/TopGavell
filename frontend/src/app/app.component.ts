@@ -7,7 +7,6 @@ import { FooterComponent } from './components/footer/footer.component';
 import { BidsComponent } from './components/bids/bids.component';
 import { ContactComponent } from './components/contact/contact.component';
 import { HomeComponent } from './components/home/home.component';
-
 import { AuctionsComponent } from './components/auctions/auctions.component'; 
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { FormsModule } from '@angular/forms';  

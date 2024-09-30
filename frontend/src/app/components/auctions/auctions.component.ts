@@ -14,6 +14,7 @@ import { AuctionService } from '../../services/auction.service';
 })
 export class AuctionsComponent implements OnInit {
   auctionForm: FormGroup;
+
   auctions: any[] = [];
   selectedAuctionId: number | null = null; // Property to track selected auction ID
 
@@ -32,24 +33,28 @@ export class AuctionsComponent implements OnInit {
     });
   }
 
+  
   ngOnInit(): void {
     this.loadAuctions();
   }
 
   loadAuctions() {
     this.auctionService.getAllAuctions().subscribe({
-      next: (data: any[]) => {
-        this.auctions = data;  
-        console.log('Auctions:',this.auctions);
+      next: (data) => {
+        if (Array.isArray(data)) {
+          this.auctions = data.filter(auction => auction.auction_status === 'open');
+        } else {
+          console.error('Expected an array but got:', data);
+          this.auctions = []; 
+        }
       },
-
-      error: (err) => {
-        console.error('Error loading auctions:', err);
-        
+      error: (error) => {
+        console.error('Error fetching auctions:', error);
+        this.auctions = [];
       }
     });
+    
   }
-
   onFileChange(event: any) {
     const file = event.target.files[0];
     if (file) {
@@ -61,17 +66,20 @@ export class AuctionsComponent implements OnInit {
         });
         return;
       }
-
+      
+      // يتم تحديث قيمة item_media لتكون الملف نفسه بدلاً من بيانات الصورة
       this.auctionForm.patchValue({
         item_media: file
       });
     }
   }
-
+  
   onSubmit() {
     const formData = new FormData();
 
+    // Append form values to FormData
     Object.keys(this.auctionForm.value).forEach(key => {
+      // إذا كانت القيمة هي ملف، أضفها مباشرة
       if (key === 'item_media') {
         formData.append(key, this.auctionForm.get('item_media')?.value);
       } else {
@@ -79,27 +87,15 @@ export class AuctionsComponent implements OnInit {
       }
     });
 
-    this.auctionService.createAuction(formData).subscribe({
-      next: (data) => {
-        console.log('Auction created:', data);
-        this.loadAuctions(); 
-        this.auctionForm.reset(); // إعادة تعيين النموذج بعد النجاح
-      },
-      error: (error) => {
-        console.error(error);
-      }
+    // Call the service to create auction
+    this.auctionService.createAuction(formData).subscribe(response => {
+      this.loadAuctions();
+      this.auctionForm.reset();
     });
   }
-
-  openBidForm(auctionId: number): void {
-    // Toggle selected auction ID
-    this.selectedAuctionId = this.selectedAuctionId === auctionId ? null : auctionId;
-  }
-
-  onBid(auctionId: number) {
-    // Handle the logic to place a bid here
-    console.log(`Placing a bid on auction ID: ${auctionId}`);
-    // Call your bid service here
-  }
 }
+
+
+
+
 

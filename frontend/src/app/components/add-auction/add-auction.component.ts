@@ -1,23 +1,22 @@
 import { Component, OnInit } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router'; // RouterLink غير ضروري هنا
+import { Router, RouterLink } from '@angular/router';
+import { AuctionService } from '../../services/auction.service'; 
 import { CommonModule } from '@angular/common';
-import { AuctionService } from '../../services/auction.service';
 
 @Component({
   selector: 'app-add-auction',
   standalone: true,
-  templateUrl: './add-auction.component.html',  
-  styleUrls: ['./add-auction.component.css'],
-  imports: [FormsModule, ReactiveFormsModule, CommonModule]
+  imports: [FormsModule, ReactiveFormsModule, CommonModule, RouterLink],
+  templateUrl: './add-auction.component.html',
+  styleUrls: ['./add-auction.component.css']
 })
-export class AddAuctionComponent implements OnInit {
+export class AddAuctionComponent implements OnInit {  // Change the class name here
   auctionForm: FormGroup;
   auctions: any[] = [];
-  selectedAuctionId: number | null = null; 
 
-  constructor(private fb: FormBuilder, private auctionService: AuctionService, private router: Router) {
+  constructor(private fb: FormBuilder, private auctionService: AuctionService) {
     this.auctionForm = this.fb.group({
       category_id: ['', Validators.required],
       item_name: ['', Validators.required],
@@ -36,14 +35,8 @@ export class AddAuctionComponent implements OnInit {
   }
 
   loadAuctions() {
-    this.auctionService.getAllAuctions().subscribe({
-      next: (data: any[]) => {
-        this.auctions = data;
-        console.log('Auctions:', this.auctions);  
-      },
-      error: (err) => {
-        console.error('Error loading auctions:', err);
-      }
+    this.auctionService.getAllAuctions().subscribe(data => {
+      this.auctions = data;
     });
   }
 
@@ -54,63 +47,55 @@ export class AddAuctionComponent implements OnInit {
       if (!allowedTypes.includes(file.type)) {
         alert('يرجى تحميل صورة بصيغة JPEG أو PNG أو GIF فقط.');
         this.auctionForm.patchValue({
-          item_media: null 
+          item_media: null // Reset value if type is not allowed
         });
         return;
       }
-
+      
+      // Update item_media to be the file itself instead of image data
       this.auctionForm.patchValue({
         item_media: file
       });
     }
   }
-
+  
   onSubmit() {
     if (this.auctionForm.invalid) {
-      // عرض رسائل الخطأ للمستخدم
-      this.auctionForm.markAllAsTouched();
+      alert('Please fill all required fields');
       return;
     }
-
+  
     const formData = new FormData();
-
+  
+    // Append form values to FormData
     Object.keys(this.auctionForm.value).forEach(key => {
       const value = this.auctionForm.get(key)?.value;
-      if (key === 'item_media' && value) {
-        formData.append(key, value); // إضافة الملف إذا كان موجودًا
+      if (key === 'item_media') {
+        if (value) {
+          formData.append(key, value);
+          console.log('Appending file:', value);
+        }
       } else {
-        formData.append(key, value); // إضافة القيم الأخرى للنموذج
+        formData.append(key, value || '');
+        console.log(`Appending ${key}:`, value);
       }
     });
-
-    // استدعاء الخدمة لإنشاء المزاد
+  
+    // Show contents of FormData (for verification only, don't use in production)
+    formData.forEach((value, key) => {
+      console.log(`${key}:`, value);
+    });
+  
+    // Call the service to create auction
     this.auctionService.createAuction(formData).subscribe({
-      next: (data) => {
-        console.log('Auction created:', data);
-        this.loadAuctions();
-        this.auctionForm.reset();
-        this.router.navigate(['/auctions']); // إعادة التوجيه بعد النجاح
+      next: (response) => {
+        this.loadAuctions(); // Reload data after creation
+        this.auctionForm.reset(); // Reset form
       },
       error: (error) => {
-        console.error(error);
-        // يمكنك إضافة معالجة إضافية للأخطاء هنا
+        console.error('Error:', error); // Log error to console
+        alert('An error occurred while creating the auction.');
       }
     });
-  }
-
-  openBidForm(auctionId: number): void {
-    // Toggle selected auction ID
-    this.selectedAuctionId = this.selectedAuctionId === auctionId ? null : auctionId;
-  }
-
-  onBid(auctionId: number) {
-    // Handle the logic to place a bid here
-    console.log(`Placing a bid on auction ID: ${auctionId}`);
-    // Call your bid service here
-  }
-
-  // دالة لمعالجة خطأ تحميل الصورة
-  onImageError(event: any): void {
-    event.target.src = 'assets/default-image.jpg'; // تأكدي من وجود هذه الصورة في المسار المحدد
   }
 }

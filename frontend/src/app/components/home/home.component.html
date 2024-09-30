@@ -69,29 +69,44 @@
 
   <!-- Opening Auctions Section -->
   <div class="auctions">
-    <div class="category-title">Auctions Closing Soon</div>
-    <div class="auction-items">
-      <div *ngFor="let auction of auctions" class="auction-item">
-        <img *ngIf="auction.item_media" [src]="auction.item_media" alt="{{ auction.item_name }}" width="200">
-        <p class="auction-time-out">{{ auction.status === 'opened' ? 'Open for Bidding' : 'Closed' }}</p>
-        <div class="auction-info">
-          <p class="category-name">{{ auction.item_category }}</p>
-          <p class="item-description">
-            <span class="item-name">{{ auction.item_name }}</span>
-            <span class="item-price">{{ auction.starting_bid }}</span>
-          </p>
-          <div class="item-location">
-            <i class="map fa-solid fa-location-dot"></i>
-            <span>{{ auction.item_country }}</span>
-          </div>
-          <p class="auction-end-date">{{ auction.auction_end_time }}</p>
+    <h1>Auction Listings</h1>
+    <div *ngIf="auctions.length > 0; else noAuctions">
+      <div class="auction-items">
+        <div *ngFor="let auction of auctions" class="auction-item">
+          <img [src]="auction.item_media" alt="{{ auction.item_name }}">
+          <div class="auction-info">
+            <p class="category-name">{{ auction.category_name }}</p>
+            <p class="item-description">
+              <span class="item-name">{{ auction.item_name }}</span>
+              <br>
+              <span class="item-price">{{ auction.starting_bid }} $</span>
+            </p>
+            <div class="item-location">
+              <i class="map fa-solid fa-location-dot"></i>
+              <span>{{ auction.item_country }}</span>
+            </div>
+            <p class="auction-end-date">{{ auction.auction_end_time | date:'short' }}</p>
   
+            <p class="auction-status" [ngClass]="{'opened': auction.auction_status === 'opened', 'closed': auction.auction_status === 'closed'}">
+              Status: {{ auction.auction_status }}
+            </p>
+  
+            <div class="bid-btn" *ngIf="auction.auction_status === 'opened'">
+              <button routerLink="/payment-verification">Place Bid Now</button>
+            </div>
+            
+            <!-- Add this clickable div to navigate to auction details -->
+            <div class="auction-detail-link">
+              <a [routerLink]="['/auction-details', auction.id]">View Auction</a>
+            </div>
+          </div>
         </div>
       </div>
     </div>
+    <ng-template #noAuctions>
+      <p>No auctions available at this time.</p>
+    </ng-template>
   </div>
-  
-
   
 </main>
 <br>

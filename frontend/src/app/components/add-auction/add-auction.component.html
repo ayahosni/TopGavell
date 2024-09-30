@@ -1,14 +1,13 @@
-<div class="hero-title">
-  <h2 class="container form-title">
-      Thank you for participating in <span class="gavel">T</span>OPGAVEL's online auctions<br>
-      Join the Auction Revolution, Showcase Your Exceptional Items and Connect with Enthusiastic Bidders
-  </h2> 
-</div>
-<div class="container add-auction-form">
 
-<form [formGroup]="auctionForm" (ngSubmit)="onSubmit()" enctype="multipart/form-data" class="form-container">
+<br><br><br>
+
+<br>
+
+
+
+<form [formGroup]="auctionForm" (ngSubmit)="onSubmit()" enctype="multipart/form-data">
   <label for="category_id">Category ID</label>
-  <input id="category_id" formControlName="category_id" type="text" required>
+  <input id="category_id" formControlName="category_id" type="number" required>
   <div *ngIf="auctionForm.get('category_id')?.invalid && (auctionForm.get('category_id')?.touched || auctionForm.get('category_id')?.dirty)">
     <small class="error">Category ID is required.</small>
   </div>
@@ -18,67 +17,63 @@
   <div *ngIf="auctionForm.get('item_name')?.invalid && (auctionForm.get('item_name')?.touched || auctionForm.get('item_name')?.dirty)">
     <small class="error">Item Name is required.</small>
   </div>
-  
+
   <label for="item_description">Item Description</label>
   <textarea id="item_description" formControlName="item_description" required></textarea>
   <div *ngIf="auctionForm.get('item_description')?.invalid && (auctionForm.get('item_description')?.touched || auctionForm.get('item_description')?.dirty)">
     <small class="error">Item Description is required.</small>
   </div>
-  
+
   <label for="starting_bid">Starting Bid</label>
   <input id="starting_bid" formControlName="starting_bid" type="number" required>
   <div *ngIf="auctionForm.get('starting_bid')?.invalid && (auctionForm.get('starting_bid')?.touched || auctionForm.get('starting_bid')?.dirty)">
     <small class="error">Starting Bid is required.</small>
   </div>
-  
+
   <label for="bid_increment">Bid Increment</label>
   <input id="bid_increment" formControlName="bid_increment" type="number" required>
   <div *ngIf="auctionForm.get('bid_increment')?.invalid && (auctionForm.get('bid_increment')?.touched || auctionForm.get('bid_increment')?.dirty)">
     <small class="error">Bid Increment is required.</small>
   </div>
-  
+
   <label for="auction_start_time">Auction Start Time</label>
   <input id="auction_start_time" formControlName="auction_start_time" type="datetime-local" required>
   <div *ngIf="auctionForm.get('auction_start_time')?.invalid && (auctionForm.get('auction_start_time')?.touched || auctionForm.get('auction_start_time')?.dirty)">
     <small class="error">Auction Start Time is required.</small>
   </div>
-  
+
   <label for="auction_end_time">Auction End Time</label>
   <input id="auction_end_time" formControlName="auction_end_time" type="datetime-local" required>
   <div *ngIf="auctionForm.get('auction_end_time')?.invalid && (auctionForm.get('auction_end_time')?.touched || auctionForm.get('auction_end_time')?.dirty)">
     <small class="error">Auction End Time is required.</small>
   </div>
-  
+
   <label for="item_media">Item Media</label>
   <input id="item_media" formControlName="item_media" type="file" (change)="onFileChange($event)" required>
   <div *ngIf="auctionForm.get('item_media')?.invalid && (auctionForm.get('item_media')?.touched || auctionForm.get('item_media')?.dirty)">
     <small class="error">Item Media is required.</small>
   </div>
-  
-  <label for="item_country">Country</label>
+
+  <label for="item_country">Item Country</label>
   <input id="item_country" formControlName="item_country" type="text" required>
   <div *ngIf="auctionForm.get('item_country')?.invalid && (auctionForm.get('item_country')?.touched || auctionForm.get('item_country')?.dirty)">
-    <small class="error">Country is required.</small>
+    <small class="error">Item Country is required.</small>
   </div>
-  
-  <!-- Conditions Section -->
-  <div class="conditions">
-    <h2>Terms and Conditions</h2>
-    <ul>
-      <h3>By proceeding with the creation of an auction on our platform, you agree to the following terms and conditions</h3>
-      <li>You must be at least 18 years of age to create an auction on this platform. By submitting your auction for approval, you confirm that you meet this age requirement and acknowledge that we may request additional documentation to verify your age if necessary.</li>
-      <li>All items listed for auction must fully comply with local, national, and international laws.</li>
-      <li>You are required to provide complete and accurate information about the item being auctioned, including its name, description, condition, origin, and any relevant history or documentation.</li>
-      <li>As the seller, you are responsible for ensuring the item's safe handling and shipment to the winning bidder upon the auction’s completion.</li>
-      <li>Once you have submitted your auction, it will undergo a review by our team to ensure that it complies with our guidelines and legal requirements.</li>
-      <label>
-        <input type="checkbox" required> 
-        <p class="agree-conditions"> I agree to the terms and conditions</p>
-      </label>
-    </ul>
-  </div>
-  
-  <button type="submit">Create Auction</button>
-</form>
+ <!-- Conditions Section -->
+ <div class="conditions">
+  <h2>Terms and Conditions</h2>
+  <ul>
+    <h3>By proceeding with the creation of an auction on our platform, you agree to the following terms and conditions</h3>
+    <li>You must be at least 18 years of age to create an auction on this platform. By submitting your auction for approval, you confirm that you meet this age requirement and acknowledge that we may request additional documentation to verify your age if necessary.</li>
+    <li>All items listed for auction must fully comply with local, national, and international laws.</li>
+    <li>You are required to provide complete and accurate information about the item being auctioned, including its name, description, condition, origin, and any relevant history or documentation.</li>
+    <li>As the seller, you are responsible for ensuring the item's safe handling and shipment to the winning bidder upon the auction’s completion.</li>
+    <li>Once you have submitted your auction, it will undergo a review by our team to ensure that it complies with our guidelines and legal requirements.</li>
+    <label>
+      <input type="checkbox" required> 
+      <p class="agree-conditions"> I agree to the terms and conditions</p>
+    </label>
+  </ul>
 </div>
-
+  <button type="submit" [disabled]="auctionForm.invalid">Create Auction</button>
+</form>

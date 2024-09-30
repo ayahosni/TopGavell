@@ -1,3 +1,4 @@
+// auction.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
@@ -13,17 +14,21 @@ export class AuctionService {
   constructor(private http: HttpClient) { }
 
   // Function to get authorization headers
-  private getAuthHeaders(): HttpHeaders | null {
+  private getAuthHeaders(includeContentType: boolean = true): HttpHeaders | undefined {
     const userJson = localStorage.getItem('user');
     if (userJson) {
       const user = JSON.parse(userJson);
-      return new HttpHeaders({
-        'Authorization': `Bearer ${user.token}`,
-        'Content-Type': 'application/json',
-      });
+      let headersConfig: { [header: string]: string } = {
+        'Authorization': `Bearer ${user.token}`
+      };
+      if (includeContentType) {
+        headersConfig['Content-Type'] = 'application/json';
+      }
+      return new HttpHeaders(headersConfig);
     }
-    return null;
+    return undefined;
   }
+  
 
   // Error handling for HTTP responses
   private handleError(error: HttpErrorResponse) {
@@ -45,16 +50,22 @@ export class AuctionService {
 
   // Create a new auction
   createAuction(auctionData: any): Observable<any> {
-    const headers = this.getAuthHeaders();
-    if (!headers) {
-      return throwError('Token is missing. Please log in.'); // Return error if token is missing
-    }
-    return this.http.post(this.apiUrl, auctionData, { headers })
+    const isFormData = auctionData instanceof FormData;
+    const headers = this.getAuthHeaders(!isFormData);
+  
+    // إذا كانت الرؤوس غير معرفة، لا تمررها في الطلب
+    const options = headers ? { headers } : {};
+  
+    return this.http.post(this.apiUrl, auctionData, options)
       .pipe(catchError(this.handleError)); // Handle errors
+  }
+  
+
+  getAuctions(): Observable<any[]> {
+    return this.http.get<any[]>(this.apiUrl);
   }
 
   // Get all auctions
-  // الحصول على جميع المزادات
   getAllAuctions(): Observable<any[]> {
     const headers = this.getAuthHeaders();
     if (!headers) {
@@ -67,15 +78,18 @@ export class AuctionService {
       );
   }
 
+
   // Get auction by ID
-  getAuctionById(id: string): Observable<any> {
-    const headers = this.getAuthHeaders();
-    if (!headers) {
-      return throwError('Token is missing. Please log in.'); // Return error if token is missing
-    }
-    return this.http.get<any>(`${this.apiUrl}/${id}`, { headers })
-      .pipe(catchError(this.handleError)); // Handle errors
+  // Get auction by ID
+getAuctionById(id: string): Observable<any> {
+  const headers = this.getAuthHeaders();
+  if (!headers) {
+    return throwError('Token is missing. Please log in.'); // Return error if token is missing
   }
+  return this.http.get<any>(`${this.apiUrl}/${id}`, { headers })
+    .pipe(catchError(this.handleError)); // Handle errors
+}
+
 
   // Update an existing auction
   updateAuction(id: string, auctionData: any): Observable<any> {
@@ -96,10 +110,4 @@ export class AuctionService {
     return this.http.delete(`${this.apiUrl}/${id}`, { headers })
       .pipe(catchError(this.handleError)); // Handle errors
   }
-
-  // createAuction(auctionData: any): Observable<any> {
-  //   const headers = this.getAuthHeaders();
-  //   return this.http.post(`${this.Url}/auction`, auctionData, { headers });
-  // }
-
 }

@@ -1,54 +1,38 @@
-
-import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router'; // To get the auction ID from the URL
+import { AuctionService } from '../../services/auction.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-auction-details',
-  standalone: true,
-  imports: [FormsModule, CommonModule, RouterLink],
   templateUrl: './auction-details.component.html',
-  styleUrl: './auction-details.component.css'
-})
+  styleUrls: ['./auction-details.component.css']
+})export class AuctionDetailsComponent implements OnInit {
+  auctionId: string = ''; // الـ auction_id الذي سيتم الحصول عليه من URL أو Parameter
+  auction: any; // لحفظ تفاصيل المزاد
 
-export class AuctionDetailsComponent {
-  isPopupOpen: boolean = false;
+  constructor(private auctionService: AuctionService, private route: ActivatedRoute) {}
 
-  formData = {
-    name: 'Nour',
-    email: 'norabotaleb25@gmail.com',
-    phone: '(100) 947-6744',
-    subject: 'Floral Art In Bamboo-Style Frame',
-    message: ''
-  };
-
-  openPopup() {
-    console.log('Popup is opening'); 
-
-    this.isPopupOpen = true;
+  ngOnInit(): void {
+    // الحصول على الـ auction_id من الـ URL
+    this.route.paramMap.subscribe(params => {
+      this.auctionId = params.get('id') || '';
+      this.loadAuctionDetails();
+    });
   }
-
-  closePopup() {
-    this.isPopupOpen = false;
+  loadAuctionDetails(): void {
+    this.auctionService.getAuctionById(this.auctionId).subscribe({
+      next: (response: any) => {
+        this.auction = response;
+        console.log(this.auction); // عرض تفاصيل المزاد في الكونسول لأغراض التصحيح
+      },
+      error: (error: any) => {
+        console.error('Error loading auction details:', error);
+      },
+      complete: () => {
+        console.log('Auction details loaded successfully.');
+      }
+    });
   }
-
-  images = [
-    'assets/images/bird3.jpg',
-    'assets/images/bird1.jpg',
-    'assets/images/bird.jpg'
-  ];
-
-  currentImage = this.images[0];
-
-  auctionTime = '12 hours 51 minutes';
-
-  changeImage(image: string) {
-    this.currentImage = image;
-  }
-
-
-  bidNow() {
-    alert('Bid placed successfully!');
-  }
+  
 }

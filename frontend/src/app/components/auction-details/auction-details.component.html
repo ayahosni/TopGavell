@@ -1,79 +1,43 @@
-<div class="container auction-details">
+
+
+
+
+<br><br>
+<br>
+<br>
+<br>
+<br>
+
+
+
+<div *ngIf="auction">
+  <h2>{{ auction.item_name }}</h2>
+  <img [src]="auction.item_media" alt="Item Image" *ngIf="auction.item_media">
   
-    <div class="auction-content">
-      <!-- Left Side: Item Image Gallery -->
-      <div class="image-gallery">
-        <div class="main-image">
-          <img [src]="currentImage" alt="Item Image">
-        </div>
+  <p><strong>Category:</strong> {{ auction.item_category }}</p>
+  <p><strong>Description:</strong> {{ auction.item_description }}</p>
+  <p><strong>Starting Bid:</strong> {{ auction.starting_bid }} USD</p>
+  <p><strong>Bid Increment:</strong> {{ auction.bid_increment }} USD</p>
+  <p><strong>Start Time:</strong> {{ auction.auction_start_time  }}</p>
+  <p><strong>End Time:</strong> {{ auction.auction_end_time  }}</p>
+  <p><strong>Status:</strong> {{ auction.auction_status }}</p>
+  <p><strong>Country:</strong> {{ auction.item_country }}</p>
   
-        <div class="thumbnail-container">
-          <img *ngFor="let image of images" [src]="image" (click)="changeImage(image)" class="thumbnail">
-        </div>
-      </div>
-  
-      <!-- Right Side: Item Details and Bidding -->
-      <div class="item-details">
-        <h3>1 OZ. Fine Silver .999 Silver ~ One Dollar With Stand (den)</h3>
-        <p><strong>{{ auctionTime }}</strong></p>
-        <p class="current-bid">Current Bid: $25.00</p>
-        <p>10 Bids</p>
-        <p>Item #10828</p>
-  
-        <button routerLink="/payment-verification" class="btn bid-button">Bid Now</button>
-  
-        <div class="shipping-info">
-          <p><strong>Shipping Available</strong></p>
-          <p>Everett, MA 02149</p>
-        </div>
-  
-        <div class="pickup-info">
-          <p><strong>When to Pickup</strong></p>
-          <ul>
-            <li>Sunday, 9/29, 11:00 am - 3:00 pm EDT</li>
-            <li>Monday, 9/30, 10:00 am - 12:00 pm EDT</li>
-          </ul>
-        </div>
-        <div class="ask-btn">
-            <button (click)="openPopup()">Ask a Question</button>
-        </div>
-      </div>
-    </div>
-  
-    <!-- Item Description -->
-    <div class="item-description">
-      <h4>Item Description</h4>
-      <p>
-        This auction features a beautifully detailed bird figurine, <br> showcasing intricate feather patterns and lifelike craftsmanship. <br> Its graceful design makes it a <br> perfect decorative piece for collectors and nature lovers alike.
-      </p>
-    </div>
+  <div *ngIf="auction.creator">
+    <h4>Created by:</h4>
+    <p>{{ auction.creator.name }}</p>
   </div>
 
-  <!-- Ask a Question Popup -->
-  <div *ngIf="isPopupOpen" id="askQuestionPopup" class="popup">
-    <div class="popup-content">
-      <span (click)="closePopup()" class="close">&times;</span>
-      
-      <h4>Item: Floral Art In Bamboo-Style Frame</h4>
-      
-      <form>
-        <label for="name">Your Name</label>
-        <input type="text" id="name" name="name" [(ngModel)]="formData.name" value="Nour Ahmed">
-        
-        <label for="email">Email</label>
-        <input type="email" id="email" name="email" [(ngModel)]="formData.email" value="norabotaleb25@gmail.com">
-        
-        <label for="phone">Phone</label>
-        <input type="text" id="phone" name="phone" [(ngModel)]="formData.phone" value="(100) 947-6744">
-        
-        <label for="subject">Subject</label>
-        <input type="text" id="subject" name="subject" [(ngModel)]="formData.subject" value="Floral Art In Bamboo-Style Frame">
-        
-        <label for="message">Message</label>
-        <textarea id="message" name="message" rows="4" [(ngModel)]="formData.message" placeholder="Type your message..."></textarea>
-        
-        <button type="submit" class="btn">Submit</button>
-      </form>
-    </div>
+  <div *ngIf="auction.bids.length > 0">
+    <h4>Bids:</h4>
+    <ul>
+      <li *ngFor="let bid of auction.bids">
+        {{ bid.amount }} USD by {{ bid.bidder.name }} at {{ bid.created_at  }}
+      </li>
+    </ul>
   </div>
-  
+</div>
+
+<div *ngIf="!auction">
+  <p>Loading auction details...</p>
+</div>
