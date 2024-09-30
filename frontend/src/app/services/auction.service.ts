@@ -7,6 +7,7 @@ import { catchError, map } from 'rxjs/operators';
   providedIn: 'root',
 })
 export class AuctionService {
+  // private apiUrl = 'http://172.18.0.3:80/api'; // ===> Docker URL
   private apiUrl = 'http://localhost:8000/api/auction'; // API URL
 
   constructor(private http: HttpClient) { }

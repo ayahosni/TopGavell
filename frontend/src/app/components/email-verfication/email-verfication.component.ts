@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
-import { AuthService } from '../../services/auth.service';
+import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 
@@ -26,11 +25,12 @@ export class EmailVerficationComponent implements OnInit {
     }
   }
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient,private router: Router) {}
 
   verify() {
     this.http.post('http://localhost:8000/api/email_verify', { email: this.email, otp: this.otp }).subscribe({
       next: (response) => {
+        this.router.navigate(['/']);
         this.successMessage = 'Email verified successfully.';
         this.errorMessage = '';
       },

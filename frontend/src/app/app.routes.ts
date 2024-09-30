@@ -27,5 +27,5 @@ export const routes: Routes = [
     {path: 'guides', component: GuidesComponent},
     {path: 'payment-verification', component: PaymentVerificationComponent},
     {path: 'auction-details', component: AuctionDetailsComponent},
-    // {path: '**', redirectTo: '/login'},
+    {path: '**', redirectTo: '/login'},
 ];

@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { Observable, of, throwError } from 'rxjs';
+import { catchError, map, tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  // private Url = 'http://172.18.0.5:80/api'; // ===> Docker URL
+  // private Url = 'http://172.18.0.3:80/api'; // ===> Docker URL
   private Url = 'http://localhost:8000/api'; // ===> Localhost URL
 
   constructor(private http: HttpClient) { }
@@ -19,7 +19,7 @@ export class AuthService {
         if (response && response.token) {
           const userData = {
             token: response.token,
-            email_verified_at : response.user.email_verified_at,
+            is_email_verified: response.user.is_email_verified,
             email: response.user.email,
             name: response.user.name
           };
@@ -37,7 +37,7 @@ export class AuthService {
         if (response && response.token) {
           const userData = {
             token: response.token,
-            email_verified_at : response.user.email_verified_at,
+            is_email_verified: response.user.is_email_verified,
             email: response.user.email,
             name: response.user.name
           };
@@ -48,12 +48,39 @@ export class AuthService {
     );
   }
 
+  logOut(): Observable<any> {
+    const user = localStorage.getItem('user');
+    if (user) {
+      const token = JSON.parse(user).token; // Retrieve token from local storage
+      const headers = new HttpHeaders({
+        'Authorization': `Bearer ${token}` // Add token to Authorization header
+      });
+  
+      return this.http.get(`${this.Url}/logout`, { headers }).pipe(
+        tap(() => {
+          localStorage.removeItem('user'); // Clear local storage after successful logout
+        }),
+        catchError((error) => {
+          console.error('Logout failed', error);
+          return throwError(error); // Handle error accordingly
+        })
+      );
+    } else {
+      return of({ message: 'No user logged in' });
+    }
+  }
+
+  is_email_verified(): boolean {
+    const userJson = localStorage.getItem('user');
+    if (userJson){
+      const user = JSON.parse(userJson);
+      return user.is_email_verified == 1;
+    }
+    return false;
+  }
+
   isLoggedIn(): boolean {
     const user = localStorage.getItem('user');
     return user !== null;
-  }
-  
-  logOut(): void {
-    localStorage.removeItem('user');
   }
 }
