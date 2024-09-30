@@ -16,11 +16,11 @@ return new class extends Migration
             $table->string('phone_number');
             $table->text('address');
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->enum('document_type', ['Passport', 'ID', 'Driving License'])->nullable();
-            $table->string('document_file')->nullable();
-            $table->enum('kyc_status', ['Pending','Approved', 'Rejected'])->default('Pending');
-            $table->enum('verification_status', ['Verified', 'Not Verified'])->default('Not Verified');
-            $table->timestamp('kyc_verification_date')->nullable();
+            // $table->enum('document_type', ['Passport', 'ID', 'Driving License'])->nullable();
+            // $table->string('document_file')->nullable();
+            // $table->enum('kyc_status', ['Pending','Approved', 'Rejected'])->default('Pending');
+            // $table->enum('verification_status', ['Verified', 'Not Verified'])->default('Not Verified');
+            // $table->timestamp('kyc_verification_date')->nullable();
             $table->timestamps();
         });
     }

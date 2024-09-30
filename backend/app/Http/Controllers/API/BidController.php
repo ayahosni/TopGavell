@@ -48,6 +48,20 @@ public function store(Request $request, $auctionId)
     // Fetch the auction or throw a 404 error if not found
     $auction = Auction::findOrFail($auctionId);
 
+    
+    // Get the authenticated customer's ID
+    $customer = Customer::where('user_id', Auth::id())->first();
+    if (!$customer) {
+        return response()->json(['error' => 'Customer not found.'], 404);
+    }
+
+    // Check if the authenticated user is the owner of the auction
+    if ($auction->customer_id === $customer->id) {
+        return response()->json([
+            "message" => "You cannot bid on your own auction.",
+        ], 400);
+    }
+
     $currentTime = Carbon::now();
   if($auction->auction_start_time > $currentTime ){
     return response()->json([
@@ -66,18 +80,6 @@ public function store(Request $request, $auctionId)
     //     ], 400);
     // }
 
-    // Get the authenticated customer's ID
-    $customer = Customer::where('user_id', Auth::id())->first();
-    if (!$customer) {
-        return response()->json(['error' => 'Customer not found.'], 404);
-    }
-
-    // Check if the authenticated user is the owner of the auction
-    if ($auction->customer_id === $customer->id) {
-        return response()->json([
-            "message" => "You cannot bid on your own auction.",
-        ], 400);
-    }
 
     // Get the last bid on the auction, if available
     $lastBid = Bid::where('auction_id', $auction->id)->latest('created_at')->first();

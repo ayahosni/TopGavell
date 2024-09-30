@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('OTP')->unique()->nullable();
             $table->rememberToken();
             $table->enum('role', ['admin', 'customer', 'moderator'])->default('customer');
-            $table->string('profile_picture')->nullable();
+            // $table->string('profile_picture')->nullable();
             $table->boolean('is_email_verified')->default(false);
             $table->timestamps();
         });

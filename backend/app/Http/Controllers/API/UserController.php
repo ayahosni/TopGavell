@@ -35,7 +35,10 @@ class UserController extends Controller
             'password' => [
                 'required','string','min:8','confirmed',
                 'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/'
-            ],            'phone_number' => ['required'],
+            ],
+            'phone_number' => ['required'],
+            'address' => ['required'],
+
         ]);
         if ($validation->fails()) {
             return response()->json($validation->messages(), 400);

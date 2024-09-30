@@ -31,7 +31,7 @@ class NewBidNotification extends Notification
     /**
      * Get the array representation of the notification.
      *
-     * @return array<string, mixed>
+     * @return array<string, mixed>a
      */
     public function toArray(object $notifiable): array
     {
