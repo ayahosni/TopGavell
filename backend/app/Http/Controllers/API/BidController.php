@@ -39,6 +39,12 @@ public function store(Request $request, $auctionId)
             'message' => 'Admin cannot place a bid.'
         ], 403);
     }
+
+    if (Auth::user()->is_email_verified === 0) {
+        return response()->json([
+          'message' => 'Please verify your mail first.'
+        ], 403);
+      }
     // Fetch the auction or throw a 404 error if not found
     $auction = Auction::findOrFail($auctionId);
 

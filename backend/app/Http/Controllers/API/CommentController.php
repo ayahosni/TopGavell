@@ -40,7 +40,11 @@ class CommentController extends Controller
                 'message' => 'Admin cannot make a comment.'
             ], 403);
         }
-
+        if (Auth::user()->is_email_verified === 0) {
+            return response()->json([
+              'message' => 'Please verify your mail first.'
+            ], 403);
+          }
         // Validate the comment input
         $validation = Validator::make($request->all(), [
             'comment_text' => 'required|string|min:3|max:255',

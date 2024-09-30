@@ -32,8 +32,10 @@ class UserController extends Controller
         $validation = Validator::make($request->all(), [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'phone_number' => ['required'],
+            'password' => [
+                'required','string','min:8','confirmed',
+                'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/'
+            ],            'phone_number' => ['required'],
         ]);
         if ($validation->fails()) {
             return response()->json($validation->messages(), 400);
@@ -51,9 +53,11 @@ class UserController extends Controller
         return response()->json([
             'message' => 'Registered successfully! Please check your email to verify your account.',
             'user' => new CustomerRescource($cust),
-            'token' => $user->createToken('auth_token')->plainTextToken,
+            // 'token' => $user->createToken('auth_token')->plainTextToken,
         ], 200);
     }
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
     public function email_verify(Request $request)
     {

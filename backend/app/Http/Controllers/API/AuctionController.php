@@ -57,7 +57,11 @@ class AuctionController extends Controller
         'message' => 'Admin cannot create an auction.'
       ], 403);
     }
-
+    if (Auth::user()->is_email_verified === 0) {
+      return response()->json([
+        'message' => 'Please verify your mail first.'
+      ], 403);
+    }
     $data = $request->all();
 
     $validation = Validator::make($request->all(), [
