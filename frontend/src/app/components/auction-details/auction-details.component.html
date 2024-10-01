@@ -1,19 +1,8 @@
-
-
-
-
-<br><br>
-<br>
-<br>
-<br>
-<br>
-
-
-
-<div *ngIf="auction">
+<div *ngIf="auction" style="padding-top: 100px;">
   <h2>{{ auction.item_name }}</h2>
   <img [src]="auction.item_media" alt="Item Image" *ngIf="auction.item_media">
   
+  <p><strong>id:</strong> {{ auction.auction_id}}</p>
   <p><strong>Category:</strong> {{ auction.item_category }}</p>
   <p><strong>Description:</strong> {{ auction.item_description }}</p>
   <p><strong>Starting Bid:</strong> {{ auction.starting_bid }} USD</p>
@@ -28,7 +17,7 @@
     <p>{{ auction.creator.name }}</p>
   </div>
 
-  <div *ngIf="auction.bids.length > 0">
+  <div *ngIf="auction.bids > 0">
     <h4>Bids:</h4>
     <ul>
       <li *ngFor="let bid of auction.bids">

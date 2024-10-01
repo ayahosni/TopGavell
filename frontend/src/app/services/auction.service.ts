@@ -52,9 +52,7 @@ export class AuctionService {
   createAuction(auctionData: any): Observable<any> {
     const isFormData = auctionData instanceof FormData;
     const headers = this.getAuthHeaders(!isFormData);
-  
-    // إذا كانت الرؤوس غير معرفة، لا تمررها في الطلب
-    const options = headers ? { headers } : {};
+      const options = headers ? { headers } : {};
   
     return this.http.post(this.apiUrl, auctionData, options)
       .pipe(catchError(this.handleError)); // Handle errors
@@ -78,16 +76,16 @@ export class AuctionService {
       );
   }
 
-
-  // Get auction by ID
-  // Get auction by ID
 getAuctionById(id: string): Observable<any> {
   const headers = this.getAuthHeaders();
   if (!headers) {
     return throwError('Token is missing. Please log in.'); // Return error if token is missing
   }
   return this.http.get<any>(`${this.apiUrl}/${id}`, { headers })
-    .pipe(catchError(this.handleError)); // Handle errors
+  .pipe(
+    map(response => response.data || []),
+    catchError(this.handleError)
+  );
 }
 
 

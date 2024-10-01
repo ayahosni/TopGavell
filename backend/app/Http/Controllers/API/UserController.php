@@ -56,7 +56,7 @@ class UserController extends Controller
         return response()->json([
             'message' => 'Registered successfully! Please check your email to verify your account.',
             'user' => new CustomerRescource($cust),
-            // 'token' => $user->createToken('auth_token')->plainTextToken,
+            'token' => $user->createToken('auth_token')->plainTextToken,
         ], 200);
     }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////

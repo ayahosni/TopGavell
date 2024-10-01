@@ -75,7 +75,7 @@
         <div *ngFor="let auction of auctions" class="auction-item">
           <img [src]="auction.item_media" alt="{{ auction.item_name }}">
           <div class="auction-info">
-            <p class="category-name">{{ auction.category_name }}</p>
+            <p class="category-name">{{ auction.auction_id }}</p>
             <p class="item-description">
               <span class="item-name">{{ auction.item_name }}</span>
               <br>
@@ -97,7 +97,7 @@
             
             <!-- Add this clickable div to navigate to auction details -->
             <div class="auction-detail-link">
-              <a [routerLink]="['/auction-details', auction.id]">View Auction</a>
+              <a [routerLink]="['/auction-details', auction.auction_id]">View Auction</a>
             </div>
           </div>
         </div>
