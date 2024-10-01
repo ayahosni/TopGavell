@@ -18,6 +18,7 @@ export const routes: Routes = [
     {path: '', component:HomeComponent},
     {path: 'auctions', component:AuctionsComponent},
     {path: 'bids', component: BidsComponent},
+    { path: 'bid/:id', component: BidsComponent },
     { path: 'auction-details/:id', component: AuctionDetailsComponent },
     {path: 'contact', component: ContactComponent},
     {path: 'login', component: LoginComponent },    

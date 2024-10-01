@@ -1,8 +1,31 @@
-<p>Bids works</p>
-<p>Bids works</p>
-<p>Bids works</p>
-<p>Bids works</p>
-<p>Bids works</p>
-<p>Bids works</p>
-<p>Bids works</p>
-<p>Bids works</p>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+<div *ngIf="auction; else loading">
+    <p><strong>id:</strong> {{ auction.auction_id }}</p>
+
+    <h2>Place your bid for {{ auction.item_name }}</h2>
+    <p><strong>Current Bid:</strong> {{ lastBid?.amount || auction.starting_bid }} USD</p>
+
+    <div *ngIf="!lastBid"> 
+        <p>No previous bids. You can place a bid starting from {{ auction.starting_bid }} USD.</p>
+    </div>
+    
+    <form (ngSubmit)="placeBid()">
+        <label for="bidAmount">Your Bid:</label>
+        <input type="number" id="bidAmount" [(ngModel)]="bidAmount" name="bidAmount" [min]="auction.starting_bid" required>
+        <button type="submit">Submit Bid</button>
+    </form>
+
+    <div *ngIf="lastBid">
+        <p><strong>Last Bid:</strong> {{ lastBid.amount }} USD by {{ lastBid.bidder.name }}</p>
+    </div>
+</div>
+
+<ng-template #loading>
+    <p>Loading auction details...</p>
+</ng-template>
