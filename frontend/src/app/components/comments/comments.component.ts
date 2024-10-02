@@ -14,14 +14,13 @@ import { FormsModule } from '@angular/forms';
 export class CommentsComponent implements OnInit {
   @Input() auctionId: string = ''; 
   comments: any[] = [];
-  newComment = {
-    content: ''
-  };
+  newComment = { comment_text: '' };
+
 
   constructor(private commentsService: CommentsService) {}
 
   ngOnInit(): void {
-    if (this.auctionId) { // تأكد من أن auctionId ليس فارغًا
+    if (this.auctionId) { 
       this.loadComments();
     } else {
       console.error('Auction ID is not provided.');
@@ -41,11 +40,11 @@ export class CommentsComponent implements OnInit {
   }
 
   submitComment(): void {
-    if (this.newComment.content.trim() !== '') {
+    if (this.newComment.comment_text.trim() !== '') {
       this.commentsService.createComment(this.auctionId, this.newComment).subscribe({
         next: (response: any) => {
           this.comments.push(response.comment);
-          this.newComment.content = '';
+          this.newComment.comment_text = '';
         },
         error: (error: any) => {
           console.error('Error submitting comment:', error);
