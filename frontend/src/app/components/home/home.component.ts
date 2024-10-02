@@ -73,38 +73,38 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  onSubmit() {
-    const formData = new FormData();
+  // onSubmit() {
+  //   const formData = new FormData();
 
-    Object.keys(this.auctionForm.value).forEach(key => {
-      if (key === 'item_media') {
-        formData.append(key, this.auctionForm.get('item_media')?.value);
-      } else {
-        formData.append(key, this.auctionForm.get(key)?.value);
-      }
-    });
+  //   Object.keys(this.auctionForm.value).forEach(key => {
+  //     if (key === 'item_media') {
+  //       formData.append(key, this.auctionForm.get('item_media')?.value);
+  //     } else {
+  //       formData.append(key, this.auctionForm.get(key)?.value);
+  //     }
+  //   });
 
-    this.auctionService.createAuction(formData).subscribe({
-      next: (data) => {
-        console.log('Auction created:', data);
-        this.loadAuctions(); 
-        this.auctionForm.reset(); // إعادة تعيين النموذج بعد النجاح
-      },
-      error: (error) => {
-        console.error(error);
-      }
-    });
-  }
+  //   this.auctionService.createAuction(formData).subscribe({
+  //     next: (data) => {
+  //       console.log('Auction created:', data);
+  //       this.loadAuctions(); 
+  //       this.auctionForm.reset(); // إعادة تعيين النموذج بعد النجاح
+  //     },
+  //     error: (error) => {
+  //       console.error(error);
+  //     }
+  //   });
+  // }
 
-  openBidForm(auctionId: number): void {
-    // Toggle selected auction ID
-    this.selectedAuctionId = this.selectedAuctionId === auctionId ? null : auctionId;
-  }
+  // openBidForm(auctionId: number): void {
+  //   // Toggle selected auction ID
+  //   this.selectedAuctionId = this.selectedAuctionId === auctionId ? null : auctionId;
+  // }
 
-  onBid(auctionId: number) {
-    // Handle the logic to place a bid here
-    console.log(`Placing a bid on auction ID: ${auctionId}`);
-    // Call your bid service here
-  }
+  // onBid(auctionId: number) {
+  //   // Handle the logic to place a bid here
+  //   console.log(`Placing a bid on auction ID: ${auctionId}`);
+  //   // Call your bid service here
+  // }
 }
 

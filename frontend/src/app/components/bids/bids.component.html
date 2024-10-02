@@ -1,31 +1,25 @@
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
+<br><br><br><br>
+<div *ngIf="auction; else loading">`
+    <div *ngIf="auction.bids && 0 < auction.bids.length" >
+        <h4>Bids:</h4>
+        @for (bid of auction.bids; track bid.id) {
+            <p><strong>bid amount:</strong> {{ bid.bid_amount }} USD <br>
+            <strong>by:</strong> {{ bid.customer_id }}<br>
+            <strong>at:</strong> {{ bid.created_at }}</p>
+            <hr>
+        }
+    </div>
 
-<div *ngIf="auction; else loading">
-    <p><strong>id:</strong> {{ auction.auction_id }}</p>
-
-    <h2>Place your bid for {{ auction.item_name }}</h2>
-    <p><strong>Current Bid:</strong> {{ lastBid?.amount || auction.starting_bid }} USD</p>
-
-    <div *ngIf="!lastBid"> 
+    <div *ngIf="0 == auction.bids.length">
         <p>No previous bids. You can place a bid starting from {{ auction.starting_bid }} USD.</p>
     </div>
-    
-    <form (ngSubmit)="placeBid()">
+
+    <form (ngSubmit)="placeBid()">  
         <label for="bidAmount">Your Bid:</label>
         <input type="number" id="bidAmount" [(ngModel)]="bidAmount" name="bidAmount" [min]="auction.starting_bid" required>
         <button type="submit">Submit Bid</button>
     </form>
-
-    <div *ngIf="lastBid">
-        <p><strong>Last Bid:</strong> {{ lastBid.amount }} USD by {{ lastBid.bidder.name }}</p>
-    </div>
 </div>
-
 <ng-template #loading>
-    <p>Loading auction details...</p>
+    <p>Loading bidders details...</p>
 </ng-template>

@@ -16,22 +16,6 @@
     <h4>Created by:</h4>
     <p>{{ auction.creator.name }}</p>
   </div>
-
-  <!-- عرض قائمة المزايدات -->
-  <div *ngIf="auction.bids && auction.bids.length > 0">
-    <h4>Bids:</h4>
-    <ul>
-      <li *ngFor="let bid of auction.bids">
-        {{ bid.amount }} USD by {{ bid.bidder.name }} at {{ bid.created_at }}
-      </li>
-    </ul>
-    <!-- عرض اخر مزايدة -->
-    <p><strong>Last Bid:</strong> {{ auction.bids[auction.bids.length - 1]?.amount }} USD</p>
-  </div>
-  
-  <!-- زر المزايدة -->
-  <button (click)="goToBidPage(auction.auction_id)">Bid Now</button>
-  
 </div>
 
 <div *ngIf="!auction">

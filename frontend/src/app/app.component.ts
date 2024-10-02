@@ -1,16 +1,15 @@
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';  
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { Component, OnInit } from '@angular/core';
 import { provideHttpClient } from '@angular/common/http';
 import { Router, RouterLink, RouterLinkActive, NavigationEnd, RouterOutlet } from '@angular/router';
 import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
-import { BidsComponent } from './components/bids/bids.component';
 import { ContactComponent } from './components/contact/contact.component';
 import { HomeComponent } from './components/home/home.component';
 import { AuctionsComponent } from './components/auctions/auctions.component'; 
 import { DashboardComponent } from './components/dashboard/dashboard.component';
-import { FormsModule } from '@angular/forms';  
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { GuidesComponent } from './components/guides/guides.component';
 import { EmailVerficationComponent } from './components/email-verfication/email-verfication.component';
 
@@ -25,7 +24,6 @@ import { EmailVerficationComponent } from './components/email-verfication/email-
     HeaderComponent,
     FooterComponent,
     FontAwesomeModule,
-    BidsComponent,
     ContactComponent,
     HomeComponent,
     AuctionsComponent,

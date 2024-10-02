@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpHeaders} from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
-export class BidService {
+export class PaymentService {
 
   private apiUrl = 'http://localhost:8000/api'; // API URL
 
@@ -26,16 +26,9 @@ export class BidService {
     return undefined; 
   }
 
-  placeBid(auctionId: string, bidAmount: number, bidData: any): Observable<any> {
-    const isFormData = bidData instanceof FormData; 
-    const headers = this.getAuthHeaders(!isFormData);
-    const options = headers ? { headers } : {};
-    return this.http.post(`${this.apiUrl}/${auctionId}/bids`, { bid_amount: bidAmount, ...bidData }, options);
-  }
-
-  getBidsByAuctionId(auctionId: string): Observable<any> {
+  checkout(auctionId: string): Observable<any> {
     const headers = this.getAuthHeaders(); 
     const options = headers ? { headers } : {}; 
-    return this.http.get(`${this.apiUrl}/${auctionId}/bids`, options);
+    return this.http.post(`${this.apiUrl}/checkout/${auctionId}`, options);
   }
 }

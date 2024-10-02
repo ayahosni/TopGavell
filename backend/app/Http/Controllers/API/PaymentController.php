@@ -14,9 +14,7 @@ use App\Models\Auction;
 use App\Models\Customer;
 use App\Models\Payment;
 use App\Models\Bid;
-
-
-
+use Illuminate\Support\Facades\Auth;
 
 class PaymentController extends Controller
 {
@@ -24,10 +22,8 @@ class PaymentController extends Controller
     public function index()
     {
         return view('PaymIndex');
-
     }
-    public function checkout($auctionID,$bidderID){
-
+    public function checkout($auctionID){
 
         // check if the customer is bidding for the first time or not for the Insurance payment 
         // $isFound=Bid::where('auction_id', $auction->id)->find($customer->id);
@@ -35,17 +31,14 @@ class PaymentController extends Controller
         //     // return route('checkout', ['auctionID' => $auction->id, 'bidderID' => $customer->id]);
         //     return route('checkout', ['auctionID' => $auction->id, 'bidderID' => $customer->id]);
         // }
-
-
-
-        Stripe::setApiKey(env('STRIPE_SECRET'));
-
+        $bidderID = Auth::id();
         $auction = Auction::findOrFail($auctionID);
+        Stripe::setApiKey(env('STRIPE_SECRET'));
 
         // dd($auction);
 
-        $amount =$auction->starting_bid*100;
-        $item_name=$auction->item_name;
+        $amount = $auction->starting_bid;
+        $item_name = $auction->item_name;
 
         if($auction->auction_status == "Closed") {
             $amount = Bid::where('auction_id', $auction->id)->max('bid_amount');
@@ -63,19 +56,19 @@ class PaymentController extends Controller
                         'product_data' => [
                             'name' => $item_name,
                         ],
-                        'unit_amount'  => $amount,
+                        'unit_amount'  => $amount+0,
                     ],
                     'quantity'   => 1,
                 ],
             ],
             'mode'        => 'payment',
-            'success_url' => route('success',['auctionID' => $auctionID, 'bidderID' => $bidderID]),
+            'success_url' => route('success',['auctionID' => $auctionID]),
             'cancel_url'  => route('index'),
         ]);
 
-
-
-        // dd($session->url);
+        return response()->json([
+            'gateway link' => $session->url
+        ], 400);
 
         return redirect()->away($session->url);
 
@@ -94,7 +87,7 @@ class PaymentController extends Controller
         // ]);
     }
 
-    public function success($auctionID,$bidderID)
+    public function success($auctionID)
     {
 
         $auction = Auction::findOrFail($auctionID);
@@ -107,7 +100,6 @@ class PaymentController extends Controller
 
         $data=[
             "amount" => $amount,
-            "bidder_id" =>$bidderID,
             "auction_id" => $auctionID
         ];
 

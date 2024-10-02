@@ -17,5 +17,5 @@ use App\Http\Controllers\API\PaymentController;
 
 
 Route::get('/index', [PaymentController::class, 'index'])->name('index');
-Route::post('/checkout/{auctionID}/{bidderID}', [PaymentController::class, 'checkout'])->name('checkout');
-Route::get('/success/{auctionID}/{bidderID}', [PaymentController::class, 'success'])->name('success');
+Route::post('/checkout/{auctionID}', [PaymentController::class, 'checkout'])->name('checkout');
+Route::get('/success/{auctionID}', [PaymentController::class, 'success'])->name('success');
