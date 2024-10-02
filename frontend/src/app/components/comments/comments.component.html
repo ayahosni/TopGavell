@@ -1,1 +1,23 @@
-<p>comments works!</p>
+<div style="margin-top: 50px;">
+    <h3>Comments</h3>
+  
+    <div *ngIf="comments && comments.length > 0">
+      <ul>
+        <li *ngFor="let comment of comments">
+          <p><strong>{{ comment.creator_name }}</strong> at {{ comment.created_at | date:'short' }}:</p>
+          <p>{{ comment.content }}</p>
+        </li>
+      </ul>
+    </div>
+  
+    <div *ngIf="comments && comments.length === 0">
+      <p>No comments yet.</p>
+    </div>
+  
+    <form (ngSubmit)="submitComment()">
+      <textarea [(ngModel)]="newComment.content" name="content" required></textarea> <!-- تعديل هنا -->
+      <button type="submit">Submit</button>
+    </form>
+  
+   
+  

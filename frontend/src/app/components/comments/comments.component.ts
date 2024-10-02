@@ -1,93 +1,69 @@
-import { Component, OnInit } from '@angular/core';
-import { CommentsService } from '../../services/comments.service'; 
-import { Observable } from 'rxjs';
+import { Component, OnInit, Input } from '@angular/core';
+import { CommentsService } from '../../services/comments.service';
+import { RouterModule } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-comments',
-  standalone: true, 
+  standalone: true,
+  imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './comments.component.html',
   styleUrls: ['./comments.component.css']
 })
 export class CommentsComponent implements OnInit {
-  comments: any[] = [];  
-  newComment: string = '';  
-  auctionId: string = '1';  
-  
+  @Input() auctionId: string = ''; 
+  comments: any[] = [];
+  newComment = {
+    content: ''
+  };
+
   constructor(private commentsService: CommentsService) {}
 
   ngOnInit(): void {
-    this.getComments();
+    if (this.auctionId) { // تأكد من أن auctionId ليس فارغًا
+      this.loadComments();
+    } else {
+      console.error('Auction ID is not provided.');
+    }
   }
 
-  getComments() {
+  loadComments() {
     this.commentsService.getCommentsByAuctionId(this.auctionId).subscribe({
       next: (response) => {
-        this.comments = response.comments; 
+        this.comments = response.comments;
         console.log('Comments loaded:', this.comments);
       },
       error: (error) => {
         console.error('Error loading comments:', error);
-      },
-      complete: () => {
-        console.log('Completed loading comments.');
       }
     });
   }
 
-  addComment() {
-    if (this.newComment.trim() === '') {
-      console.log('Comment is empty.');
-      return;
-    }
-
-    const commentData = { text: this.newComment };
-
-    this.commentsService.createComment(this.auctionId, commentData).subscribe({
-      next: (response) => {
-        this.comments.push(response.comment); 
-        this.newComment = ''; 
-        console.log('Comment added:', response.comment);
-      },
-      error: (error) => {
-        console.error('Error adding comment:', error);
-      },
-      complete: () => {
-        console.log('Completed adding comment.');
-      }
-    });
-  }
-
-  updateComment(commentId: string, updatedText: string) {
-    const commentData = { text: updatedText };
-
-    this.commentsService.updateComment(this.auctionId, commentId, commentData).subscribe({
-      next: (response) => {
-        const commentIndex = this.comments.findIndex(comment => comment.id === commentId);
-        if (commentIndex !== -1) {
-          this.comments[commentIndex].text = updatedText; 
+  submitComment(): void {
+    if (this.newComment.content.trim() !== '') {
+      this.commentsService.createComment(this.auctionId, this.newComment).subscribe({
+        next: (response: any) => {
+          this.comments.push(response.comment);
+          this.newComment.content = '';
+        },
+        error: (error: any) => {
+          console.error('Error submitting comment:', error);
         }
-        console.log('Comment updated:', response);
-      },
-      error: (error) => {
-        console.error('Error updating comment:', error);
-      },
-      complete: () => {
-        console.log('Completed updating comment.');
-      }
-    });
+      });
+    } else {
+      alert('Comment content cannot be empty.');
+    }
   }
 
   deleteComment(commentId: string) {
     this.commentsService.deleteComment(this.auctionId, commentId).subscribe({
       next: (response) => {
-        this.comments = this.comments.filter(comment => comment.id !== commentId); 
+        this.comments = this.comments.filter(comment => comment.id !== commentId);
         console.log('Comment deleted:', response);
       },
       error: (error) => {
         console.error('Error deleting comment:', error);
-      },
-      complete: () => {
-        console.log('Completed deleting comment.');
       }
     });
   }
