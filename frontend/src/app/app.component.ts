@@ -7,6 +7,7 @@ import { FooterComponent } from './components/footer/footer.component';
 import { BidsComponent } from './components/bids/bids.component';
 import { ContactComponent } from './components/contact/contact.component';
 import { HomeComponent } from './components/home/home.component';
+import { CommentsComponent } from './components/comments/comments.component';
 import { AuctionsComponent } from './components/auctions/auctions.component'; 
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { FormsModule } from '@angular/forms';  
@@ -32,7 +33,8 @@ import { EmailVerficationComponent } from './components/email-verfication/email-
     FormsModule,
     GuidesComponent,
     DashboardComponent,
-    EmailVerficationComponent
+    EmailVerficationComponent,
+    CommentsComponent
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']  
@@ -40,13 +42,21 @@ import { EmailVerficationComponent } from './components/email-verfication/email-
 export class AppComponent implements OnInit {
   showHeader: boolean = true;
   showFooter: boolean = true;  
+  isAdminRoute: boolean = false;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router) {
+
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        this.isAdminRoute = this.router.url.includes('/admin');
+      }
+    });
+  }
 
   ngOnInit(): void {
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
-        const hideHeaderFooterRoutes = ['/login', '/register',];
+        const hideHeaderFooterRoutes = ['/login', '/register'];  
 
         this.showHeader = !hideHeaderFooterRoutes.includes(this.router.url);
         this.showFooter = !hideHeaderFooterRoutes.includes(this.router.url);

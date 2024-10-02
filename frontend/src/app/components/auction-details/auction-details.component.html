@@ -1,23 +1,22 @@
 <div *ngIf="auction" style="padding-top: 100px;">
   <h2>{{ auction.item_name }}</h2>
   <img [src]="auction.item_media" alt="Item Image" *ngIf="auction.item_media">
-  
-  <p><strong>id:</strong> {{ auction.auction_id}}</p>
+
+  <p><strong>id:</strong> {{ auction.auction_id }}</p>
   <p><strong>Category:</strong> {{ auction.item_category }}</p>
   <p><strong>Description:</strong> {{ auction.item_description }}</p>
   <p><strong>Starting Bid:</strong> {{ auction.starting_bid }} USD</p>
   <p><strong>Bid Increment:</strong> {{ auction.bid_increment }} USD</p>
-  <p><strong>Start Time:</strong> {{ auction.auction_start_time  }}</p>
-  <p><strong>End Time:</strong> {{ auction.auction_end_time  }}</p>
+  <p><strong>Start Time:</strong> {{ auction.auction_start_time }}</p>
+  <p><strong>End Time:</strong> {{ auction.auction_end_time }}</p>
   <p><strong>Status:</strong> {{ auction.auction_status }}</p>
   <p><strong>Country:</strong> {{ auction.item_country }}</p>
-  
+
   <div *ngIf="auction.creator">
     <h4>Created by:</h4>
     <p>{{ auction.creator.name }}</p>
   </div>
 
-  <!-- عرض قائمة المزايدات -->
   <div *ngIf="auction.bids && auction.bids.length > 0">
     <h4>Bids:</h4>
     <ul>
@@ -25,13 +24,31 @@
         {{ bid.amount }} USD by {{ bid.bidder.name }} at {{ bid.created_at }}
       </li>
     </ul>
-    <!-- عرض اخر مزايدة -->
     <p><strong>Last Bid:</strong> {{ auction.bids[auction.bids.length - 1]?.amount }} USD</p>
   </div>
-  
-  <!-- زر المزايدة -->
+
   <button (click)="goToBidPage(auction.auction_id)">Bid Now</button>
-  
+
+  <div style="margin-top: 50px;">
+  <h3>Comments</h3>
+
+  <div *ngIf="comments && comments.length > 0">
+    <ul>
+      <li *ngFor="let comment of comments">
+        <p><strong>{{ comment.creator_name }}</strong> at {{ comment.created_at | date:'short' }}:</p>
+        <p>{{ comment.content }}</p> <!-- تعديل هنا لاستخدام content -->
+      </li>
+    </ul>
+  </div>
+
+  <div *ngIf="comments && comments.length === 0">
+    <p>No comments yet.</p>
+  </div>
+
+  <form (ngSubmit)="submitComment()">
+    <textarea [(ngModel)]="newComment.comment_text" name="content" required></textarea> <!-- تعديل هنا ليتناسب مع المحتوى الجديد -->
+    <button type="submit">Submit</button>
+  </form>
 </div>
 
 <div *ngIf="!auction">

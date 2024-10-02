@@ -9,7 +9,7 @@ import { RegisterComponent } from './components/register/register.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { AddAuctionComponent } from './components/add-auction/add-auction.component';
 import { AuctionDetailsComponent } from './components/auction-details/auction-details.component';
-
+import { CommentsComponent } from './components/comments/comments.component';
 import { GuidesComponent } from './components/guides/guides.component';
 import { EmailVerficationComponent } from './components/email-verfication/email-verfication.component';
 import { authGuard } from './services/auth.guard';
@@ -27,6 +27,7 @@ export const routes: Routes = [
     // { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
     {path: 'dashboard', component: DashboardComponent},
     { path: 'addAuction', component: AddAuctionComponent },
+    { path: 'comments/:id', component: CommentsComponent }, 
     {path: 'guides', component: GuidesComponent},
     {path: 'payment-verification', component: PaymentVerificationComponent},
     {path: 'auction-details', component: AuctionDetailsComponent},
