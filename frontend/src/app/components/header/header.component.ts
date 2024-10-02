@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { RouterLink, RouterLinkActive } from '@angular/router';
-import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-header',
@@ -20,8 +19,18 @@ export class HeaderComponent implements OnInit {
   userName: string = '';
   userProfileImage: string = 'assets/images/user.jpeg'; 
   showDropdown: boolean = false;
+  notificationCount: number = 0;  
 
-  constructor(private router: Router, private authService: AuthService) {}
+  addNotification() {
+    this.notificationCount += 1; // Increment notification count
+  }
+
+
+  clearNotifications() {
+    this.notificationCount = 0; // clear notifications when viewed
+  }
+
+  constructor(private router: Router) {}
 
   ngOnInit(): void {
     this.router.events.subscribe(event => {
@@ -36,7 +45,7 @@ export class HeaderComponent implements OnInit {
       const user = JSON.parse(userData);
       this.userName = user.name; 
       this.isLoggedIn = true;  
-      this.isRegistered = true;
+      this.isRegistered = true;  
     }
   }
 
@@ -49,13 +58,10 @@ export class HeaderComponent implements OnInit {
     this.showDropdown = false;
   }
 
-  logout(){
-    this.authService.logOut().subscribe({
-      next: (response) => {
-        this.router.navigate(['/login']);
-      },
-      error: (error) => {
-      }
-    });
+  logout(): void {
+    localStorage.removeItem('user'); 
+    this.isLoggedIn = false;
+    this.isRegistered = false;
+    this.router.navigate(['/']); 
   }
 }
