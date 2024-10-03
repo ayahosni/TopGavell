@@ -10,8 +10,7 @@ class Payment extends Model
     use HasFactory;
 
     protected $fillable = [
-        'amount', 
-        'transaction_date', 
+        'amount',
         'bidder_id', 
         'auction_id', 
     ];

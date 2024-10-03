@@ -1,13 +1,11 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders} from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { environment } from '../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PaymentService {
-
-  private apiUrl = 'http://localhost:8000/api'; // API URL
 
   constructor(private http: HttpClient) { }
 
@@ -26,9 +24,13 @@ export class PaymentService {
     return undefined; 
   }
 
-  checkout(auctionId: string): Observable<any> {
-    const headers = this.getAuthHeaders(); 
-    const options = headers ? { headers } : {}; 
-    return this.http.post(`${this.apiUrl}/checkout/${auctionId}`, options);
+  createCheckoutSession(auctionId: string) {
+    const headers = this.getAuthHeaders();
+    const options = headers ? { headers } : {};
+    const body = {
+      auction_id: auctionId,
+    };
+    // return this.http.post<{ id: string }>(`${environment.apiUrl}/create-checkout-session`, {});
+    return this.http.post<{ id: string }>(`${environment.apiUrl}/create-checkout-session`, body, options);
   }
 }

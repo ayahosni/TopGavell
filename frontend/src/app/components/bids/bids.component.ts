@@ -56,7 +56,7 @@ export class BidsComponent implements OnInit {
       error: (error: any) => {
         console.log('Error placing bid:', error.error.massage)
         if (error.error.payment == false) {
-          this.router.navigate(['/payment_verification']);
+          this.router.navigate(['/payment']);
         };
       }
     });

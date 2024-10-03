@@ -34,8 +34,8 @@ export class BidService {
   }
 
   getBidsByAuctionId(auctionId: string): Observable<any> {
-    const headers = this.getAuthHeaders(); 
-    const options = headers ? { headers } : {}; 
+    const headers = this.getAuthHeaders();
+    const options = headers ? { headers } : {};
     return this.http.get(`${this.apiUrl}/${auctionId}/bids`, options);
   }
 }

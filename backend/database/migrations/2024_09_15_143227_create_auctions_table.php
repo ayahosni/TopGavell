@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('customer_id')->constrained('customers')->onDelete('cascade');
             $table->foreignId('category_id')->constrained('categories')->onDelete('cascade');
+            $table->foreignId('winning_bidder_id')->constrained('customers')->onDelete('cascade');
             $table->string('item_name');
             $table->text('item_description');
             $table->decimal('starting_bid', 10, 2);

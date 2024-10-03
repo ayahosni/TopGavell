@@ -1,4 +1,3 @@
-import { PaymentVerificationComponent } from './components/payment-verification/payment-verification.component';
 import { Routes } from '@angular/router';
 import { HomeComponent } from './components/home/home.component';
 import { AuctionsComponent } from './components/auctions/auctions.component';
@@ -14,6 +13,7 @@ import { GuidesComponent } from './components/guides/guides.component';
 import { EmailVerficationComponent } from './components/email-verfication/email-verfication.component';
 import { authGuard } from './services/auth.guard';
 import { AuctionComponent } from './components/auction/auction.component';
+import { PaymentComponent } from './components/Payment/Payment.component';
 
 export const routes: Routes = [
     {path: '', component:HomeComponent},
@@ -28,8 +28,9 @@ export const routes: Routes = [
     {path: 'email_verify', component: EmailVerficationComponent, canActivate: [authGuard]},
     // { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
     {path: 'dashboard', component: DashboardComponent},
-    { path: 'addAuction', component: AddAuctionComponent },
-    { path: 'comments/:id', component: CommentsComponent }, 
+    {path: 'addAuction', component: AddAuctionComponent },
+    {path: 'comments/:id', component: CommentsComponent }, 
     {path: 'guides', component: GuidesComponent},
-    {path: '**', redirectTo: '/login'},
+    {path: 'payment', component: PaymentComponent},
+    // {path: '**', redirectTo: '/login'},
 ];

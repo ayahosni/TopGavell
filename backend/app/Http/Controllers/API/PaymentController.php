@@ -1,110 +1,78 @@
 <?php
 
 namespace App\Http\Controllers\API;
-
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-
-use Stripe\Checkout\Session;
-
-use Stripe\Stripe;
-use Stripe\PaymentIntent;
-
 use App\Models\Auction;
-use App\Models\Customer;
-use App\Models\Payment;
 use App\Models\Bid;
+use App\Models\Payment;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Stripe\Stripe;
+use Stripe\Checkout\Session;
 
 class PaymentController extends Controller
 {
-    //
-    public function index()
-    {
-        return view('PaymIndex');
-    }
-    public function checkout($auctionID){
-
-        // check if the customer is bidding for the first time or not for the Insurance payment 
-        // $isFound=Bid::where('auction_id', $auction->id)->find($customer->id);
-        // if(!$isFound){
-        //     // return route('checkout', ['auctionID' => $auction->id, 'bidderID' => $customer->id]);
-        //     return route('checkout', ['auctionID' => $auction->id, 'bidderID' => $customer->id]);
-        // }
+    public function createCheckoutSession(Request $request)
+    {   
+        $data=$request->all();
+        $auctionID = $data['auction_id'];
         $bidderID = Auth::id();
+        // return response()->json(['id' => $bidderID]);
         $auction = Auction::findOrFail($auctionID);
         Stripe::setApiKey(env('STRIPE_SECRET'));
 
-        // dd($auction);
-
-        $amount = $auction->starting_bid;
         $item_name = $auction->item_name;
 
         if($auction->auction_status == "Closed") {
             $amount = Bid::where('auction_id', $auction->id)->max('bid_amount');
+            if(!$amount){
+                $amount = $auction->starting_bid;
+            }
         }
-
-        // dd(Bid::where('auction_id', $auction->id)->find($bidderID));
-        // dd(Bid::where('auction_id', $auction->id)->where('customer_id', $bidderID)->get());
-
-
+        $amount = $amount*100;
+        // Create a new checkout session
         $session = Session::create([
-            'line_items'  => [
+            'payment_method_types' => ['card'],
+            'line_items' => [
                 [
                     'price_data' => [
-                        'currency'     => 'USD',
+                        'currency' => 'usd',
                         'product_data' => [
-                            'name' => $item_name,
+                            'name' => 'Auction Insurance',
                         ],
-                        'unit_amount'  => $amount+0,
+                        'unit_amount' => $amount, // Amount in cents
                     ],
-                    'quantity'   => 1,
+                    'quantity' => 1,
                 ],
             ],
-            'mode'        => 'payment',
-            'success_url' => route('success',['auctionID' => $auctionID]),
-            'cancel_url'  => route('index'),
+            'mode' => 'payment',
+            'success_url' => route('success',['auctionID' => $auctionID,'bidderID'=> $bidderID]),
+            'cancel_url' => route('cancel'),   // URL after payment cancellation
         ]);
 
-        return response()->json([
-            'gateway link' => $session->url
-        ], 400);
-
-        return redirect()->away($session->url);
-
-
-        // Stripe::setApiKey(env('STRIPE_SECRET'));
-
-        // Create a PaymentIntent with the order amount and currency
-        // $paymentIntent = PaymentIntent::create([
-        //     'amount' => 1000,  // Example amount in cents (1000 = $10)
-        //     'currency' => 'usd',
-        //     'payment_method_types' => ['card'],  // Specify card payments
-        // ]);
-
-        // return response()->json([
-        //     'clientSecret' => $paymentIntent->client_secret,
-        // ]);
+        return response()->json(['id' => $session->id]);
     }
-
-    public function success($auctionID)
+    public function success($auctionID,$bidderID)
     {
 
         $auction = Auction::findOrFail($auctionID);
         $amount =$auction->starting_bid;
 
-        //if pay for winneng
+
         if($auction->auction_status == "Closed") {
             $amount = Bid::where('auction_id', $auction->id)->max('bid_amount');
+            if(!$amount){
+                $amount = $auction->starting_bid;
+            }
         }
 
         $data=[
             "amount" => $amount,
-            "auction_id" => $auctionID
+            "auction_id" => $auctionID,
+            'bidder_id'=>$bidderID
         ];
 
         Payment::create($data);
-
-        return view('PaymIndex');
+        return redirect('http://localhost:4200/auction/' . $auctionID);
     }
 }

@@ -8,7 +8,6 @@ use App\Http\Controllers\API\CommentController;
 use App\Http\Controllers\API\NotificationController;
 use App\Http\Controllers\API\PaymentController;
 
-
 Route::post('/register', [UserController::class, 'register'])->name('register');
 Route::post('email_verify', [UserController::class,'email_verify'])->name('email_verify');
 route::get('/login', [UserController::class, 'notLoggedIn'])->name('login');
@@ -26,6 +25,14 @@ Route::apiResource('{auction}/bids', BidController::class);
 Route::apiResource('{auction}/comments', CommentController::class);
 Route::get('/notifications', [NotificationController::class, 'index'])->middleware('auth:sanctum');
 
-// Route::get('/index', [PaymentController::class, 'index'])->name('index');
-Route::post('/checkout/{auctionID}', [PaymentController::class, 'checkout'])->name('checkout');
-Route::get('/success/{auctionID}', [PaymentController::class, 'success'])->name('success');
+// Route::get('/checkout', [PaymentController::class, 'index'])->name('index');
+// Route::post('/checkout/{auctionID}/{bidderID}', [PaymentController::class, 'checkout'])->name('checkout');
+// Route::get('/success/{auctionID}/{bidderID}', [PaymentController::class, 'success'])->name('success');
+
+
+Route::post('/create-checkout-session', [PaymentController::class, 'createCheckoutSession'])->name('createSession')->middleware('auth:sanctum');
+Route::get('/success/{auctionID}/{bidderID}', [PaymentController::class, 'success'])->name('success');
+
+Route::get('/cancel', function () {
+  return 'Payment Cancelled';
+})->name('cancel');
