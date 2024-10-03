@@ -15,7 +15,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 export class AuctionDetailsComponent implements OnInit {
     @Input() auctionId: string = '';
     auction: any;
-
+    auctionEndTime: Date | null = null; 
+    isAuctionEnded: boolean = false; 
     constructor(private auctionService: AuctionService, private route: ActivatedRoute, private router: Router) { }
 
     ngOnInit(): void {
@@ -32,4 +33,9 @@ export class AuctionDetailsComponent implements OnInit {
             },
         });
     }
+    checkAuctionStatus(auctionEndTime: Date): string {
+        const currentTime = new Date();
+        return auctionEndTime && auctionEndTime < currentTime ? 'closed' : 'opened';
+      }
+      
 }

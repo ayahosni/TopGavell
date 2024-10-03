@@ -86,22 +86,22 @@
               <span>{{ auction.item_country }}</span>
             </div>
             <p class="auction-end-date">{{ auction.auction_end_time | date:'short' }}</p>
-  
-            <p class="auction-status" [ngClass]="{'opened': auction.auction_status === 'opened', 'closed': auction.auction_status === 'closed'}">
-              Status: {{ auction.auction_status }}
+      
+            <p class="auction-status" [ngClass]="{'opened': checkAuctionStatus(auction.auction_end_time) === 'opened', 'closed': checkAuctionStatus(auction.auction_end_time) === 'closed'}">
+              Status: {{ checkAuctionStatus(auction.auction_end_time) }}
             </p>
-  
-            <div class="bid-btn" *ngIf="auction.auction_status === 'opened'">
+      
+            <div class="bid-btn" *ngIf="checkAuctionStatus(auction.auction_end_time) === 'opened'">
               <button routerLink="/payment-verification">Place Bid Now</button>
             </div>
-            
-            <!-- Add this clickable div to navigate to auction details -->
+      
             <div class="auction-detail-link">
               <a [routerLink]="['/auction', auction.auction_id]">View Auction</a>
             </div>
           </div>
         </div>
       </div>
+      
     </div>
     <ng-template #noAuctions>
       <p>No auctions available at this time.</p>
