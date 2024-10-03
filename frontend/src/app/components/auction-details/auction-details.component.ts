@@ -91,6 +91,7 @@ export class AuctionDetailsComponent implements OnInit {
             },
         });
     }
+<<<<<<< HEAD
 
     checkAuctionStatus(auctionEndTime: Date): string {
         const currentTime = new Date();
@@ -100,3 +101,11 @@ export class AuctionDetailsComponent implements OnInit {
         this.selectedImage = image;
     }
 }
+=======
+    checkAuctionStatus(auctionEndTime: Date): string {
+        const currentTime = new Date();
+        return auctionEndTime && auctionEndTime < currentTime ? 'closed' : 'opened';
+      }
+      
+}
+>>>>>>> b43b8a7 (auction status)

@@ -6,7 +6,10 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommentsComponent } from "../comments/comments.component";
 import { AuctionService } from '../../services/auction.service';
+<<<<<<< HEAD
 
+=======
+>>>>>>> b43b8a7 (auction status)
 
 @Component({
   selector: 'app-auction',
