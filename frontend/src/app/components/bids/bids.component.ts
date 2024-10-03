@@ -23,11 +23,11 @@ export class BidsComponent implements OnInit {
   hasPaid: boolean | null = null;
 
   constructor(
-    private paymentService: PaymentService,
     private auctionService: AuctionService,
     private route: ActivatedRoute,
     private bidService: BidService,
     private router: Router,
+    private paymentService: PaymentService
   ) { }
 
   ngOnInit(): void {
