@@ -68,18 +68,18 @@
   border: none; /* إزالة الحدود */
   border-radius: 5px; /* زوايا مدورة */
   font-size: 16px; /* حجم خط للأزرار */
-  cursor: pointer; /* تغيير المؤشر عند التمرير */
-  transition: background-color 0.3s; /* تأثير انتقال على الخلفية */
+  cursor: pointer; 
+  transition: background-color 0.3s; 
 }
 
 .submit-bid-button:hover {
-  background-color: #218838; /* لون أغمق عند التمرير */
+  background-color: #218838; 
 }
 
 .loading-message {
-  text-align: center; /* توسيط الرسالة */
-  font-size: 18px; /* حجم خط للرسالة */
-  color: #777; /* لون رمادي للرسالة */
+  text-align: center; 
+  font-size: 18px; 
+  color: #777; 
 }
 
 .message {

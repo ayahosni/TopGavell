@@ -22,7 +22,6 @@ export class BidsComponent implements OnInit {
   message: string = ''; 
 
   constructor(
-    private paymentService: PaymentService,
     private auctionService: AuctionService,
     private route: ActivatedRoute,
     private bidService: BidService,
@@ -57,7 +56,7 @@ export class BidsComponent implements OnInit {
     this.bidService.placeBid(this.auctionId, this.bidAmount, bidInfo).subscribe({
       next: (response: any) => {
         console.log('Bid placed successfully', response);
-        this.message = 'Bid placed successfully!'; 
+        this.message = 'Bid placed successfully!';
         this.loadAuctionDetails(); 
       },
       error: (error: any) => {
