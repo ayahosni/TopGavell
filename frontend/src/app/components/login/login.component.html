@@ -2,34 +2,22 @@
 <div class="login-container">
   <div class="welcome">Welcome Back</div>
   <div *ngFor="let entry of message | keyvalue" class="error">
-    <h2> {{ entry.value }} <br> </h2>
+    <p>{{ entry.value }}</p>
   </div>
   <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
     <div class="form-group">
       <label for="email">Email</label>
-      <input
-        type="email"
-        id="email"
-        formControlName="email"
-        required
-        class="form-control"
-      />
+      <input type="email" id="email" formControlName="email" required class="form-control" />
       <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" class="error">
-        Email is required
+        <span>Email is required</span>
       </div>
     </div>
 
     <div class="form-group">
       <label for="password">Password</label>
-      <input
-        type="password"
-        id="password"
-        formControlName="password"
-        required
-        class="form-control"
-      />
+      <input type="password" id="password" formControlName="password" required class="form-control" />
       <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" class="error">
-        Password is required
+        <span>Password is required</span>
       </div>
     </div>
 
@@ -37,6 +25,9 @@
       Sign In
     </button>
     <span class="forgot"><a href="#">Forgot Password?</a></span>
-    <div class="join"><span>New to <span class="gavel">T</span>OPGAVEL? </span><a routerLink="/register">Join Now</a></div>
+    <div class="join">
+      <span>New to <span class="gavel">T</span>OPGAVEL?</span> 
+      <a routerLink="/register">Join Now</a>
+    </div>
   </form>
 </div>

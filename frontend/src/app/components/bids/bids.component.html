@@ -1,25 +1,30 @@
-<br><br><br><br>
-<div *ngIf="auction; else loading">`
-    <div *ngIf="auction.bids && 0 < auction.bids.length" >
-        <h4>Bids:</h4>
-        @for (bid of auction.bids; track bid.id) {
-            <p><strong>bid amount:</strong> {{ bid.bid_amount }} USD <br>
-            <strong>by:</strong> {{ bid.customer_id }}<br>
-            <strong>at:</strong> {{ bid.created_at }}</p>
-            <hr>
-        }
+<div class="bids-container" *ngIf="auction; else loading">
+    <div *ngIf="message" class="message" [ngClass]="{'error': message.includes('Error'), 'success': message.includes('success')}">
+      {{ message }}
     </div>
-
-    <div *ngIf="0 == auction.bids.length">
-        <p>No previous bids. You can place a bid starting from {{ auction.starting_bid }} USD.</p>
+  
+    <h4 class="bids-title">Bids:</h4>
+    <div class="bids-list">
+      <div class="bid-card" *ngFor="let bid of auction.bids;">
+        <p class="bid-amount"><strong>Bid Amount:</strong> {{ bid.bid_amount }} USD</p>
+        <p class="bid-by"><strong>By:</strong> {{ bid.customer_id }}</p>
+        <p class="bid-time"><strong>At:</strong> {{ bid.created_at | date: 'short' }}</p>
+        <hr>
+      </div>
     </div>
-
-    <form (ngSubmit)="placeBid()">  
-        <label for="bidAmount">Your Bid:</label>
-        <input type="number" id="bidAmount" [(ngModel)]="bidAmount" name="bidAmount" [min]="auction.starting_bid" required>
-        <button type="submit">Submit Bid</button>
+  
+    <div *ngIf="auction.bids.length === 0">
+      <p class="no-bids-message">No previous bids. You can place a bid starting from <strong>{{ auction.starting_bid }} USD</strong>.</p>
+    </div>
+  
+    <form class="bid-form" (ngSubmit)="placeBid()">
+      <label for="bidAmount" class="bid-label">Your Bid:</label>
+      <input type="number" id="bidAmount" [(ngModel)]="bidAmount" name="bidAmount" [min]="auction.starting_bid" required class="bid-input">
+      <button type="submit" class="submit-bid-button">Submit Bid</button>
     </form>
-</div>
-<ng-template #loading>
-    <p>Loading bidders details...</p>
-</ng-template>
+  </div>
+  
+  <ng-template #loading>
+    <p class="loading-message">Loading auction details...</p>
+  </ng-template>
+  

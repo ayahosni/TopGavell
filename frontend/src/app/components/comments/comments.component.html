@@ -1,21 +1,14 @@
-<div style="margin-top: 50px;">
+<div>
   <h3>Comments</h3>
 
-  <div *ngIf="comments && comments.length > 0">
-    <ul>
-      <li *ngFor="let comment of comments">
-        <p><strong>{{ comment.creator_name }}</strong> at {{ comment.created_at | date:'short' }}:</p>
-        <p>{{ comment.content }}</p>
-      </li>
-    </ul>
-  </div>
-
-  <div *ngIf="comments && comments.length === 0">
-    <p>No comments yet.</p>
+  <div *ngFor="let comment of comments">
+    <p><strong>{{ comment.creator_name }}</strong>: {{ comment.content }}</p>
+    <button (click)="editComment(comment)">Edit</button>
+    <button (click)="deleteComment(comment.comment_id)">Delete</button>
   </div>
 
   <form (ngSubmit)="submitComment()">
-    <textarea [(ngModel)]="newComment.comment_text" name="content" required></textarea> <!-- تعديل هنا -->
-    <button type="submit">Submit</button>
+    <textarea [(ngModel)]="newComment.comment_text" name="commentText" required></textarea>
+    <button type="submit">{{ editMode ? 'Update' : 'Submit' }}</button>
   </form>
 </div>

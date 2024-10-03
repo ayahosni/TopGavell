@@ -28,8 +28,8 @@ export const routes: Routes = [
     {path: 'email_verify', component: EmailVerficationComponent, canActivate: [authGuard]},
     // { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
     {path: 'dashboard', component: DashboardComponent},
-    {path: 'addAuction', component: AddAuctionComponent },
-    {path: 'comments/:id', component: CommentsComponent }, 
+    { path: 'addAuction', component: AddAuctionComponent },
+  { path: 'auction/:auctionId/comments', component: CommentsComponent }, // مسار عرض التعليقات
     {path: 'guides', component: GuidesComponent},
     {path: 'payment', component: PaymentComponent},
     // {path: '**', redirectTo: '/login'},

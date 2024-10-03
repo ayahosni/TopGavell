@@ -1,0 +1,84 @@
+.comments-section {
+    max-width: 800px; /* Maximum width of comments section */
+    margin: auto; /* Center the section */
+    padding: 20px; /* Padding for inner content */
+    background-color: #f9f9f9; /* Light background color */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+.comments-title {
+    font-size: 24px; /* Larger font size for title */
+    color: #333; /* Dark text color */
+    margin-bottom: 20px; /* Spacing below title */
+}
+
+.comments-list {
+    list-style-type: none; /* Remove default list style */
+    padding: 0; /* Remove padding */
+}
+
+.comment-item {
+    background-color: #fff; /* White background for comments */
+    margin-bottom: 15px; /* Space between comments */
+    padding: 15px; /* Padding for each comment */
+    border-radius: 6px; /* Rounded corners for comment items */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05); /* Subtle shadow for comments */
+}
+
+.comment-author {
+    font-weight: bold; /* Bold for author name */
+    color: #007bff; /* Blue color for author name */
+}
+
+.comment-content {
+    margin-top: 5px; /* Space above comment content */
+    color: #555; /* Dark gray for comment text */
+}
+
+.no-comments {
+    text-align: center; /* Centered text for no comments */
+    color: #888; /* Gray color for no comments message */
+    font-size: 16px; /* Slightly larger font size */
+}
+
+.comment-form {
+    margin-top: 20px; /* Space above form */
+}
+
+.comment-form textarea {
+    width: 100%; /* Full width for textarea */
+    height: 100px; /* Height of textarea */
+    padding: 10px; /* Padding inside textarea */
+    border: 1px solid #ccc; /* Border style */
+    border-radius: 4px; /* Rounded corners */
+    resize: none; /* Disable resizing */
+    font-size: 16px; /* Font size */
+    margin-bottom: 10px; /* Space below textarea */
+}
+
+.submit-button {
+    background-color: #007bff; /* Blue background for button */
+    color: white; /* White text color */
+    padding: 10px 20px; /* Padding for button */
+    border: none; /* No border */
+    border-radius: 4px; /* Rounded corners for button */
+    cursor: pointer; /* Pointer cursor on hover */
+    font-size: 16px; /* Font size */
+    transition: background-color 0.3s; /* Transition effect for background */
+}
+
+.submit-button:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}
+
+/* Media query for responsive design */
+@media (max-width: 768px) {
+    .comments-section {
+        padding: 15px; /* Adjust padding on smaller screens */
+    }
+
+    .comment-form textarea {
+        height: 80px; /* Reduce height on smaller screens */
+    }
+}

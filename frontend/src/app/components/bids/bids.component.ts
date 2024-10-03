@@ -19,8 +19,10 @@ export class BidsComponent implements OnInit {
   auction: any;
   lastBid: any;
   bidAmount: number = 0;
+  message: string = ''; 
 
   constructor(
+    private paymentService: PaymentService,
     private auctionService: AuctionService,
     private route: ActivatedRoute,
     private bidService: BidService,
@@ -45,13 +47,18 @@ export class BidsComponent implements OnInit {
   }
 
   placeBid(): void {
-    localStorage.setItem('auctionIdToBidOn',this.auctionId);
+    localStorage.setItem('auctionIdToBidOn', this.auctionId);
     const bidInfo = {
       bid_amount: this.bidAmount,
     };
+
+    this.message = '';
+
     this.bidService.placeBid(this.auctionId, this.bidAmount, bidInfo).subscribe({
       next: (response: any) => {
         console.log('Bid placed successfully', response);
+        this.message = 'Bid placed successfully!'; 
+        this.loadAuctionDetails(); 
       },
       error: (error: any) => {
         console.log('Error placing bid:', error.error.massage)

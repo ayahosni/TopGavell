@@ -1,23 +1,26 @@
-<div *ngIf="auction" style="padding-top: 100px;">
-  <h2>{{ auction.item_name }}</h2>
-  <img [src]="auction.item_media" alt="Item Image" *ngIf="auction.item_media">
-  
-  <p><strong>id:</strong> {{ auction.auction_id}}</p>
-  <p><strong>Category:</strong> {{ auction.item_category }}</p>
-  <p><strong>Description:</strong> {{ auction.item_description }}</p>
-  <p><strong>Starting Bid:</strong> {{ auction.starting_bid }} USD</p>
-  <p><strong>Bid Increment:</strong> {{ auction.bid_increment }} USD</p>
-  <p><strong>Start Time:</strong> {{ auction.auction_start_time  }}</p>
-  <p><strong>End Time:</strong> {{ auction.auction_end_time  }}</p>
-  <p><strong>Status:</strong> {{ auction.auction_status }}</p>
-  <p><strong>Country:</strong> {{ auction.item_country }}</p>
-  
-  <div *ngIf="auction.creator">
-    <h4>Created by:</h4>
-    <p>{{ auction.creator.name }}</p>
+<br>
+
+<div class="auction-container" *ngIf="auction">
+  <h2 class="auction-title">{{ auction.item_name }}</h2>
+  <img [src]="auction.item_media" alt="Item Image" class="auction-image" *ngIf="auction.item_media">
+
+  <div class="auction-details">
+      <p><strong>Category:</strong> {{ auction.item_category }}</p>
+      <p><strong>Description:</strong> {{ auction.item_description }}</p>
+      <p><strong>Starting Bid:</strong> {{ auction.starting_bid }} USD</p>
+      <p><strong>Bid Increment:</strong> {{ auction.bid_increment }} USD</p>
+      <p><strong>Start Time:</strong> {{ auction.auction_start_time | date: 'short' }}</p>
+      <p><strong>End Time:</strong> {{ auction.auction_end_time | date: 'short' }}</p>
+      <p><strong>Status:</strong> {{ auction.auction_status }}</p>
+      <p><strong>Country:</strong> {{ auction.item_country }}</p>
+  </div>
+
+  <div *ngIf="auction.creator" class="creator-info">
+      <h4>Created by:</h4>
+      <p>{{ auction.creator.name }}</p>
   </div>
 </div>
 
-<div *ngIf="!auction">
+<div *ngIf="!auction" class="loading-message">
   <p>Loading auction details...</p>
 </div>

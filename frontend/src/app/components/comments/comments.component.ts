@@ -15,6 +15,8 @@ export class CommentsComponent implements OnInit {
   @Input() auctionId: string = ''; 
   comments: any[] = [];
   newComment = { comment_text: '' };
+  editMode: boolean = false;
+  currentCommentId: string | null = null;
 
 
   constructor(private commentsService: CommentsService) {}
@@ -41,29 +43,56 @@ export class CommentsComponent implements OnInit {
 
   submitComment(): void {
     if (this.newComment.comment_text.trim() !== '') {
-      this.commentsService.createComment(this.auctionId, this.newComment).subscribe({
-        next: (response: any) => {
-          this.comments.push(response.comment);
-          this.newComment.comment_text = '';
-        },
-        error: (error: any) => {
-          console.error('Error submitting comment:', error);
-        }
-      });
+      if (this.editMode) {
+        this.commentsService.updateComment(this.auctionId, this.currentCommentId!, { comment_text: this.newComment.comment_text }).subscribe({
+          next: (response) => {
+            const index = this.comments.findIndex(comment => comment.comment_id === this.currentCommentId);
+            if (index !== -1) {
+              this.comments[index] = response.comment;
+            }
+            this.resetForm();
+          },
+          error: (error) => {
+            console.error('Error updating comment:', error);
+          }
+        });
+      } else {
+        this.commentsService.createComment(this.auctionId, this.newComment).subscribe({
+          next: (response) => {
+            this.comments.push(response.comment);
+            this.resetForm();
+          },
+          error: (error) => {
+            console.error('Error submitting comment:', error);
+          }
+        });
+      }
     } else {
       alert('Comment content cannot be empty.');
     }
   }
 
+  editComment(comment: any) {
+    this.newComment.comment_text = comment.content; 
+    this.currentCommentId = comment.comment_id; 
+    this.editMode = true; 
+  }
+
   deleteComment(commentId: string) {
     this.commentsService.deleteComment(this.auctionId, commentId).subscribe({
       next: (response) => {
-        this.comments = this.comments.filter(comment => comment.id !== commentId);
+        this.comments = this.comments.filter(comment => comment.comment_id !== commentId);
         console.log('Comment deleted:', response);
       },
       error: (error) => {
         console.error('Error deleting comment:', error);
       }
     });
+  }
+  
+  resetForm() {
+    this.newComment.comment_text = '';
+    this.editMode = false;
+    this.currentCommentId = null; 
   }
 }
