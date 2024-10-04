@@ -173,7 +173,6 @@ class AuctionController extends Controller
           // Check if the time is before auction start
     if ($currentTime < $auction->auction_start_time){
           // Check if the user is either the owner of the auction or an admin
-
       if ($user->role === 'admin' || $user->id === $auction->customer->user_id) {
       $auction->delete();
 
@@ -188,27 +187,12 @@ class AuctionController extends Controller
     ], 403);
   }
 
-  /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  // public function updateAuctionStatus()
-  // {
-  //     $currentTime = Carbon::now();
-
-  //     Auction::where('auction_start_time', '<=', $currentTime)
-  //         ->where('auction_end_time', '>', $currentTime)
-  //         ->where('auction_status', 'Closed')
-  //         ->update(['auction_status' => 'Open']);
-
-  //     Auction::where('auction_end_time', '<=', $currentTime)
-  //         ->where('auction_status', 'Open')
-  //         ->update(['auction_status' => 'Closed']);
-  // }
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
   public function searchByCategory(Request $request)
   {
     $categoryId = $request->input('category_id');
 
-    // Validate the category_id to ensure it's provided and exists in the categories table
     $validation = Validator::make($request->all(), [
       'category_id' => ['required', 'exists:categories,id'],
     ]);
@@ -217,20 +201,18 @@ class AuctionController extends Controller
       return response()->json($validation->messages(), 400);
     }
 
-    // Fetch auctions that belong to the provided category
     $auctions = Auction::where('category_id', $categoryId)->get();
 
-    // Return the auctions as a collection using the AuctionResource
     return AuctionResource::collection($auctions);
   }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   public function approve($id)
     {
-      // $user = Auth::user();
+      $user = Auth::user();
 
       // Check if the user is admin
-      // if ($user->role === 'admin') {
+      if ($user->role === 'admin') {
 
         $auction=Auction::find($id);
         $auction->approval_status = 'approved';
@@ -239,10 +221,10 @@ class AuctionController extends Controller
         return response()->json([
           'message' => 'Auction approved successfully'
         ], 200);
-      // }
-      // return response()->json([
-      //   'message' => 'Unauthorized.'
-      // ], 403); 
+      }
+      return response()->json([
+        'message' => 'Unauthorized.'
+      ], 403); 
 
         
 
@@ -254,7 +236,7 @@ class AuctionController extends Controller
       // $user = Auth::user();
 
       // Check if the user is admin
-      // if ($user->role === 'admin') {
+      if ($user->role === 'admin') {
 
         $auction=Auction::find($id);
         $auction->approval_status = 'rejected';
@@ -263,10 +245,10 @@ class AuctionController extends Controller
         return response()->json([
           'message' => 'Auction rejected successfully'
         ], 200);
-      // }
-      // return response()->json([
-      //   'message' => 'Unauthorized.'
-      // ], 403); 
+      }
+      return response()->json([
+        'message' => 'Unauthorized.'
+      ], 403); 
 
         
 
