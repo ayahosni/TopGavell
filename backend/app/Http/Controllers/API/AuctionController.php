@@ -26,20 +26,23 @@ class AuctionController extends Controller
   // {
   //   return AuctionResource::collection(Auction::all());
   // }
-
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // show all approved auctions
-
   public function index()
 {
-    // Retrieve all auctions where approval_status is "approved"
     $approvedAuctions = Auction::where('approval_status', 'approved')->get();
-
-    // Return the approved auctions using the AuctionResource collection
     return AuctionResource::collection($approvedAuctions);
 }
 
   /////////////////////////////////////////////////////////////////////////////////////////////////////////
+  public function pendingAuctions()
+{
+    $pendingAuctions = Auction::where('approval_status', 'pending')->get();
 
+    return AuctionResource::collection($pendingAuctions);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   public function show(Auction $auction)
   {
@@ -61,6 +64,7 @@ class AuctionController extends Controller
     return AuctionResource::collection($activeAuctions);
   }
   /////////////////////////////////////////////////////////////////////////////////////////////////////////
+  
 
   public function store(Request $request)
   {
