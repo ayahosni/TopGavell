@@ -22,17 +22,25 @@ class AuctionController extends Controller
   {
     $this->middleware('auth:sanctum')->only('store', 'update', 'destroy','pendingAuctions');
   }
-  // public function index()
-  // {
-  //   return AuctionResource::collection(Auction::all());
-  // }
-////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// show all approved auctions
-  public function index()
-{
-    $approvedAuctions = Auction::where('approval_status', 'approved')->get();
-    return AuctionResource::collection($approvedAuctions);
-}
+
+  public function index(Request $request)
+  {
+      $perPage = $request->input('per_page', 10); 
+      
+      $auctions = Auction::paginate($perPage);
+  
+      return AuctionResource::collection($auctions)
+          ->additional([
+              'meta' => [
+                  'current_page' => $auctions->currentPage(),
+                  'last_page' => $auctions->lastPage(),
+                  'per_page' => $auctions->perPage(),
+                  'total' => $auctions->total(),
+              ]
+          ]);
+  }
+  
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   /////////////////////////////////////////////////////////////////////////////////////////////////////////
   public function pendingAuctions()
@@ -210,68 +218,71 @@ return response()->json([
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
   public function searchByCategory(Request $request)
   {
-    $categoryId = $request->input('category_id');
+      $categoryId = $request->input('category_id');
+  
+      $validation = Validator::make($request->all(), [
+          'category_id' => ['required', 'exists:categories,id'],
+      ]);
+  
+      if ($validation->fails()) {
+          return response()->json($validation->messages(), 400);
+      }
+  
+      $perPage = $request->input('per_page', 10);
+  
+      $auctions = Auction::where('category_id', $categoryId)->paginate($perPage);
+  
+      return AuctionResource::collection($auctions)
+          ->additional([
+              'meta' => [
+                  'current_page' => $auctions->currentPage(),
+                  'last_page' => $auctions->lastPage(),
+                  'per_page' => $auctions->perPage(),
+                  'total' => $auctions->total(),
+              ]
+          ]);
+  }
+  public function search(Request $request)
+{
+    $searchTerm = $request->input('search');
 
     $validation = Validator::make($request->all(), [
-      'category_id' => ['required', 'exists:categories,id'],
+        'search' => ['required', 'string', 'min:1'],
     ]);
 
     if ($validation->fails()) {
-      return response()->json($validation->messages(), 400);
+        return response()->json($validation->messages(), 400);
     }
 
-    $auctions = Auction::where('category_id', $categoryId)->get();
+    $perPage = $request->input('per_page', 10);
 
-    return AuctionResource::collection($auctions);
-  }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    $auctions = Auction::where('item_name', 'LIKE', '%' . $searchTerm . '%')
+        ->orWhere('item_description', 'LIKE', '%' . $searchTerm . '%')
+        ->orWhere('item_country', 'LIKE', '%' . $searchTerm . '%')
+        ->paginate($perPage);
 
-  public function approve($id)
-    {
-      $user = Auth::user();
-
-      // Check if the user is admin
-      if ($user->role === 'admin') {
-
-        $auction=Auction::find($id);
-        $auction->approval_status = 'approved';
-        $auction->save();
-  
+    if ($auctions->isEmpty()) {
         return response()->json([
-          'message' => 'Auction approved successfully'
+            'data' => [],
+            'meta' => [
+                'current_page' => 1,
+                'last_page' => 1,
+                'per_page' => $perPage,
+                'total' => 0,
+            ]
         ], 200);
-      }
-      return response()->json([
-        'message' => 'Unauthorized.'
-      ], 403); 
-
-        
-
     }
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public function rejected($id)
-    {
-      // $user = Auth::user();
-
-      // Check if the user is admin
-      if ($user->role === 'admin') {
-
-        $auction=Auction::find($id);
-        $auction->approval_status = 'rejected';
-        $auction->save();
-  
-        return response()->json([
-          'message' => 'Auction rejected successfully'
-        ], 200);
-      }
-      return response()->json([
-        'message' => 'Unauthorized.'
-      ], 403); 
-
-        
-
-    }
+    return AuctionResource::collection($auctions)
+        ->additional([
+            'meta' => [
+                'current_page' => $auctions->currentPage(),
+                'last_page' => $auctions->lastPage(),
+                'per_page' => $auctions->perPage(),
+                'total' => $auctions->total(),
+            ]
+        ]);
+}
 
 
 }

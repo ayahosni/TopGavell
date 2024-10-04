@@ -1,6 +1,6 @@
 // auction.service.ts
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpErrorResponse ,HttpParams} from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
@@ -59,9 +59,22 @@ export class AuctionService {
   }
   
 
-  getAuctions(): Observable<any[]> {
-    return this.http.get<any[]>(this.apiUrl);
-  }
+  getAuctions(page: number = 1, perPage: number = 10): Observable<any> {
+    let params = new HttpParams()
+        .set('page', page.toString())
+        .set('per_page', perPage.toString());
+
+    return this.http.get<any>(this.apiUrl, { params });
+}
+
+searchAuctions(searchTerm: string, page: number = 1, perPage: number = 10): Observable<any> {
+    let httpParams = new HttpParams()
+        .set('search', searchTerm)
+        .set('page', page.toString())
+        .set('per_page', perPage.toString());
+
+    return this.http.get<any>(`${this.apiUrl}/search`, { params: httpParams });
+}
 
   // Get all auctions
   getAllAuctions(): Observable<any[]> {

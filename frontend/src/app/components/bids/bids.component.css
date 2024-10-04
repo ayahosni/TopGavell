@@ -48,7 +48,7 @@
 }
 
 .bid-label {
-  font-weight: bold;
+  font-weight: bold; 
   margin-bottom: 5px; 
 }
 
@@ -95,4 +95,32 @@
 .success {
   color: green;
   background-color: #d4edda;
+}
+.error {
+  color: #d8000c; 
+  background-color: #ffbaba; 
+  border: 1px solid #d8000c; 
+  padding: 8px;
+  margin-top: 5px;
+  border-radius: 4px;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.error::before {
+  content: "⚠️";
+  margin-right: 8px;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

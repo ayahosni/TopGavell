@@ -1,14 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { Router } from '@angular/router';
-import { CommonModule } from '@angular/common';
-<<<<<<< HEAD
-import { RouterModule } from '@angular/router';
-=======
-import { RouterModule } from '@angular/router'; 
->>>>>>> b43b8a7 (auction status)
 import { AuctionService } from '../../services/auction.service';
 import { AuthService } from '../../services/auth.service';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -19,11 +16,12 @@ import { AuthService } from '../../services/auth.service';
 })
 export class HomeComponent implements OnInit {
   auctions: any[] = [];
-  auctionId: string = '';
-  auctionEndTime: Date | null = null;
-  isAuctionEnded: boolean = false;
-  auctionStatus: string = '';
-  images: string[] = [];
+  filteredAuctions: any[] = [];
+  searchTerm: string = '';
+  currentPage: number = 1;
+  totalPages: number = 0;
+  perPage: number = 10;
+  
   constructor(
     private fb: FormBuilder,
     private auctionService: AuctionService,
@@ -32,93 +30,68 @@ export class HomeComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.loadAuctions();
+    this.loadAuctions(this.currentPage);
   }
 
-  loadAuctions() {
-    this.auctionService.getAllAuctions().subscribe({
+  loadAuctions(page: number = 1) {
+    this.auctionService.getAuctions(page, this.perPage).subscribe({
       next: (response: any) => {
-        this.auctions = response;
-        this.auctions.forEach((item) => {
-          item.item_media.forEach((item: { path: any; }) => {
-            this.images.push(item.path);
-          });
-        });
-
+        this.auctions = response.data;
+        this.filteredAuctions = [...this.auctions]; // تهيئة filteredAuctions
+        this.currentPage = response.meta.current_page;
+        this.totalPages = response.meta.last_page;
+        console.log('Auctions:', this.auctions);
       },
-      error: (error: any) => {
-        console.error('Error loading auction details:', error);
-      },
+      error: (err) => {
+        console.error('Error loading auctions:', err);
+      }
     });
   }
 
-<<<<<<< HEAD
-  checkAuctionStatus(auctionEndTime: string): string {
-    const currentTime = new Date();
-    const auctionEndDate = new Date(auctionEndTime);
-    return auctionEndDate < currentTime ? 'closed' : 'opened';
-  }
-
-}
-=======
-  onFileChange(event: any) {
-    const file = event.target.files[0];
-    if (file) {
-      const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
-      if (!allowedTypes.includes(file.type)) {
-        alert('يرجى تحميل صورة بصيغة JPEG أو PNG أو GIF فقط.');
-        this.auctionForm.patchValue({
-          item_media: null 
-        });
-        return;
-      }
-
-      this.auctionForm.patchValue({
-        item_media: file
-      });
-    }
-  }
   checkAuctionStatus(auctionEndTime: string): string {
     const currentTime = new Date();
     const auctionEndDate = new Date(auctionEndTime);
     return auctionEndDate < currentTime ? 'closed' : 'opened';
   }
   
+  filterAuctions(): void {
+    if (!this.searchTerm) {
+      this.loadAuctions(this.currentPage);
+      return;
+    }
+
+    this.auctionService.searchAuctions(this.searchTerm, this.currentPage, this.perPage).subscribe({
+      next: (response: any) => {
+        this.filteredAuctions = response.data;
+        this.currentPage = response.meta.current_page;
+        this.totalPages = response.meta.last_page;
+        console.log('Filtered Auctions:', this.filteredAuctions);
+      },
+      error: (err) => {
+        console.error('Error searching auctions:', err);
+      }
+    });
+  }
+
+  changePage(page: number): void {
+    if (page < 1 || page > this.totalPages) return;
+    this.currentPage = page;
+    if (this.searchTerm) {
+      this.filterAuctions();
+    } else {
+      this.loadAuctions(page);
+    }
+  }
+
+  nextPage(): void {
+    if (this.currentPage < this.totalPages) {
+      this.changePage(this.currentPage + 1);
+    }
+  }
+
+  prevPage(): void {
+    if (this.currentPage > 1) {
+      this.changePage(this.currentPage - 1);
+    }
+  }
 }
-  // onSubmit() {
-  //   const formData = new FormData();
-
-  //   Object.keys(this.auctionForm.value).forEach(key => {
-  //     if (key === 'item_media') {
-  //       formData.append(key, this.auctionForm.get('item_media')?.value);
-  //     } else {
-  //       formData.append(key, this.auctionForm.get(key)?.value);
-  //     }
-  //   });
-
-  //   this.auctionService.createAuction(formData).subscribe({
-  //     next: (data) => {
-  //       console.log('Auction created:', data);
-  //       this.loadAuctions(); 
-  //       this.auctionForm.reset(); // إعادة تعيين النموذج بعد النجاح
-  //     },
-  //     error: (error) => {
-  //       console.error(error);
-  //     }
-  //   });
-  // }
-
-  // openBidForm(auctionId: number): void {
-  //   // Toggle selected auction ID
-  //   this.selectedAuctionId = this.selectedAuctionId === auctionId ? null : auctionId;
-  // }
-
-  // onBid(auctionId: number) {
-  //   // Handle the logic to place a bid here
-  //   console.log(`Placing a bid on auction ID: ${auctionId}`);
-  //   // Call your bid service here
-  // }
-
->>>>>>> b43b8a7 (auction status)
-
-
