@@ -122,6 +122,10 @@ class AuctionController extends Controller
     if (Auth::id() !== $auction->user_id) {
       return response()->json(['message' => 'Unauthorized'], 403);
     }
+          
+    // Check if the time is before auction start
+    if ($currentTime < $auction->auction_start_time){
+
     $data = $request->all();
 
     $validation = Validator::make($request->all(), [
@@ -155,6 +159,7 @@ class AuctionController extends Controller
       'auction' => new AuctionResource($auction)
     ]);
   }
+  }
   /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   /**
@@ -165,15 +170,19 @@ class AuctionController extends Controller
 
     $user = Auth::user();
 
-    // Check if the user is either the owner of the auction or an admin
-    if ($user->role === 'admin' || $user->id === $auction->customer->user_id) {
-      // Proceed to delete the auction
+          // Check if the time is before auction start
+    if ($currentTime < $auction->auction_start_time){
+          // Check if the user is either the owner of the auction or an admin
+
+      if ($user->role === 'admin' || $user->id === $auction->customer->user_id) {
       $auction->delete();
 
       return response()->json([
         'message' => 'Auction deleted successfully'
       ], 200);
     }
+    }
+    
     return response()->json([
       'message' => 'Unauthorized.'
     ], 403);
@@ -214,7 +223,7 @@ class AuctionController extends Controller
     // Return the auctions as a collection using the AuctionResource
     return AuctionResource::collection($auctions);
   }
-
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   public function approve($id)
     {
@@ -239,7 +248,7 @@ class AuctionController extends Controller
 
     }
 
-
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
     public function rejected($id)
     {
       // $user = Auth::user();
