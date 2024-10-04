@@ -20,9 +20,9 @@ return new class extends Migration
             $table->text('item_description');
             $table->decimal('starting_bid', 10, 2);
             $table->decimal('bid_increment', 10, 2);
-            $table->timestamp('auction_start_time');
-            $table->timestamp('auction_end_time');
-            $table->timestamp('auction_actual_end_time');
+            $table->timestamp('auction_start_time')->nullable();
+            $table->timestamp('auction_end_time')->nullable();
+            $table->timestamp('auction_actual_end_time')->nullable();
             $table->enum('auction_status', ['Open', 'Closed'])->default('Closed');
             // $table->enum('approval_status', ['approved', 'pending', 'rejected'])->default('pending');
             $table->string('item_country');
