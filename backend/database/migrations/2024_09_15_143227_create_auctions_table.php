@@ -24,6 +24,7 @@ return new class extends Migration
             $table->timestamp('auction_end_time');
             $table->timestamp('auction_actual_end_time');
             $table->enum('auction_status', ['Open', 'Closed'])->default('Closed');
+            // $table->enum('approval_status', ['approved', 'pending', 'rejected'])->default('pending');
             $table->string('item_country');
             $table->timestamps();
         });

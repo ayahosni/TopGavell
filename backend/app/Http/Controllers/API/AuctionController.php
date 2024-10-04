@@ -214,4 +214,54 @@ class AuctionController extends Controller
     // Return the auctions as a collection using the AuctionResource
     return AuctionResource::collection($auctions);
   }
+
+
+  public function approve($id)
+    {
+      // $user = Auth::user();
+
+      // Check if the user is admin
+      // if ($user->role === 'admin') {
+
+        $auction=Auction::find($id);
+        $auction->approval_status = 'approved';
+        $auction->save();
+  
+        return response()->json([
+          'message' => 'Auction approved successfully'
+        ], 200);
+      // }
+      // return response()->json([
+      //   'message' => 'Unauthorized.'
+      // ], 403); 
+
+        
+
+    }
+
+
+    public function rejected($id)
+    {
+      // $user = Auth::user();
+
+      // Check if the user is admin
+      // if ($user->role === 'admin') {
+
+        $auction=Auction::find($id);
+        $auction->approval_status = 'rejected';
+        $auction->save();
+  
+        return response()->json([
+          'message' => 'Auction rejected successfully'
+        ], 200);
+      // }
+      // return response()->json([
+      //   'message' => 'Unauthorized.'
+      // ], 403); 
+
+        
+
+    }
+
+
 }

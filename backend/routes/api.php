@@ -20,6 +20,8 @@ Route::apiresource('auction', AuctionController::class);
 Route::get('/active-auctions', [AuctionController::class, 'showActiveAuctions']);
 // Route::get('/auction-status', [AuctionController::class, 'updateAuctionStatus']);
 Route::get('/auctions/search-by-category', [AuctionController::class, 'searchByCategory']);
+Route::post('/auctions/approve/{id}', [AuctionController::class, 'approve']);
+Route::post('/auctions/rejected/{id}', [AuctionController::class, 'rejected']);
 
 Route::apiResource('{auction}/bids', BidController::class);
 Route::apiResource('{auction}/comments', CommentController::class);
