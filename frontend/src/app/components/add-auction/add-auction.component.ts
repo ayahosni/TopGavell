@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { AuctionService } from '../../services/auction.service'; 
+import { AuctionService } from '../../services/auction.service';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -12,9 +12,10 @@ import { CommonModule } from '@angular/common';
   templateUrl: './add-auction.component.html',
   styleUrls: ['./add-auction.component.css']
 })
-export class AddAuctionComponent implements OnInit {  // Change the class name here
+export class AddAuctionComponent {
   auctionForm: FormGroup;
-  auctions: any[] = [];
+  selectedFiles: File[] = [];
+
 
   constructor(private fb: FormBuilder, private auctionService: AuctionService) {
     this.auctionForm = this.fb.group({
@@ -30,72 +31,73 @@ export class AddAuctionComponent implements OnInit {  // Change the class name h
     });
   }
 
-  ngOnInit(): void {
-    this.loadAuctions();
-  }
-
-  loadAuctions() {
-    this.auctionService.getAllAuctions().subscribe(data => {
-      this.auctions = data;
-    });
-  }
-
   onFileChange(event: any) {
-    const file = event.target.files[0];
-    if (file) {
-      const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
-      if (!allowedTypes.includes(file.type)) {
-        alert('يرجى تحميل صورة بصيغة JPEG أو PNG أو GIF فقط.');
-        this.auctionForm.patchValue({
-          item_media: null // Reset value if type is not allowed
-        });
-        return;
-      }
-      
-      // Update item_media to be the file itself instead of image data
-      this.auctionForm.patchValue({
-        item_media: file
+    this.selectedFiles = Array.from(event.target.files);
+    // const file = event.target.files[0]; // Get the first file from the file input
+    // if (file) {
+    //   const allowedTypes = ['image/jpeg', 'image/png', 'image/gif']; // Define allowed file types
+    //   if (!allowedTypes.includes(file.type)) {
+    //     alert('Please upload an image in JPEG, PNG, or GIF format only.'); // Alert if the file type is not allowed
+    //     this.auctionForm.patchValue({
+    //       item_media: null // Reset value if type is not allowed
+    //     });
+    //     return; // Exit the method
+    //   }
+
+    //   // Update item_media to be the file itself instead of image data
+    //   this.auctionForm.patchValue({
+    //     item_media: file // Set item_media to the selected file
+    //   });
+    // }
+  }
+
+
+  onSubmit() {
+    if (this.auctionForm.valid) {
+      const formData = new FormData();
+      // const formData = this.auctionForm.value;
+      Object.keys(this.auctionForm.value).forEach(key => {
+        const value = this.auctionForm.get(key)?.value;
+        if (key === 'item_media') {
+          if (this.selectedFiles.length > 0) {
+            this.selectedFiles.forEach(file => {
+              formData.append('item_media[]', file, file.name); // Append files
+            });
+          }
+        } else {
+          formData.append(key, value || ''); // Append other form values
+        }
+      });
+      this.auctionService.createAuction(formData).subscribe({
+        next: (response) => {
+          console.log(response);
+          this.auctionForm.reset();
+        },
+        error: (error) => {
+          console.log('Error:', error);
+        }
       });
     }
-  }
-  
-  onSubmit() {
-    if (this.auctionForm.invalid) {
-      alert('Please fill all required fields');
-      return;
-    }
-  
-    const formData = new FormData();
-  
+    console.log(this.auctionForm.valid);
+
+    // const formData = new FormData();
     // Append form values to FormData
-    Object.keys(this.auctionForm.value).forEach(key => {
-      const value = this.auctionForm.get(key)?.value;
-      if (key === 'item_media') {
-        if (value) {
-          formData.append(key, value);
-          console.log('Appending file:', value);
-        }
-      } else {
-        formData.append(key, value || '');
-        console.log(`Appending ${key}:`, value);
-      }
-    });
-  
-    // Show contents of FormData (for verification only, don't use in production)
-    formData.forEach((value, key) => {
-      console.log(`${key}:`, value);
-    });
-  
-    // Call the service to create auction
-    this.auctionService.createAuction(formData).subscribe({
-      next: (response) => {
-        this.loadAuctions(); // Reload data after creation
-        this.auctionForm.reset(); // Reset form
-      },
-      error: (error) => {
-        console.error('Error:', error); // Log error to console
-        alert('An error occurred while creating the auction.');
-      }
-    });
+    // Object.keys(this.auctionForm.value).forEach(key => {
+    //   const value = this.auctionForm.get(key)?.value;
+    //   if (key === 'item_media') {
+    //     if (value) {
+    //       Data.append(key, value);
+    //       console.log('Appending file:', value);
+    //     }
+    //   } else {
+    //     Data.append(key, value || '');
+    //     console.log(`Appending ${key}:`, value);
+    //   }
+    // });
+
+    // // Show contents of FormData (for verification only, don't use in production)
+    // formData.forEach((value, key) => {
+    //   console.log(`${key}:`, value);
+    // });
   }
 }

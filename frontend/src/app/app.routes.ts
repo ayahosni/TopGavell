@@ -11,26 +11,28 @@ import { AuctionDetailsComponent } from './components/auction-details/auction-de
 import { CommentsComponent } from './components/comments/comments.component';
 import { GuidesComponent } from './components/guides/guides.component';
 import { EmailVerficationComponent } from './components/email-verfication/email-verfication.component';
-import { authGuard } from './services/auth.guard';
+import { authGuard } from './guards/auth.guard';
 import { AuctionComponent } from './components/auction/auction.component';
 import { PaymentComponent } from './components/Payment/Payment.component';
+import { noAuthGuard } from './guards/no-auth.guard';
+import { verifyemailGuard } from './guards/verifyemail.guard';
 
 export const routes: Routes = [
-    {path: '', component:HomeComponent},
-    {path: 'auctions', component:AuctionsComponent},
-    {path: 'auction/:id', component: AuctionComponent},
-    {path: 'bids', component: BidsComponent},
-    {path: 'bid/:id', component: BidsComponent },
-    {path: 'auction-details', component: AuctionDetailsComponent },
-    {path: 'contact', component: ContactComponent},
-    {path: 'login', component: LoginComponent },    
-    {path: 'register', component: RegisterComponent},
+    {path: '', component:HomeComponent, canActivate: [verifyemailGuard]},
+    {path: 'auctions', component:AuctionsComponent, canActivate: [verifyemailGuard]},
+    {path: 'auction/:id', component: AuctionComponent, canActivate: [verifyemailGuard]},
+    {path: 'bids', component: BidsComponent , canActivate: [verifyemailGuard]},
+    {path: 'bid/:id', component: BidsComponent , canActivate: [verifyemailGuard]},
+    {path: 'auction-details', component: AuctionDetailsComponent , canActivate: [verifyemailGuard]},
+    {path: 'contact', component: ContactComponent, canActivate: [verifyemailGuard]},
+    {path: 'login', component: LoginComponent, canActivate: [noAuthGuard]},
+    {path: 'register', component: RegisterComponent, canActivate: [noAuthGuard]},
     {path: 'email_verify', component: EmailVerficationComponent, canActivate: [authGuard]},
     // { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
-    {path: 'dashboard', component: DashboardComponent},
-    { path: 'addAuction', component: AddAuctionComponent },
-  { path: 'auction/:auctionId/comments', component: CommentsComponent }, 
-    {path: 'guides', component: GuidesComponent},
-    {path: 'payment', component: PaymentComponent},
+    {path: 'dashboard', component: DashboardComponent, canActivate: [verifyemailGuard]},
+    {path: 'addAuction', component: AddAuctionComponent , canActivate: [verifyemailGuard]},
+    {path: 'auction/:auctionId/comments', component: CommentsComponent, canActivate: [verifyemailGuard]},
+    {path: 'guides', component: GuidesComponent, canActivate: [verifyemailGuard]},
+    {path: 'payment', component: PaymentComponent, canActivate: [verifyemailGuard]},
     // {path: '**', redirectTo: '/login'},
 ];

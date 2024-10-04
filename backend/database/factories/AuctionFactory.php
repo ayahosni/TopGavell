@@ -22,15 +22,15 @@ class AuctionFactory extends Factory
         return [
             'customer_id' => Customer::factory(),
             'category_id' => Category::factory(),
+            'winning_bidder_id' => null, // No winner yet
             'item_name' => $this->faker->words(3, true),
             'item_description' => $this->faker->paragraph,
             'starting_bid' => $this->faker->randomFloat(2, 100, 1000), // Random starting bid between 100 and 1000
             'bid_increment' => $this->faker->randomFloat(2, 10, 100),  // Random bid increment between 10 and 100
             'auction_start_time' => now(),
             'auction_end_time' => now()->addDays(7),
-            'auction_actual_end_time' => now()->addDays(8),
-            'auction_status' => 'Closed', // Default value
-            'item_media' => $this->faker->imageUrl(), // Random image URL
+            'auction_actual_end_time' => now()->addDays(7),
+            'auction_status' => 'Open',
             'item_country' => $this->faker->country,
         ];
     }

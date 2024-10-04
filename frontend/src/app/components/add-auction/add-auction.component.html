@@ -49,7 +49,7 @@
   </div>
 
   <label for="item_media">Item Media</label>
-  <input id="item_media" formControlName="item_media" type="file" (change)="onFileChange($event)" required>
+  <input id="item_media" formControlName="item_media" type="file" (change)="onFileChange($event)" required multiple>
   <div *ngIf="auctionForm.get('item_media')?.invalid && (auctionForm.get('item_media')?.touched || auctionForm.get('item_media')?.dirty)">
     <small class="error">Item Media is required.</small>
   </div>

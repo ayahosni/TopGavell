@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Resources\AuctionResource;
 use App\Models\Customer;
+use App\Models\Image;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use App\Models\User;
@@ -71,28 +72,34 @@ class AuctionController extends Controller
       'starting_bid' => ['required', 'integer'],
       'bid_increment' => ['required', 'integer'],
       'auction_start_time' => ['required', 'date', 'after:now'],
-      'auction_end_time' => ['required', 'date', 'after:auction_start_time'],
-      'item_media' => ['nullable', 'image'],
+      'auction_end_time' => ['required', 'date'],
       'item_country' => ['required', 'string'],
+      'item_media.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
     ]);
 
     if ($validation->fails()) {
       return response()->json($validation->messages(), 400);
     }
-
     $customer = Customer::where('user_id', Auth::id())->first();
     $data['customer_id'] = $customer->id;
     $data['auction_actual_end_time'] = $data['auction_end_time'];
-    $data['item_media'] = null;
 
-    if ($request->hasFile('item_media')) {
-      $file = $request->file('item_media');
-      $filename = time() . '.' . $file->getClientOriginalExtension();
-      $file->move(public_path('uploads/item_media'), $filename);
-      $data['item_media'] = $filename;
-    }
+    // if ($request->hasFile('item_media')) {
+    //   $file = $request->file('item_media');
+    //   $filename = time() . '.' . $file->getClientOriginalExtension();
+    //   $file->move(public_path('uploads/item_media'), $filename);
+    //   $data['item_media'] = $filename;
+    // }
 
     $auction = Auction::create($data);
+    if ($request->hasFile('item_media')) {
+      foreach ($request->file('item_media') as $image) {
+        $filename = uniqid(time() . '_') . '.' . $image->getClientOriginalExtension();
+        $image->move(public_path('uploads/images'), $filename);
+        $path = 'images/'.$filename;
+        Image::create(['auction_id' => $auction->id, 'path' => $path]);
+      }
+    }
 
     // Get all admin users
     $admins = User::where('role', 'admin')->get();

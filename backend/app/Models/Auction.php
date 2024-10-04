@@ -19,7 +19,6 @@ class Auction extends Model
         'auction_start_time',
         'auction_end_time',
         'auction_actual_end_time',
-        'item_media',
         'item_country',
     ];
     public function customer()
@@ -48,5 +47,9 @@ class Auction extends Model
     public function payments()
     {
         return $this->hasMany(Payment::class);
+    }
+    public function images()
+    {
+        return $this->hasMany(Image::class);
     }
 }

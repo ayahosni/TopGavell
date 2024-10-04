@@ -15,8 +15,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 export class AuctionDetailsComponent implements OnInit {
     @Input() auctionId: string = '';
     auction: any;
-    auctionEndTime: Date | null = null; 
-    isAuctionEnded: boolean = false; 
+    auctionEndTime: Date | null = null;
+    isAuctionEnded: boolean = false;
+    images: [string]=[''];
     constructor(private auctionService: AuctionService, private route: ActivatedRoute, private router: Router) { }
 
     ngOnInit(): void {
@@ -27,6 +28,10 @@ export class AuctionDetailsComponent implements OnInit {
         this.auctionService.getAuctionById(this.auctionId).subscribe({
             next: (response: any) => {
                 this.auction = response;
+                response.item_media.forEach((item: { path: any; }) => {                    
+                    this.images.push(item.path);
+                });
+                console.log(this.images);
             },
             error: (error: any) => {
                 console.error('Error loading auction details:', error);
@@ -36,6 +41,6 @@ export class AuctionDetailsComponent implements OnInit {
     checkAuctionStatus(auctionEndTime: Date): string {
         const currentTime = new Date();
         return auctionEndTime && auctionEndTime < currentTime ? 'closed' : 'opened';
-      }
-      
+    }
+
 }

@@ -2,8 +2,9 @@
 
 <div class="auction-container" *ngIf="auction">
   <h2 class="auction-title">{{ auction.item_name }}</h2>
-  <img [src]="auction.item_media" alt="Item Image" class="auction-image" *ngIf="auction.item_media">
-
+  <div *ngFor="let image of images">
+    <img [src]="'http://localhost:8000/uploads/'+image" alt="Item Image" class="auction-image" *ngIf="image" width="100px">
+  </div>
   <div class="auction-details">
     <p><strong>Category:</strong> {{ auction.item_category }}</p>
     <p><strong>Description:</strong> {{ auction.item_description }}</p>
@@ -11,16 +12,15 @@
     <p><strong>Bid Increment:</strong> {{ auction.bid_increment }} USD</p>
     <p><strong>Start Time:</strong> {{ auction.auction_start_time | date: 'short' }}</p>
     <p><strong>End Time:</strong> {{ auction.auction_end_time | date: 'short' }}</p>
-    
-    <p class="auction-status" 
-    [ngClass]="{
-       'opened': checkAuctionStatus(auction.auction_end_time) === 'opened', 
-       'closed': checkAuctionStatus(auction.auction_end_time) === 'closed'
+
+    <p class="auction-status" [ngClass]="{
+      'opened': checkAuctionStatus(auction.auction_end_time) === 'opened', 
+      'closed': checkAuctionStatus(auction.auction_end_time) === 'closed'
     }">
-   Status: {{ checkAuctionStatus(auction.auction_end_time) }}
- </p>
- 
-    
+      Status: {{ checkAuctionStatus(auction.auction_end_time) }}
+    </p>
+
+
     <p><strong>Country:</strong> {{ auction.item_country }}</p>
   </div>
 

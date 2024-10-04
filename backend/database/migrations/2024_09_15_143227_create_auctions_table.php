@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('customer_id')->constrained('customers')->onDelete('cascade');
             $table->foreignId('category_id')->constrained('categories')->onDelete('cascade');
-            $table->foreignId('winning_bidder_id')->constrained('customers')->onDelete('cascade');
+            $table->foreignId('winning_bidder_id')->nullable()->constrained('customers')->onDelete('cascade');
             $table->string('item_name');
             $table->text('item_description');
             $table->decimal('starting_bid', 10, 2);
@@ -24,7 +24,6 @@ return new class extends Migration
             $table->timestamp('auction_end_time');
             $table->timestamp('auction_actual_end_time');
             $table->enum('auction_status', ['Open', 'Closed'])->default('Closed');
-            $table->string('item_media')->nullable();
             $table->string('item_country');
             $table->timestamps();
         });

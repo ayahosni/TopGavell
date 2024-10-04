@@ -26,7 +26,7 @@ class AuctionResource extends JsonResource
             'auction_start_time' => $this->auction_start_time,
             'auction_end_time' => $this->auction_end_time,
             'auction_status'=> $this ->auction_status,
-            'item_media' => asset('uploads/item_media/' . $this->item_media),
+            'item_media' => $this->images,
             'item_country' => $this->item_country,
             'creator' => new CustomerRescource($this->customer),
             'bids' => new BidResource($this->bids)

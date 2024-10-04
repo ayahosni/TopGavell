@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\User;
 use App\Models\Auction;
 use App\Models\Customer;
+use App\Models\Image;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -20,5 +21,13 @@ class DatabaseSeeder extends Seeder
             'role' => 'admin',
         ]);
         Auction::factory()->count(3)->create();
+
+        $auctions = Auction::all();
+        foreach ($auctions as $auction) {
+            Image::factory()->count(3)->create([
+                'auction_id' => $auction->id,
+                'path' => 'images/sample-image.jpg',
+            ]);
+        }
     }
 }
