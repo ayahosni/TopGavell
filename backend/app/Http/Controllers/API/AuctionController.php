@@ -22,11 +22,22 @@ class AuctionController extends Controller
   {
     $this->middleware('auth:sanctum')->only('store', 'update', 'destroy');
   }
+  // public function index()
+  // {
+  //   return AuctionResource::collection(Auction::all());
+  // }
+
+// show all approved auctions
 
   public function index()
-  {
-    return AuctionResource::collection(Auction::all());
-  }
+{
+    // Retrieve all auctions where approval_status is "approved"
+    $approvedAuctions = Auction::where('approval_status', 'approved')->get();
+
+    // Return the approved auctions using the AuctionResource collection
+    return AuctionResource::collection($approvedAuctions);
+}
+
   /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 

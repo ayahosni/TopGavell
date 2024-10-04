@@ -138,6 +138,8 @@ class BidController extends Controller
         $data['auction_id'] = $auction->id;
         $bid = Bid::create($data);
 
+        
+
         $admins = User::where('role', 'admin')->get();
 
         // Send notification to all admin users
