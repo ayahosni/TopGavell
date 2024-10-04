@@ -43,7 +43,9 @@ class AuctionController extends Controller
 
     return AuctionResource::collection($pendingAuctions);
 }
-}
+return response()->json([
+  'message' => 'Unauthorized.'
+], 403);}
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   public function show(Auction $auction)
