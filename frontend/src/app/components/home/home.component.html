@@ -73,7 +73,9 @@
     <div *ngIf="auctions.length > 0; else noAuctions">
       <div class="auction-items">
         <div *ngFor="let auction of auctions" class="auction-item">
-          <img [src]="auction.item_media" alt="{{ auction.item_name }}">
+          <div *ngIf="images && images.length > 1">
+            <img [src]="'http://localhost:8000/uploads/' + images[1]" alt="Item Image" class="auction-image" width="100px">
+          </div>          
           <div class="auction-info">
             <p class="category-name">{{ auction.auction_id }}</p>
             <p class="item-description">
