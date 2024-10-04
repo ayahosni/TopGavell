@@ -20,7 +20,7 @@ class AuctionController extends Controller
 {
   public function __construct()
   {
-    $this->middleware('auth:sanctum')->only('store', 'update', 'destroy');
+    $this->middleware('auth:sanctum')->only('store', 'update', 'destroy','pendingAuctions');
   }
   // public function index()
   // {
@@ -37,11 +37,13 @@ class AuctionController extends Controller
   /////////////////////////////////////////////////////////////////////////////////////////////////////////
   public function pendingAuctions()
 {
+  if (Auth::user()->role === 'admin') {
+
     $pendingAuctions = Auction::where('approval_status', 'pending')->get();
 
     return AuctionResource::collection($pendingAuctions);
 }
-
+}
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   public function show(Auction $auction)
