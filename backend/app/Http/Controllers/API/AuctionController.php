@@ -20,41 +20,86 @@ class AuctionController extends Controller
 {
   public function __construct()
   {
-    $this->middleware('auth:sanctum')->only('store', 'update', 'destroy', 'pendingAuctions');
+    $this->middleware('auth:sanctum')->only('store', 'update', 'destroy','pendingAuctions','approve','rejected');
   }
 
-  public function index(Request $request)
-  {
+  // public function index(Request $request)
+  // {
+  //   $perPage = $request->input('per_page', 10);
+
+  //   $auctions = Auction::paginate($perPage);
+
+  //   return AuctionResource::collection($auctions)
+  //     ->additional([
+  //       'meta' => [
+  //         'current_page' => $auctions->currentPage(),
+  //         'last_page' => $auctions->lastPage(),
+  //         'per_page' => $auctions->perPage(),
+  //         'total' => $auctions->total(),
+  //       ]
+  //     ]);
+  // }
+
+public function index(Request $request)
+{
     $perPage = $request->input('per_page', 10);
 
-    $auctions = Auction::paginate($perPage);
+    $approvedAuctions = Auction::where('approval_status', 'approved')->paginate($perPage);
 
-    return AuctionResource::collection($auctions)
-      ->additional([
-        'meta' => [
-          'current_page' => $auctions->currentPage(),
-          'last_page' => $auctions->lastPage(),
-          'per_page' => $auctions->perPage(),
-          'total' => $auctions->total(),
-        ]
-      ]);
-  }
-
-  /////////////////////////////////////////////////////////////////////////////////////////////////////////
+    return AuctionResource::collection($approvedAuctions)
+        ->additional([
+            'meta' => [
+                'current_page' => $approvedAuctions->currentPage(),
+                'last_page' => $approvedAuctions->lastPage(),
+                'per_page' => $approvedAuctions->perPage(),
+                'total' => $approvedAuctions->total(),
+            ]
+        ]);
+}
 
   /////////////////////////////////////////////////////////////////////////////////////////////////////////
-  public function pendingAuctions()
-  {
+
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // public function pendingAuctions()
+  // {
+  //   if (Auth::user()->role === 'admin') {
+
+  //     $pendingAuctions = Auction::where('approval_status', 'pending')->get();
+
+  //     return AuctionResource::collection($pendingAuctions);
+  //   }
+  //   return response()->json([
+  //     'message' => 'Unauthorized.'
+  //   ], 403);
+  // }
+  
+// show all pending auctions
+
+public function pendingAuctions(Request $request)
+{
+    // Check if the authenticated user is an admin
     if (Auth::user()->role === 'admin') {
+        $perPage = $request->input('per_page', 10);
 
-      $pendingAuctions = Auction::where('approval_status', 'pending')->get();
+        $pendingAuctions = Auction::where('approval_status', 'pending')->paginate($perPage);
 
-      return AuctionResource::collection($pendingAuctions);
+        return AuctionResource::collection($pendingAuctions)
+            ->additional([
+                'meta' => [
+                    'current_page' => $pendingAuctions->currentPage(),
+                    'last_page' => $pendingAuctions->lastPage(),
+                    'per_page' => $pendingAuctions->perPage(),
+                    'total' => $pendingAuctions->total(),
+                ]
+            ]);
     }
+
+    // If the user is not an admin, return a 403 Unauthorized response
     return response()->json([
-      'message' => 'Unauthorized.'
+        'message' => 'Unauthorized.'
     ], 403);
-  }
+}
+
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   public function show(Auction $auction)
@@ -65,17 +110,38 @@ class AuctionController extends Controller
 
   //show active auction
 
-  public function showActiveAuctions()
-  {
+  // public function showActiveAuctions()
+  // {
+  //   $currentTime = Carbon::now();
+
+  //   // Query to get auctions where current time is within the auction start and end times
+  //   $activeAuctions = Auction::where('auction_start_time', '<=', $currentTime)
+  //     ->where('auction_end_time', '>=', $currentTime)
+  //     ->get();
+
+  //   return AuctionResource::collection($activeAuctions);
+  // }
+
+   public function showActiveAuctions(Request $request)
+{
     $currentTime = Carbon::now();
-
-    // Query to get auctions where current time is within the auction start and end times
+    $perPage = $request->input('per_page', 10);
     $activeAuctions = Auction::where('auction_start_time', '<=', $currentTime)
-      ->where('auction_end_time', '>=', $currentTime)
-      ->get();
+        ->where('auction_end_time', '>', $currentTime)
+        ->where('approval_status', 'approved')
+        ->paginate($perPage);
 
-    return AuctionResource::collection($activeAuctions);
-  }
+    return AuctionResource::collection($activeAuctions)
+        ->additional([
+            'meta' => [
+                'current_page' => $activeAuctions->currentPage(),
+                'last_page' => $activeAuctions->lastPage(),
+                'per_page' => $activeAuctions->perPage(),
+                'total' => $activeAuctions->total(),
+            ]
+        ]);
+}
+
   /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
