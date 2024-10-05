@@ -64,7 +64,7 @@ export class AuctionDetailsComponent implements OnInit {
     auctionEndTime: Date | null = null;
     isAuctionEnded: boolean = false;
     images: string[] = [];
-    selectedImage: string = ''; 
+    selectedImage: string = '';
 
     constructor(private auctionService: AuctionService, private route: ActivatedRoute, private router: Router) { }
 
@@ -76,12 +76,12 @@ export class AuctionDetailsComponent implements OnInit {
         this.auctionService.getAuctionById(this.auctionId).subscribe({
             next: (response: any) => {
                 this.auction = response;
-             
+
                 if (response.item_media.length > 0) {
-                    this.selectedImage = response.item_media[0].path; 
+                    this.selectedImage = response.item_media[0].path;
                 }
 
-                response.item_media.forEach((item: { path: string; }) => {                    
+                response.item_media.forEach((item: { path: string; }) => {
                     this.images.push(item.path);
                 });
                 console.log(this.images);
@@ -91,7 +91,6 @@ export class AuctionDetailsComponent implements OnInit {
             },
         });
     }
-<<<<<<< HEAD
 
     checkAuctionStatus(auctionEndTime: Date): string {
         const currentTime = new Date();
@@ -101,11 +100,3 @@ export class AuctionDetailsComponent implements OnInit {
         this.selectedImage = image;
     }
 }
-=======
-    checkAuctionStatus(auctionEndTime: Date): string {
-        const currentTime = new Date();
-        return auctionEndTime && auctionEndTime < currentTime ? 'closed' : 'opened';
-      }
-      
-}
->>>>>>> b43b8a7 (auction status)

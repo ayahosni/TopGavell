@@ -84,7 +84,6 @@ export class AddAuctionComponent implements OnInit {
 
     this.auctionService.createAuction(formData).subscribe({
       next: (response) => {
-        this.loadAuctions(); // Reload data after creation
         this.auctionForm.reset(); // Reset form
       },
       error: (error) => {

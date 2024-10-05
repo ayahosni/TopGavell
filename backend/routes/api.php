@@ -47,3 +47,6 @@ Route::post('/check-payment', [PaymentController::class, 'checkPayment'])->middl
 Route::get('/notifications', [NotificationController::class, 'index'])->middleware('auth:sanctum');
 Route::post('/checkout/{auctionID}', [PaymentController::class, 'checkout'])->name('checkout');
 Route::get('/success/{auctionID}', [PaymentController::class, 'success'])->name('success');
+
+Route::post('/auctions/approve/{id}', [AuctionController::class, 'approve']);
+Route::post('/auctions/rejected/{id}', [AuctionController::class, 'rejected']);
