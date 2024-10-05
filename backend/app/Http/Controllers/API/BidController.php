@@ -62,7 +62,7 @@ class BidController extends Controller
             ], 400);
         }
 
-        $currentTime = Carbon::now();
+        $currentTime = Carbon::now('UTC')->setTimezone('Europe/Bucharest')->format('Y-m-d H:i:s');
         if ($auction->auction_start_time > $currentTime) {
             return response()->json([
                 "message" => "You can't participate in this auction. This auction didn't start yet.",
@@ -119,16 +119,17 @@ class BidController extends Controller
 
 
         // check if the customer is bidding for the first time or not for the Insurance payment 
-        $isFound = Bid::where('auction_id', $auction->id)
-            ->where('customer_id', $customer->id)
-            ->exists();
-        if (!$isFound) {
-            // return route('checkout', ['auctionID' => $auction->id]);
-            return response()->json([
-                'payment'=>false,
-                'message' => 'You have to pay insurance',
-            ], 400);
-        }
+        // $isFound = Bid::where('auction_id', $auction->id)
+        //     ->where('customer_id', $customer->id)
+        //     ->exists();
+
+        // if (!$isFound) {
+        //     // return route('checkout', ['auctionID' => $auction->id]);
+        //     return response()->json([
+        //         'payment'=>false,
+        //         'message' => 'You have to pay insurance',
+        //     ], 400);
+        // }
 
 
         // Create the new bid

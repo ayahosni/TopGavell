@@ -7,6 +7,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommentsComponent } from "../comments/comments.component";
 import { AuctionService } from '../../services/auction.service';
 
+
 @Component({
   selector: 'app-auction',
   standalone: true,
@@ -17,7 +18,7 @@ import { AuctionService } from '../../services/auction.service';
 export class AuctionComponent implements OnInit {
   auctionId: string = '';
   auctionEndTime: Date | null = null; 
-  isAuctionEnded: boolean = false; 
+  isAuctionEnded: boolean = false;
 
   constructor(private route: ActivatedRoute, private router: Router, private auctionService: AuctionService) { }
 

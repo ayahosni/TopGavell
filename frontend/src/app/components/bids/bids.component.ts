@@ -19,19 +19,34 @@ export class BidsComponent implements OnInit {
   auction: any;
   lastBid: any;
   bidAmount: number = 0;
-  message: string = ''; 
+  message: string = '';
+  hasPaid: boolean | null = null;
 
   constructor(
     private auctionService: AuctionService,
     private route: ActivatedRoute,
     private bidService: BidService,
-    private router: Router
+    private router: Router,
+    private paymentService: PaymentService
   ) { }
 
   ngOnInit(): void {
     this.loadAuctionDetails();
+    this.checkIfBidderPaid(this.auctionId);
   }
 
+  checkIfBidderPaid(auctionId: any) {
+    this.paymentService.checkPayment(auctionId).subscribe({
+      next: (response) => {
+        this.hasPaid = response.hasPaid;
+        console.log(response);
+      },
+      error: (error) => {
+        console.error('Error checking payment:', error);
+        this.hasPaid = false;
+      }
+    });
+  }
   loadAuctionDetails(): void {
     this.auctionService.getAuctionById(this.auctionId).subscribe({
       next: (response: any) => {
@@ -46,24 +61,22 @@ export class BidsComponent implements OnInit {
   }
 
   placeBid(): void {
+    console.log(this.hasPaid);
+    if (!this.hasPaid) {
+      this.router.navigate(['/payment']);
+    };
     localStorage.setItem('auctionIdToBidOn', this.auctionId);
     const bidInfo = {
       bid_amount: this.bidAmount,
     };
-
     this.message = '';
-
     this.bidService.placeBid(this.auctionId, this.bidAmount, bidInfo).subscribe({
       next: (response: any) => {
-        console.log('Bid placed successfully', response);
         this.message = 'Bid placed successfully!';
-        this.loadAuctionDetails(); 
+        this.loadAuctionDetails();
       },
       error: (error: any) => {
-        console.log('Error placing bid:', error.error.massage)
-        if (error.error.payment == false) {
-          this.router.navigate(['/payment']);
-        };
+        console.log('Error placing bid:', error)
       }
     });
   }

@@ -11,21 +11,22 @@ declare var Stripe: any;
 })
 export class PaymentComponent {
   private stripe: any;
-
   constructor(private paymentService: PaymentService) {
     // this.stripe = new Stripe(environment.stripeKey);
     this.stripe = (window as any).Stripe(environment.stripeKey);
   }
 
   pay() {
-    const auctionId = '3';
-    this.paymentService.createCheckoutSession(auctionId).subscribe((response) => {
-      this.stripe.redirectToCheckout({ sessionId: response.id }).then((result: any) => {
-        if (result.error) {
-          // Display error.message in your UI.
-          console.log(result.error.message);
-        }
+    const auctionId = localStorage.getItem('auctionIdToBidOn');
+    if (auctionId) {
+      this.paymentService.createCheckoutSession(auctionId).subscribe((response) => {
+        this.stripe.redirectToCheckout({ sessionId: response.id }).then((result: any) => {
+          if (result.error) {
+            // Display error.message in your UI.
+            console.log(result.error.message);
+          }
+        });
       });
-    });
+    }
   }
 }

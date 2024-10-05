@@ -7,6 +7,7 @@ use App\Models\Bid;
 use App\Models\Payment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Stripe\Stripe;
 use Stripe\Checkout\Session;
 
@@ -74,5 +75,19 @@ class PaymentController extends Controller
 
         Payment::create($data);
         return redirect('http://localhost:4200/auction/' . $auctionID);
+    }
+
+    public function checkPayment(Request $request)
+    {
+        $request->validate([
+            'auction_id' => 'required|exists:auctions,id',
+        ]);
+        $bidderID = Auth::id();
+        $paymentExists = DB::table('payments')
+            ->where('bidder_id', $bidderID)
+            ->where('auction_id', $request->auction_id)
+            ->exists();
+
+        return response()->json(['hasPaid' => $paymentExists]);
     }
 }

@@ -33,6 +33,6 @@ Route::get('/notifications', [NotificationController::class, 'index'])->middlewa
 Route::post('/create-checkout-session', [PaymentController::class, 'createCheckoutSession'])->name('createSession')->middleware('auth:sanctum');
 Route::get('/success/{auctionID}/{bidderID}', [PaymentController::class, 'success'])->name('success');
 
-Route::get('/cancel', function () {
-  return 'Payment Cancelled';
-})->name('cancel');
+Route::get('/cancel', function () {return 'Payment Cancelled';})->name('cancel');
+
+Route::post('/check-payment', [PaymentController::class, 'checkPayment'])->middleware('auth:sanctum');
