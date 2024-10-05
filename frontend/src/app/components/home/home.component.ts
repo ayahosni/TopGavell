@@ -21,6 +21,7 @@ export class HomeComponent implements OnInit {
   currentPage: number = 1;
   totalPages: number = 0;
   perPage: number = 10;
+  images: string[] = [];
   
   constructor(
     private fb: FormBuilder,
