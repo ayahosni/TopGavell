@@ -138,7 +138,19 @@ class BidController extends Controller
         $data['auction_id'] = $auction->id;
         $bid = Bid::create($data);
 
+            // Extend the auction end time by 2 minutes if placed in last 2 minutes of auction
+  
+        $auctionEndTime = Carbon::parse($auction->auction_end_time);
+
+        $bidCreatedAt = Carbon::parse($bid->created_at);
         
+        // Check if the bid is placed within the last 2 minutes of the auction
+        $twoMinutesBeforeEnd = $auctionEndTime->copy()->subMinutes(2);
+        if ($bidCreatedAt > $twoMinutesBeforeEnd) {
+            // Extend the auction end time by another 2 minutes
+            $auction->auction_end_time = $auctionEndTime->addMinutes(2)->toDateTimeString();
+            $auction->save();
+        }
 
         $admins = User::where('role', 'admin')->get();
 
