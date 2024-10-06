@@ -255,29 +255,29 @@ public function pendingAuctions(Request $request)
   
  
 
-      //          if ($request->hasFile('item_media')) {
-      // $file = $request->file('item_media');
-      // $filename = time() . '.' . $file->getClientOriginalExtension();
-      // $file->move(public_path('uploads/images'), $filename);
-      // $data['item_media'] = $filename;
-      //       Image::create(['auction_id' => $auction->id, 'path' => $filename]);
-      //   }
-  
-      if ($request->hasFile('item_media')) {
-        foreach ($request->file('item_media') as $file) {
-            // Generate a unique filename for each image
-            $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-    
-            // Move the file to the desired location (uploads/images)
-            $file->move(public_path('uploads/images'), $filename);
-    
-            // Save the image path to the database
-            Image::create([
-                'auction_id' => $auction->id,
-                'path' => $filename
-            ]);
+               if ($request->hasFile('item_media')) {
+      $file = $request->file('item_media');
+      $filename = time() . '.' . $file->getClientOriginalExtension();
+      $file->move(public_path('uploads/images'), $filename);
+      $data['item_media'] = $filename;
+            Image::create(['auction_id' => $auction->id, 'path' => $filename]);
         }
-    }
+  
+    //   if ($request->hasFile('item_media')) {
+    //     foreach ($request->file('item_media') as $file) {
+    //         // Generate a unique filename for each image
+    //         $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+    
+    //         // Move the file to the desired location (uploads/images)
+    //         $file->move(public_path('uploads/images'), $filename);
+    
+    //         // Save the image path to the database
+    //         Image::create([
+    //             'auction_id' => $auction->id,
+    //             'path' => $filename
+    //         ]);
+    //     }
+    // }
     
   
       // Notify admins about the new auction
