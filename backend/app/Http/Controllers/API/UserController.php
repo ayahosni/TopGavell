@@ -3,12 +3,14 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\CustomerRescource;
+use App\Http\Resources\CustomerResource;
+use App\Http\Resources\UserRescource;
 use App\Mail\OtpMail;
 use App\Models\Customer;
 use App\Models\User;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
@@ -22,7 +24,7 @@ class UserController extends Controller
 
     public function index()
     {
-        return CustomerRescource::collection(Customer::all());
+        return CustomerResource::collection(Customer::all());
     }
 
     public function register(Request $request)
@@ -55,7 +57,7 @@ class UserController extends Controller
 
         return response()->json([
             'message' => 'Registered successfully! Please check your email to verify your account.',
-            'user' => new CustomerRescource($cust),
+            'user' => new CustomerResource($cust),
             'token' => $user->createToken('auth_token')->plainTextToken,
         ], 200);
     }
@@ -95,20 +97,25 @@ class UserController extends Controller
             [
                 'email' => 'required|email',
                 'password' => 'required',
-                // 'device_name' => 'required',
             ]
         );
         if ($validation->fails()) {
             return response()->json($validation->messages(), 400);
         }
         $user = User::where('email', $request->email)->first();
+
         if (! $user || ! Hash::check($request->password, $user->password)) {
             return response()->json(['message' => 'Invalid Username or Password'], 400);
         }
-        $cust = Customer::where('user_id', $user->id)->first();
+
+        if ($user->role === 'customer') {
+            $cust = Customer::where('user_id', $user->id)->first();
+            $userdata = new CustomerResource($cust);
+        }
+        $userdata= new UserRescource($user);
         return response()->json([
             'message' => 'User successfully logged in',
-            'user' => new CustomerRescource($cust),
+            'user' => $userdata,
             'token' => $user->createToken('auth_token')->plainTextToken,
         ]);
     }
