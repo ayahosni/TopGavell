@@ -155,13 +155,16 @@ export class AuctionService {
    * @param id 
    * @returns 
    */
-  getAuctionById(id: any): Observable<Auction> {
+  getAuctionById(id: string): Observable<any> {
     const headers = this.getAuthHeaders();
     if (!headers) {
-      return throwError('Token is missing. Please log in.');
+      return throwError('Token is missing. Please log in.'); // Return error if token is missing
     }
-    return this.http.get<Auction>(`${this.apiUrl}/${id}`, { headers })
-      .pipe(catchError(this.handleError));
+    return this.http.get<any>(`${this.apiUrl}/${id}`, { headers })
+    .pipe(
+      map(response => response.data || []),
+      catchError(this.handleError)
+    );
   }
 
   /**

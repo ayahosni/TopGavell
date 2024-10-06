@@ -326,7 +326,7 @@ public function getApprovedAuctions(Request $request)
   public function search(Request $request)
   {
     $searchTerm = $request->input('search');
-
+    
     $validation = Validator::make($request->all(), [
       'search' => ['required', 'string', 'min:1'],
     ]);

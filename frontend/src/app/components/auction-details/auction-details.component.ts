@@ -30,7 +30,7 @@ export class AuctionDetailsComponent implements OnInit {
         this.auctionService.getAuctionById(this.auctionId).subscribe({
             next: (response: any) => {
                 this.auction = response;
-
+                console.log(this.auction);
                 if (response.item_media.length > 0) {
                     this.selectedImage = response.item_media[0].path;
                 }

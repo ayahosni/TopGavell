@@ -16,9 +16,10 @@ import { AuctionComponent } from './components/auction/auction.component';
 import { PaymentComponent } from './components/Payment/Payment.component';
 import { noAuthGuard } from './guards/no-auth.guard';
 import { verifyemailGuard } from './guards/verifyemail.guard';
+import { ErrorsComponent } from './components/errors/errors.component';
 
 export const routes: Routes = [
-    {path: '', component:HomeComponent, canActivate: [verifyemailGuard]},
+    {path: '', component:HomeComponent},
     {path: 'auctions', component:AuctionsComponent, canActivate: [verifyemailGuard]},
     {path: 'auction/:id', component: AuctionComponent, canActivate: [verifyemailGuard]},
     {path: 'bids', component: BidsComponent , canActivate: [verifyemailGuard]},
@@ -34,5 +35,6 @@ export const routes: Routes = [
     {path: 'auction/:auctionId/comments', component: CommentsComponent, canActivate: [verifyemailGuard]},
     {path: 'guides', component: GuidesComponent, canActivate: [verifyemailGuard]},
     {path: 'payment', component: PaymentComponent, canActivate: [verifyemailGuard]},
-    // {path: '**', redirectTo: '/login'},
+    {path: 'errors', component: ErrorsComponent},
+    {path: '**', redirectTo: '/errors'},
 ];
