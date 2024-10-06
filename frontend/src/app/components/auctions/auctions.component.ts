@@ -39,7 +39,7 @@ export class AuctionsComponent implements OnInit {
   }
 
   loadAuctions() {
-    this.auctionService.getAllAuctions().subscribe({
+    this.auctionService.getAuctions().subscribe({
       next: (data) => {
         if (Array.isArray(data)) {
           this.auctions = data.filter(auction => auction.auction_status === 'open');

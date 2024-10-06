@@ -1,19 +1,52 @@
-// auction.service.ts
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpErrorResponse ,HttpParams} from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
+
+export interface Image {
+  id: number;
+  auction_id: number;
+  path: string;
+}
+
+export interface Auction {
+  id: string;
+  category_id: number;
+  item_name: string;
+  item_category:any;
+  item_description: string;
+  starting_bid: number;
+  bid_increment: number;
+  auction_start_time: string;
+  auction_end_time: string;
+  item_country: string;
+  creator:any;
+  approval_status: string;
+  images: Image[];
+}
+
+export interface PaginatedAuctions {
+  data: Auction[];
+  meta: {
+    current_page: number;
+    last_page: number;
+    per_page: number;
+    total: number;
+  };
+}
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuctionService {
-  // private apiUrl = 'http://172.18.0.3:80/api'; // ===> Docker URL
-  private apiUrl = 'http://localhost:8000/api/auction'; // API URL
+  private apiUrl = 'http://localhost:8000/api/auction'; 
 
   constructor(private http: HttpClient) { }
 
-  // Function to get authorization headers
+  /**
+   * @param includeContentType 
+   * @returns 
+   */
   private getAuthHeaders(includeContentType: boolean = true): HttpHeaders | undefined {
     const userJson = localStorage.getItem('user');
     if (userJson) {
@@ -28,17 +61,17 @@ export class AuctionService {
     }
     return undefined;
   }
-  
 
-  // Error handling for HTTP responses
+  /**
+   * @param error 
+   * @returns 
+   */
   private handleError(error: HttpErrorResponse) {
     let errorMessage = 'An error occurred.';
 
     if (error.error instanceof ErrorEvent) {
-      // Client-side error
       errorMessage = `Error: ${error.error.message}`;
     } else {
-      // Server-side error
       if (error.status === 401) {
         errorMessage = 'Authentication error: Token is missing or invalid. Please log in again.';
       } else {
@@ -48,77 +81,148 @@ export class AuctionService {
     return throwError(errorMessage);
   }
 
-  // Create a new auction
-  createAuction(auctionData: any): Observable<any> {
-    const isFormData = auctionData instanceof FormData;
-    const headers = this.getAuthHeaders(!isFormData);
-      const options = headers ? { headers } : {};
+  /**
+   * @param auctionData 
+   * @returns 
+   */
+  createAuction(auctionData: FormData): Observable<Auction> {
+    const headers = this.getAuthHeaders(false); 
+    const options = headers ? { headers } : {};
+
+    return this.http.post<Auction>(this.apiUrl, auctionData, options)
+      .pipe(catchError(this.handleError));
+  }
+
+  /**
+   * @param page 
+   * @param perPage 
+   * @returns 
+   */
+  getAuctions(page: number = 1, perPage: number = 10,): Observable<PaginatedAuctions> {
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('per_page', perPage.toString());
   
-    return this.http.post(this.apiUrl, auctionData, options)
-      .pipe(catchError(this.handleError)); // Handle errors
+    return this.http.get<PaginatedAuctions>(`${this.apiUrl}/`, { params }).pipe(
+      catchError(this.handleError)
+    );
   }
   
 
-  getAuctions(page: number = 1, perPage: number = 10): Observable<any> {
+  /**
+   * @param page 
+   * @param perPage 
+   * @returns 
+   */
+  getActiveAuctions(page: number = 1, perPage: number = 10): Observable<PaginatedAuctions> {
     let params = new HttpParams()
-        .set('page', page.toString())
-        .set('per_page', perPage.toString());
+      .set('page', page.toString())
+      .set('per_page', perPage.toString());
+    return this.http.get<PaginatedAuctions>(`${this.apiUrl}/active-auctions`, { params })
+      .pipe(catchError(this.handleError));
+  }
 
-    return this.http.get<any>(this.apiUrl, { params });
-}
+  /**
+   * @param page 
+   * @param perPage 
+   * @returns 
+   */
+  getPendingAuctions(page: number = 1, perPage: number = 10): Observable<PaginatedAuctions> {
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('per_page', perPage.toString());
+    return this.http.get<PaginatedAuctions>(`${this.apiUrl}/pending`, { params, headers: this.getAuthHeaders() })
+      .pipe(catchError(this.handleError));
+  }
 
-searchAuctions(searchTerm: string, page: number = 1, perPage: number = 10): Observable<any> {
+  /**
+   * @param searchTerm 
+   * @param page 
+   * @param perPage 
+   * @returns
+   */
+  searchAuctions(searchTerm: string, page: number = 1, perPage: number = 10): Observable<PaginatedAuctions> {
     let httpParams = new HttpParams()
-        .set('search', searchTerm)
-        .set('page', page.toString())
-        .set('per_page', perPage.toString());
+      .set('search', searchTerm)
+      .set('page', page.toString())
+      .set('per_page', perPage.toString());
 
-    return this.http.get<any>(`${this.apiUrl}/search`, { params: httpParams });
-}
+    return this.http.get<PaginatedAuctions>(`${this.apiUrl}/search`, { params: httpParams })
+      .pipe(catchError(this.handleError));
+  }
 
-  // Get all auctions
-  getAllAuctions(): Observable<any[]> {
+  /**
+   * @param id 
+   * @returns 
+   */
+  getAuctionById(id: any): Observable<Auction> {
     const headers = this.getAuthHeaders();
     if (!headers) {
       return throwError('Token is missing. Please log in.');
     }
-    return this.http.get<any>(this.apiUrl, { headers })
-      .pipe(
-        map(response => response.data || []),
-        catchError(this.handleError)
-      );
+    return this.http.get<Auction>(`${this.apiUrl}/${id}`, { headers })
+      .pipe(catchError(this.handleError));
   }
 
-getAuctionById(id: string): Observable<any> {
-  const headers = this.getAuthHeaders();
-  if (!headers) {
-    return throwError('Token is missing. Please log in.'); // Return error if token is missing
+  /**
+   * @param id 
+   * @param auctionData 
+   * @returns 
+   */
+  updateAuction(id: number, auctionData: FormData | any): Observable<Auction> {
+    const isFormData = auctionData instanceof FormData;
+    const headers = this.getAuthHeaders(!isFormData);
+    const options = headers ? { headers } : {};
+
+    return this.http.put<Auction>(`${this.apiUrl}/${id}`, auctionData, options)
+      .pipe(catchError(this.handleError));
   }
-  return this.http.get<any>(`${this.apiUrl}/${id}`, { headers })
-  .pipe(
-    map(response => response.data || []),
-    catchError(this.handleError)
-  );
-}
 
-
-  // Update an existing auction
-  updateAuction(id: string, auctionData: any): Observable<any> {
+  /**
+   * @param id 
+   * @returns 
+   */
+  deleteAuction(id: number): Observable<any> {
     const headers = this.getAuthHeaders();
     if (!headers) {
-      return throwError('Token is missing. Please log in.'); // Return error if token is missing
-    }
-    return this.http.put(`${this.apiUrl}/${id}`, auctionData, { headers })
-      .pipe(catchError(this.handleError)); // Handle errors
-  }
-
-  // Delete an auction
-  deleteAuction(id: string): Observable<any> {
-    const headers = this.getAuthHeaders();
-    if (!headers) {
-      return throwError('Token is missing. Please log in.'); // Return error if token is missing
+      return throwError('Token is missing. Please log in.');
     }
     return this.http.delete(`${this.apiUrl}/${id}`, { headers })
-      .pipe(catchError(this.handleError)); // Handle errors
+      .pipe(catchError(this.handleError));
+  }
+
+  /**
+   * @param id 
+   * @returns 
+   */
+  getApprovedAuctions(page: number = 1, perPage: number = 10): Observable<PaginatedAuctions> {
+    let params = new HttpParams()
+        .set('page', page.toString())
+        .set('per_page', perPage.toString());
+  
+    return this.http.get<PaginatedAuctions>(`${this.apiUrl}/approved`, { params })
+        .pipe(catchError(this.handleError));
+}
+
+  approveAuction(id: number): Observable<any> {
+    const headers = this.getAuthHeaders();
+    if (!headers) {
+      return throwError('Token is missing. Please log in.');
+    }
+    return this.http.post(`${this.apiUrl}/${id}/approve`, {}, { headers })
+      .pipe(catchError(this.handleError));
+  }
+
+  /**
+   * @param id 
+   * @returns 
+   */
+  rejectAuction(id: number): Observable<any> {
+    const headers = this.getAuthHeaders();
+    if (!headers) {
+      return throwError('Token is missing. Please log in.');
+    }
+    return this.http.post(`${this.apiUrl}/${id}/reject`, {}, { headers })
+      .pipe(catchError(this.handleError));
   }
 }

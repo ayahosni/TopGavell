@@ -255,6 +255,20 @@ public function pendingAuctions(Request $request)
     }
   }
   /////////////////////////////////////////////////////////////////////////////////////////////////////////
+public function getApprovedAuctions(Request $request)
+{
+    $auctions = Auction::where('approval_status', 'approved')
+        ->paginate($request->per_page);
+
+    return response()->json([
+        'data' => $auctions->items(),
+        'meta' => [
+            'current_page' => $auctions->currentPage(),
+            'last_page' => $auctions->lastPage(),
+            'total' => $auctions->total(),
+        ],
+    ]);
+}
 
   /**
    * Remove the specified resource from storage.

@@ -88,7 +88,7 @@ class UserController extends Controller
         ], 400);
     }
 
-    #######################################################################################################    
+
 
     public function login(Request $request)
     {
@@ -119,11 +119,14 @@ class UserController extends Controller
             'token' => $user->createToken('auth_token')->plainTextToken,
         ]);
     }
-    #######################################################################################################
+
+    #######################################################################################################    
+
+  #######################################################################################################
 
     public function logout(Request $request)
     {
-        $request->user()->currentAccessToken()->delete();
+        $request->user()->currentAccessToken()->delete(); 
         return response()->json(['message' => 'Logged out successfully'], 200);
     }
     /**
