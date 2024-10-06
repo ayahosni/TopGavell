@@ -86,7 +86,7 @@ class UserController extends Controller
         ], 400);
     }
 
-    #######################################################################################################    
+
 
     public function login(Request $request)
     {
@@ -95,28 +95,36 @@ class UserController extends Controller
             [
                 'email' => 'required|email',
                 'password' => 'required',
-                // 'device_name' => 'required',
             ]
         );
         if ($validation->fails()) {
             return response()->json($validation->messages(), 400);
         }
         $user = User::where('email', $request->email)->first();
+
         if (! $user || ! Hash::check($request->password, $user->password)) {
             return response()->json(['message' => 'Invalid Username or Password'], 400);
         }
-        $cust = Customer::where('user_id', $user->id)->first();
+
+        if ($user->role === 'customer') {
+            $cust = Customer::where('user_id', $user->id)->first();
+            $userdata = new CustomerResource($cust);
+        }
+        $userdata= new UserRescource($user);
         return response()->json([
             'message' => 'User successfully logged in',
-            'user' => new CustomerRescource($cust),
+            'user' => $userdata,
             'token' => $user->createToken('auth_token')->plainTextToken,
         ]);
     }
-    #######################################################################################################
+
+    #######################################################################################################    
+
+  #######################################################################################################
 
     public function logout(Request $request)
     {
-        $request->user()->currentAccessToken()->delete();
+        $request->user()->currentAccessToken()->delete(); 
         return response()->json(['message' => 'Logged out successfully'], 200);
     }
     /**

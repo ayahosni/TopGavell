@@ -16,8 +16,13 @@
     </div>
     <div class="search-container">
       <i class="map fa-solid fa-location-dot"></i>
-      <input type="text" [(ngModel)]="searchTerm" placeholder="Search by state, city or auction" />
-      <button type="button" (click)="filterAuctions()">Search Auctions</button>
+      <input 
+        type="text" 
+        [(ngModel)]="searchTerm" 
+        placeholder="Search by state, city or auction" 
+        (keyup.enter)="onSearch()"
+      />
+      <button type="button" (click)="onSearch()">Search Auctions</button>
     </div>
   </div>
 </div>
@@ -27,29 +32,9 @@
   <div class="categories-content">
     <div class="category-title">Explore Our Categories</div>
     <div class="categories">
-      <div class="furniture">
-        <img src="assets/images/furniture.jpg" alt="">
-        <p>Furniture</p>
-      </div>
-      <div class="home-decor">
-        <img src="assets/images/decor.jpg" alt="">
-        <p>Home Decor</p>
-      </div>
-      <div class="fine-art">
-        <img src="assets/images/art.jpg" alt="">
-        <p>Fine Art</p>
-      </div>
-      <div class="birds">
-        <img src="assets/images/bird.jpg" alt="">
-        <p>Birds</p>
-      </div>
-      <div class="animals">
-        <img src="assets/images/animal.jpg" alt="">
-        <p>Animals</p>
-      </div>
-      <div class="vehicles">
-        <img src="assets/images/vehicles.jpg" alt="">
-        <p>Motor Vehicles</p>
+      <div class="category" *ngFor="let category of categories">
+        <img [src]="category.image" alt="{{ category.name }}">
+        <p>{{ category.name }}</p>
       </div>
     </div>
   </div>
@@ -62,58 +47,59 @@
       Cutting-edge auction platform. Competitive pricing. Unlock endless opportunities and watch your auction business
       thrive with just a few simple steps.
     </p>
-    <button class="btn">Sell on TOPGAVEL</button>
+    <button class="btn" routerLink="/create-auction">Sell on TOPGAVEL</button>
   </div>
   <!-- End Selling Section -->
 
   <!-- Opening Auctions Section -->
   <div class="auctions container">
     <h2>Auction Listings</h2>
-    <div *ngIf="auctions.length > 0; else noAuctions">
+    <div *ngIf="filteredAuctions.length > 0; else noAuctions">
       <div class="auction-items">
-        <div *ngFor="let auction of auctions" class="auction-item">
-
-          <div *ngIf="images && images.length > 1">
-            <img [src]="'http://localhost:8000/uploads/' + images[2]" [routerLink]="['/auction', auction.auction_id]" alt="{{ auction.item_name }}">
-            <!-- <img [src]="'http://localhost:8000/uploads/' + images[1]" alt="Item Image" class="auction-image" width="100px"> -->
+        <div *ngFor="let auction of filteredAuctions" class="auction-item" (click)="goToAuctionDetails(auction.id)" style="cursor: pointer;">
+          <div *ngIf="auction.images && auction.images.length > 0">
+            <img 
+              [src]="auction.images[0].path | safeUrl" 
+              alt="{{ auction.item_name }}"
+            >
           </div>
           <div class="auction-info">
             <p class="item-description">
               <span class="item-name">{{ auction.item_name }}</span>
               <br>
-              <span class="item-price">{{ auction.starting_bid }} $</span>
+              <span class="item-price">{{ auction.starting_bid | currency }} $</span>
             </p>
             <div class="item-location">
               <i class="map fa-solid fa-location-dot"></i>
               <span>{{ auction.item_country }}</span>
             </div>
-            <p class="auction-end-date">{{ auction.auction_end_time | date:'short' }}</p>
+            <p class="auction-end-date">Ends: {{ auction.auction_end_time | date:'short' }}</p>
 
             <p class="auction-status"
               [ngClass]="{'opened': checkAuctionStatus(auction.auction_end_time) === 'opened', 'closed': checkAuctionStatus(auction.auction_end_time) === 'closed'}">
-              {{ checkAuctionStatus(auction.auction_end_time) }}
+              {{ checkAuctionStatus(auction.auction_end_time) | titlecase }}
             </p>
 
             <div class="bid-btn" *ngIf="checkAuctionStatus(auction.auction_end_time) === 'opened'">
               <button routerLink="/payment-verification">Bid Now</button>
             </div>
-
           </div>
         </div>
-      </div>
-
-      <!-- Pagination Controls -->
-      <div class="pagination-controls">
-        <button (click)="prevPage()" [disabled]="currentPage === 1">Previous</button>
-        <span>Page {{ currentPage }} of {{ totalPages }}</span>
-        <button (click)="nextPage()" [disabled]="currentPage === totalPages">Next</button>
       </div>
     </div>
     <ng-template #noAuctions>
       <p>No auctions available at this time.</p>
     </ng-template>
   </div>
+
+  <!-- Pagination Controls -->
+  <div class="pagination-controls">
+    <button (click)="prevPage()" [disabled]="currentPage === 1">Previous</button>
+    <span>Page {{ currentPage }} of {{ totalPages }}</span>
+    <button (click)="nextPage()" [disabled]="currentPage === totalPages">Next</button>
+  </div>
 </main>
+
 <br>
 <br>
 <br>
@@ -124,24 +110,14 @@
   <div class="container">
     <div class="category-title">Top Auctions</div>
     <div class="top-auctions">
-      <div class="top-auction">
-        <img src="https://i.pinimg.com/564x/85/0a/ca/850aca7cd77c110e99ab20862aef14cf.jpg" alt="">
+      <div class="top-auction" *ngFor="let topAuction of topAuctions">
+        <img [src]="topAuction.image | safeUrl" alt="{{ topAuction.name }}">
         <div class="top-auction-winner">
           <div class="winner-info">
-            <img src="https://i.pinimg.com/474x/3d/2e/ae/3d2eae4e497f028babdada44978fe851.jpg" alt="">
-            <p class="winner-name">John Doe</p>
+            <img [src]="topAuction.winnerImage | safeUrl" alt="{{ topAuction.winnerName }}">
+            <p class="winner-name">{{ topAuction.winnerName }}</p>
           </div>
-          <p class="price">$54345.08</p>
-        </div>
-      </div>
-      <div class="top-auction">
-        <img src="https://i.pinimg.com/564x/d4/2e/a0/d42ea0c760d91a64ab632a2bb950992f.jpg" alt="">
-        <div class="top-auction-winner">
-          <div class="winner-info">
-            <img src="https://i.pinimg.com/564x/06/22/e8/0622e80b0b75c6cfb005ecf2a18c02b6.jpg" alt="">
-            <p class="winner-name">Mary Gard</p>
-          </div>
-          <p class="price">$4135.08</p>
+          <p class="price">{{ topAuction.price | currency }}</p>
         </div>
       </div>
     </div>

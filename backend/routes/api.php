@@ -16,12 +16,14 @@ Route::get('/logout', [UserController::class, 'logout'])->name('logout')->middle
 Route::apiResource('user', UserController::class);
 
 // Auction Routes - specific first
-Route::get('/auction/search', [AuctionController::class, 'search']);
-Route::get('/auction/search-by-category', [AuctionController::class, 'searchByCategory']);
-Route::get('/active-auctions', [AuctionController::class, 'showActiveAuctions']);
-Route::post('/auctions/approve/{id}', [AuctionController::class, 'approve']);
-Route::post('/auctions/rejected/{id}', [AuctionController::class, 'rejected']);
-Route::get('/auctions/pending', [AuctionController::class, 'pendingAuctions']);
+Route::get('/auction/active-auctions', [AuctionController::class, 'showActiveAuctions']); 
+Route::get('/auction/approved', [AuctionController::class, 'getApprovedAuctions']); 
+Route::get('/auction/pending', [AuctionController::class, 'pendingAuctions']); 
+Route::get('/auction/search', [AuctionController::class, 'search']); 
+Route::get('/auction/search-by-category', [AuctionController::class, 'searchByCategory']); 
+
+Route::post('/auction/approve/{id}', [AuctionController::class, 'approve']); 
+Route::post('/auction/rejected/{id}', [AuctionController::class, 'rejected']);
 
 // Then resource route
 Route::apiResource('auction', AuctionController::class);
