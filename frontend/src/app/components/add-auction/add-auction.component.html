@@ -23,7 +23,7 @@
   <label for="item_description">Item Description</label>
   <textarea id="item_description" formControlName="item_description" required></textarea>
   <div *ngIf="auctionForm.get('item_description')?.invalid && auctionForm.get('item_description')?.touched">
-    <small class="error">Item Description is required.</small>
+    <small class="error">Item Description field must be at least 15 characters long.</small>
   </div>
 
   <label for="starting_bid">Starting Bid</label>

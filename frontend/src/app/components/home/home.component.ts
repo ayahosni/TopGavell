@@ -2,11 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuctionService, Auction, PaginatedAuctions } from '../../services/auction.service';
-import { AuthService } from '../../services/auth.service';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { SafeUrlPipe } from '../../pipes/safe-url.pipe'; 
+import { SafeUrlPipe } from '../../pipes/safe-url.pipe';
 
 interface Category {
   name: string;
@@ -65,7 +64,6 @@ export class HomeComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private auctionService: AuctionService,
-    private authService: AuthService,
     private router: Router
   ) { }
 
@@ -79,19 +77,22 @@ export class HomeComponent implements OnInit {
    */
   loadApprovedAuctions(page: number = 1): void {
     this.auctionService.getApprovedAuctions(page, this.perPage).subscribe({
-        next: (response: PaginatedAuctions) => {
-            this.auctions = response.data;
-            this.filteredAuctions = [...this.auctions]; 
-            this.currentPage = response.meta.current_page;
-            this.totalPages = response.meta.last_page;
-            console.log('Loaded Approved Auctions:', this.auctions);
-        },
-        error: (err) => {
-            console.error('Error loading approved auctions:', err);
-        }
+      next: (response: PaginatedAuctions) => {
+        this.auctions = response.data;
+        this.filteredAuctions = [...this.auctions];
+        this.currentPage = response.meta.current_page;
+        this.totalPages = response.meta.last_page;
+        // console.log('Loaded Approved Auctions:', this.auctions);
+        this.auctions.forEach((auction) => {
+          console.log(auction.item_media[0]?.path);
+          // auction.item_media.forEach((img)=>{console.log(img.path)});
+        })
+      },
+      error: (err) => {
+        console.error('Error loading approved auctions:', err);
+      }
     });
-}
-
+  }
 
   /**
    * @param auctionEndTime 
@@ -177,5 +178,4 @@ export class HomeComponent implements OnInit {
   goToAuctionDetails(auctionId: string): void {
     this.router.navigate(['/auction', auctionId]);
   }
-  
 }

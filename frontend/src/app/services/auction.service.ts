@@ -10,7 +10,7 @@ export interface Image {
 }
 
 export interface Auction {
-  id: string;
+  auction_id: string;
   category_id: number;
   item_name: string;
   item_category:any;
@@ -22,7 +22,7 @@ export interface Auction {
   item_country: string;
   creator:any;
   approval_status: string;
-  images: Image[];
+  item_media: Image[];
 }
 
 export interface PaginatedAuctions {
