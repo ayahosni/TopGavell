@@ -25,6 +25,9 @@ export class AuctionDetailsComponent implements OnInit {
     constructor(private auctionService: AuctionService, private route: ActivatedRoute, private router: Router) { }
 
     ngOnInit(): void {
+        this.route.paramMap.subscribe(params => {
+            this.auctionId = params.get('id') || '';
+        });
         this.loadAuctionDetails();
     }
 
@@ -33,12 +36,12 @@ export class AuctionDetailsComponent implements OnInit {
             next: (response: any) => {
                 this.auction = response;
                 console.log(this.auction);
-                
+
                 // Load the auction images
                 if (response.item_media && response.item_media.length > 0) {
                     // Set the first image as the selected image
                     this.selectedImage = 'http://localhost:8000/uploads/images/' + response.item_media[0].path;
-                    
+
                     // Add all the image paths to the images array
                     response.item_media.forEach((item: { path: string; }) => {
                         this.images.push('http://localhost:8000/uploads/images/' + item.path);

@@ -85,24 +85,21 @@
       </div>
     </div>
     <ng-template #noAuctions>
-      <p>No auctions available at this time.</p>
+      <p style="font-size: 30px; color: black; text-align: center;">No auctions available at this time.</p>
     </ng-template>
   </div>
 
   <!-- Pagination Controls -->
-  <div class="pagination-controls">
+  <div class="pagination-controls" *ngIf="filteredAuctions.length > 0;">
     <button (click)="prevPage()" [disabled]="currentPage === 1">Previous</button>
-    <span>Page {{ currentPage }} of {{ totalPages }}</span>
     <button (click)="nextPage()" [disabled]="currentPage === totalPages">Next</button>
+    <span>Page {{ currentPage }} of {{ totalPages }}</span>
   </div>
 </main>
 
 <br>
 <br>
-<br>
-<br>
-
-<!-- Top Auction Section -->
+<!-- Top Auction Section
 <div class="top-auctions-content">
   <div class="container">
     <div class="category-title">Top Auctions</div>
@@ -119,4 +116,4 @@
       </div>
     </div>
   </div>
-</div>
+</div> -->
