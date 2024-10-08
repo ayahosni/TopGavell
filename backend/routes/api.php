@@ -25,6 +25,7 @@ Route::get('/auction/active-auctions', [AuctionController::class, 'showActiveAuc
 Route::get('/auction/approved', [AuctionController::class, 'getApprovedAuctions']); 
 Route::get('/auction/pending', [AuctionController::class, 'pendingAuctions']); 
 Route::get('/auction/deleted', [AuctionController::class, 'getDeletedAuctions']); 
+Route::get('/auction/finished', [AuctionController::class, 'finishedAuctions']); 
 Route::get('/auction/search', [AuctionController::class, 'search']); 
 Route::get('/auction/search-by-category', [AuctionController::class, 'searchByCategory']);
 Route::get('/auction/myAuctions', [AuctionController::class, 'myAuctions'])->middleware('auth:sanctum');

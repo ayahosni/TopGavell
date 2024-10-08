@@ -95,26 +95,42 @@ class AuctionController extends Controller
 
   public function showActiveAuctions(Request $request)
   {
-      $perPage = $request->input('per_page', 10);
-  
-      $activeAuctions = Auction::where('auction_status', 'open') 
-          ->where('approval_status', 'approved') 
-          ->paginate($perPage);
-  
-      return AuctionResource::collection($activeAuctions)
-          ->additional([
-              'meta' => [
-                  'current_page' => $activeAuctions->currentPage(),
-                  'last_page' => $activeAuctions->lastPage(),
-                  'per_page' => $activeAuctions->perPage(),
-                  'total' => $activeAuctions->total(),
-              ]
-          ]);
+    $perPage = $request->input('per_page', 10);
+    $currentTime = Carbon::now('UTC')->setTimezone('Africa/Cairo')->format('Y-m-d H:i:s');
+    $activeAuctions = Auction::where('auction_start_time', '<=', $currentTime)
+      ->where('auction_end_time', '>', $currentTime)
+      // ->where('approval_status', 'approved')
+      ->paginate($perPage);
+
+    // $auction = Auction::findOrFail(2);
+    // return response()->json(['auction_start_time' => $auction->auction_start_time,'currentTime' => $currentTime], 404);
+
+    return AuctionResource::collection($activeAuctions)
+      ->additional([
+        'meta' => [
+          'current_page' => $activeAuctions->currentPage(),
+          'last_page' => $activeAuctions->lastPage(),
+          'per_page' => $activeAuctions->perPage(),
+          'total' => $activeAuctions->total(),
+        ]
+      ]);
   }
   
   
   /////////////////////////////////////////////////////////////////////////////////////////////////////////
+  public function finishedAuctions()
+{
+    $finishedAuctions = Auction::with(['winningBidder.user', 'customer'])
+        ->where('auction_end_time', '<', Carbon::now())
+        ->where('approval_status','approved')
+        ->whereNotNull('winning_bidder_id')
+        ->get();
 
+    return AuctionResource::collection($finishedAuctions);
+}
+
+
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////
   public function store(Request $request)
   {
     // return response()->json(['message' => $request->file('item_media')], 403);
