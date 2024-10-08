@@ -9,7 +9,7 @@ import { SafeUrlPipe } from '../../pipes/safe-url.pipe';
 
 interface Category {
  id: number;
-  name: string;
+  name: string; 
   image: string;
 }
 
@@ -217,6 +217,6 @@ export class HomeComponent implements OnInit {
     }
   }
   goToAuctionDetails(auctionId: string): void {
-    this.router.navigate(['/auction-details', auctionId]);
+    this.router.navigate(['/auction', auctionId]);
   }
 }
