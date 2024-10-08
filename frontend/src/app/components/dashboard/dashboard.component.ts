@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { RouterLink } from '@angular/router';
+import { AuctionService, Auction, PaginatedAuctions } from '../../services/auction.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -10,15 +11,39 @@ import { RouterLink } from '@angular/router';
   styleUrl: './dashboard.component.css'
 })
 export class DashboardComponent {
-  userData: any;
-  constructor(private authService: AuthService) {}
+  Pauctions: Auction[] = [];
+  Aauctions: Auction[] = [];
+  ATSauctions: Auction[] = [];
+  Dauctions: Auction[] = [];
+  constructor(private authService: AuthService,private auctionService: AuctionService) { }
 
   ngOnInit(): void {
-    this.loadUserData();
+    this.loadPendingAuctions();
+    this.loadActiveAuctions();
   }
+    /**
+   * 
+   * @param page 
+   */
+    loadPendingAuctions(page: number = 1): void {
+      this.auctionService.getPendingAuctions(page).subscribe({
+        next: (response: PaginatedAuctions) => {
+          this.Pauctions = response.data;
+        },
+        error: (err) => {
+          console.error('Error loading approved auctions:', err);
+        }
+      });
+    }
 
-  loadUserData(): void {
-    const token = localStorage.getItem('auth_token');
-    this.userData = localStorage.getItem('user');
-  }
+    loadActiveAuctions(page: number = 1): void {
+      this.auctionService.getActiveAuctions(page).subscribe({
+        next: (response: PaginatedAuctions) => {
+          this.Aauctions = response.data;
+        },
+        error: (err) => {
+          console.error('Error loading approved auctions:', err);
+        }
+      });
+    }
 }

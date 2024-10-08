@@ -2,19 +2,16 @@
   <div class="image-gallery">
     <!-- Main Image Display -->
     <div class="main-image">
-      <img [src]=" selectedImage" alt="Main image of {{ auction.item_name }}"
-        class="auction-image" width="500">
+      <img [src]=" selectedImage" alt="Main image of {{ auction.item_name }}" class="auction-image" width="500">
     </div>
 
     <!-- Thumbnail Images Display -->
     <div class="thumbnails">
       <div *ngFor="let image of images">
-        <img [src]="image" alt="Thumbnail of {{ auction.item_name }}"
-          class="thumbnail-image" width="100" (click)="setMainImage(image)">
+        <img [src]="image" alt="Thumbnail of {{ auction.item_name }}" class="thumbnail-image" width="100"
+          (click)="setMainImage(image)">
       </div>
     </div>
-
-
   </div>
 
   <div class="auction-details">
@@ -27,9 +24,9 @@
     <p><strong>End Time:</strong> {{ auction.auction_end_time | date: 'short' }}</p>
 
     <p class="auction-status" [ngClass]="{
-         'opened': checkAuctionStatus(auction.auction_end_time) === 'opened', 
-         'closed': checkAuctionStatus(auction.auction_end_time) === 'closed'
-       }">
+        'opened': checkAuctionStatus(auction.auction_end_time) === 'opened', 
+        'closed': checkAuctionStatus(auction.auction_end_time) === 'closed'
+      }">
       Status: {{ checkAuctionStatus(auction.auction_end_time) | titlecase }}
     </p>
 

@@ -17,6 +17,7 @@ import { PaymentComponent } from './components/Payment/Payment.component';
 import { noAuthGuard } from './guards/no-auth.guard';
 import { verifyemailGuard } from './guards/verifyemail.guard';
 import { ErrorsComponent } from './components/errors/errors.component';
+import { adminGuard } from './guards/admin.guard';
 
 export const routes: Routes = [
     {path: '', component:HomeComponent},
@@ -30,7 +31,7 @@ export const routes: Routes = [
     {path: 'register', component: RegisterComponent, canActivate: [noAuthGuard]},
     {path: 'email_verify', component: EmailVerficationComponent, canActivate: [authGuard]},
     // { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
-    {path: 'dashboard', component: DashboardComponent, canActivate: [verifyemailGuard]},
+    {path: 'dashboard', component: DashboardComponent, canActivate: [adminGuard]},
     {path: 'addAuction', component: AddAuctionComponent , canActivate: [verifyemailGuard]},
     {path: 'auction/:auctionId/comments', component: CommentsComponent, canActivate: [verifyemailGuard]},
     {path: 'guides', component: GuidesComponent, canActivate: [verifyemailGuard]},
