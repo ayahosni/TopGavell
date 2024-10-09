@@ -26,6 +26,7 @@ return new class extends Migration
             $table->enum('auction_status', ['Open', 'Closed'])->default('Closed');
             $table->enum('approval_status', ['approved', 'pending', 'rejected'])->default('pending');
             $table->string('item_country');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

@@ -266,6 +266,36 @@ class AuctionController extends Controller
     ], 403);
   }
 
+  public function getDeletedAuctions(Request $request)
+  {
+
+    // Check if the authenticated user is an admin
+    if (Auth::user()->role === 'admin') {
+      $perPage = $request->input('per_page', 10);
+
+      $pendingAuctions = Auction::onlyTrashed()->get(); // Only soft-deleted records
+
+      return AuctionResource::collection($pendingAuctions)
+        ->additional([
+          'meta' => [
+            'current_page' => $pendingAuctions->currentPage(),
+            'last_page' => $pendingAuctions->lastPage(),
+            'per_page' => $pendingAuctions->perPage(),
+            'total' => $pendingAuctions->total(),
+          ]
+        ]);
+    }
+
+    // If the user is not an admin, return a 403 Unauthorized response
+    return response()->json([
+      'message' => 'Unauthorized.'
+    ], 403);
+
+  }
+
+
+  
+
 
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
   public function searchByCategory(Request $request)
