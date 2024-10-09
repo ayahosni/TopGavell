@@ -23,6 +23,7 @@ import { PendingAuctionsComponent } from './components/pending-auctions/pending-
 import { DeletedAuctionsComponent } from './components/deleted-auctions/deleted-auctions.component';
 import { UserDashboardComponent } from './components/user-dashboard/user-dashboard.component';
 import { MyAuctionsComponent } from './components/my-auctions/my-auctions.component';
+import { FinishedAuctionsComponent } from './components/finished-auctions/finished-auctions.component';
 
 export const routes: Routes = [
     {path: '', component:HomeComponent},
@@ -47,5 +48,12 @@ export const routes: Routes = [
     {path: 'pendingAuctions',component:PendingAuctionsComponent,canActivate:[adminGuard]},
     {path: 'deletedAuctions',component:DeletedAuctionsComponent,canActivate:[adminGuard]},
     {path: 'errors', component: ErrorsComponent},
+    { path: 'finished-auctions', component: FinishedAuctionsComponent },
+
     {path: '**', redirectTo: '/errors'},
+
+
+
+
+
 ];
