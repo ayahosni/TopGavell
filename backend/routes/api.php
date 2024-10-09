@@ -26,6 +26,8 @@ Route::get('/auction/myAuctions', [AuctionController::class, 'myAuctions'])->mid
 
 Route::post('/auction/{id}/approve', [AuctionController::class, 'approve']); 
 Route::post('/auction/{id}/reject', [AuctionController::class, 'rejected']);
+Route::delete('/auction/{id}/delete', [AuctionController::class, 'destroy']);
+
 
 // Then resource route
 Route::apiResource('auction', AuctionController::class);

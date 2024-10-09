@@ -21,7 +21,7 @@ class DatabaseSeeder extends Seeder
         // User::factory()->create([
         //     'role' => 'admin',
         // ]);
-        // Auction::factory()->count(3)->create();
+        Auction::factory()->count(3)->create();
 
         // $auctions = Auction::all();
         // foreach ($auctions as $auction) {
@@ -32,12 +32,12 @@ class DatabaseSeeder extends Seeder
         // }
 
         // Category::factory()->count(5)->create();
-        Category::factory()->createMany([
-            ['name' => 'Birds'],
-            ['name' => 'Cars'],
-            ['name' => 'Art'],
-            ['name' => 'Cats'],
-            ['name' => 'Dogs'],
-        ]);        
+        // Category::factory()->createMany([
+        //     ['name' => 'Birds'],
+        //     ['name' => 'Cars'],
+        //     ['name' => 'Art'],
+        //     ['name' => 'Cats'],
+        //     ['name' => 'Dogs'],
+        // ]);        
     }
 }

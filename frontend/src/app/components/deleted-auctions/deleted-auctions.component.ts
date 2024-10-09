@@ -29,17 +29,18 @@ export class DeletedAuctionsComponent {
   ) { }
 
   ngOnInit(): void {
-    this.loadPendingAuctions(this.currentPage);
+    this.loadDeletedAuctions(this.currentPage);
   }
 
   /**
    * 
    * @param page 
    */
-  loadPendingAuctions(page: number = 1): void {
+  loadDeletedAuctions(page: number = 1): void {
     this.auctionService.getDeletedAuctions(page, this.perPage).subscribe({
       next: (response: PaginatedAuctions) => {
         this.auctions = response.data;
+        console.log(this.auctions);
         this.filteredAuctions = [...this.auctions];
         this.currentPage = response.meta.current_page;
         this.totalPages = response.meta.last_page;

@@ -230,6 +230,9 @@ class AuctionController extends Controller
   /////////////////////////////////////////////////////////////////////////////////////////////////////////
   public function getApprovedAuctions(Request $request)
   {
+    dd($request->per_page);
+
+
     $auctions = Auction::where('approval_status', 'approved')
       ->paginate($request->per_page);
 
@@ -248,9 +251,19 @@ class AuctionController extends Controller
   /**
    * Remove the specified resource from storage.
    */
-  public function destroy(Auction $auction)
+  public function destroy($id)
   {
+    
+    // $id=$request->input('auction_id');
 
+   
+    $auction =Auction::findOrFail($id);
+
+    //  return response()->json([
+    //   'message' => $auction
+    // ], 200);
+    
+  
     $user = Auth::user();
     $currentTime = Carbon::now('UTC')->setTimezone('Europe/Bucharest')->format('Y-m-d H:i:s');
     // Check if the time is before auction start
@@ -273,27 +286,50 @@ class AuctionController extends Controller
   public function getDeletedAuctions(Request $request)
   {
 
-    // Check if the authenticated user is an admin
-    if (Auth::user()->role === 'admin') {
-      $perPage = $request->input('per_page', 10);
+    $perPage = $request->input('per_page', 10);
 
-      $pendingAuctions = Auction::onlyTrashed()->get(); // Only soft-deleted records
 
-      return AuctionResource::collection($pendingAuctions)
-        ->additional([
-          'meta' => [
-            'current_page' => $pendingAuctions->currentPage(),
-            'last_page' => $pendingAuctions->lastPage(),
-            'per_page' => $pendingAuctions->perPage(),
-            'total' => $pendingAuctions->total(),
-          ]
-        ]);
-    }
+    $deletedAuctions = Auction::onlyTrashed()
+    ->paginate($perPage); // Only soft-deleted records
 
-    // If the user is not an admin, return a 403 Unauthorized response
-    return response()->json([
-      'message' => 'Unauthorized.'
-    ], 403);
+    return AuctionResource::collection($deletedAuctions)
+    ->additional([
+      'meta' => [
+        'current_page' => $deletedAuctions->currentPage(),
+        'last_page' => $deletedAuctions->lastPage(),
+        'per_page' => $deletedAuctions->perPage(),
+        'total' => $deletedAuctions->total(),
+      ]
+    ]);
+
+    // $user = Auth::user();
+
+    // dd(Auth::user());
+
+    // // Check if the authenticated user is an admin
+    // if (Auth::user()->role  === 'admin') {
+    //   $perPage = $request->input('per_page', 10);
+
+
+    // $deletedAuctions = Auction::onlyTrashed()
+    // ->paginate($perPage); // Only soft-deleted records
+
+    // return AuctionResource::collection($deletedAuctions)
+    // ->additional([
+    //   'meta' => [
+    //     'current_page' => $deletedAuctions->currentPage(),
+    //     'last_page' => $deletedAuctions->lastPage(),
+    //     'per_page' => $deletedAuctions->perPage(),
+    //     'total' => $deletedAuctions->total(),
+    //   ]
+    // ]);
+
+    // }
+
+    // // If the user is not an admin, return a 403 Unauthorized response
+    // return response()->json([
+    //   'message' => 'Unauthorized.'
+    // ], 403);
 
   }
 

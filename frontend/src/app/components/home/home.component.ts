@@ -94,6 +94,18 @@ export class HomeComponent implements OnInit {
     });
   }
 
+  deleteAuction(auctionId: string) {
+    this.auctionService.deleteAuction(auctionId).subscribe({
+      next: (response) => {
+        console.log('Auction deleted:', response);
+        // Optionally refresh the list of auctions or perform other actions
+      },
+      error: (error) => {
+        console.error('Error deleting auction:', error);
+      }
+    });
+  }
+
   /**
    * @param auctionEndTime 
    * @returns 

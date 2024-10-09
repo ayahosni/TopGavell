@@ -80,6 +80,15 @@
             <div class="bid-btn" *ngIf="checkAuctionStatus(auction.auction_end_time) === 'opened'">
               <button routerLink="/payment-verification">Bid Now</button>
             </div>
+
+            <!-- <div class="bid-btn" *ngIf="checkAuctionStatus(auction.auction_end_time) === 'opened'">
+              <button routerLink="http://localhost:8000/api/auction/{{auction.auction_id}}/delete">delete</button>
+            </div> -->
+
+            <div class="bid-btn" *ngIf="checkAuctionStatus(auction.auction_end_time) === 'opened'">
+              <button (click)="deleteAuction(auction.auction_id)">Delete</button>
+            </div>
+            
           </div>
         </div>
       </div>

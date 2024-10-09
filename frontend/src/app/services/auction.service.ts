@@ -213,14 +213,16 @@ export class AuctionService {
    * @param id 
    * @returns 
    */
-  deleteAuction(id: number): Observable<any> {
+  deleteAuction(id: string): Observable<any> {
     const headers = this.getAuthHeaders();
     if (!headers) {
       return throwError('Token is missing. Please log in.');
     }
-    return this.http.delete(`${this.apiUrl}/${id}`, { headers })
+    return this.http.delete(`${this.apiUrl}/${id}/delete`, { headers })
       .pipe(catchError(this.handleError));
   }
+
+
 
   approveAuction(id: string): Observable<any> {
     const headers = this.getAuthHeaders();
