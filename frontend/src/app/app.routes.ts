@@ -19,6 +19,7 @@ import { verifyemailGuard } from './guards/verifyemail.guard';
 import { ErrorsComponent } from './components/errors/errors.component';
 import { adminGuard } from './guards/admin.guard';
 import { PendingAuctionsComponent } from './components/pending-auctions/pending-auctions.component';
+import { DeletedAuctionsComponent } from './components/deleted-auctions/deleted-auctions.component';
 
 export const routes: Routes = [
     {path: '', component:HomeComponent},
@@ -37,6 +38,7 @@ export const routes: Routes = [
     {path: 'guides', component: GuidesComponent, canActivate: [verifyemailGuard]},
     {path: 'payment', component: PaymentComponent, canActivate: [verifyemailGuard]},
     {path: 'pendingAuctions',component:PendingAuctionsComponent,canActivate:[adminGuard]},
+    {path: 'deletedAuctions',component:DeletedAuctionsComponent,canActivate:[adminGuard]},
     {path: 'errors', component: ErrorsComponent},
     {path: '**', redirectTo: '/errors'},
 ];

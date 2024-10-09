@@ -136,6 +136,20 @@ export class AuctionService {
     return this.http.get<PaginatedAuctions>(`${this.apiUrl}/pending`, { params, headers: this.getAuthHeaders() })
       .pipe(catchError(this.handleError));
   }
+
+    /**
+   * @param page 
+   * @param perPage 
+   * @returns 
+   */
+    getDeletedAuctions(page: number = 1, perPage: number = 10): Observable<PaginatedAuctions> {
+      let params = new HttpParams()
+        .set('page', page.toString())
+        .set('per_page', perPage.toString());
+  
+      return this.http.get<PaginatedAuctions>(`${this.apiUrl}/deleted`, { params, headers: this.getAuthHeaders() })
+        .pipe(catchError(this.handleError));
+    }
   /**
  * @param id 
  * @returns 
