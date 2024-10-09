@@ -13,10 +13,10 @@
                 <h3>Pending Auctions</h3>
                 <p class="counter">{{Pauctions.length}}</p>
             </a>
-            <a class="card" href="#">
+            <div class="card" (click)="goToAuctions()">
                 <h3>Active Auctions</h3>
                 <p class="counter">{{Aauctions.length}}</p>
-            </a>
+              </div>
             <a class="card" href="#">
                 <h3>About to start</h3>
                 <p class="counter">{{ATSauctions.length}}</p>

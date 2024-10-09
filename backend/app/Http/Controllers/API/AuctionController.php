@@ -95,28 +95,29 @@ class AuctionController extends Controller
 
   public function showActiveAuctions(Request $request)
   {
-    $perPage = $request->input('per_page', 10);
-    $currentTime = Carbon::now('UTC')->setTimezone('Europe/Bucharest')->format('Y-m-d H:i:s');
-    $activeAuctions = Auction::where('auction_start_time', '<=', $currentTime)
-      ->where('auction_end_time', '>', $currentTime)
-      ->where('approval_status', 'approved')
-      ->paginate($perPage);
-
-    return AuctionResource::collection($activeAuctions)
-      ->additional([
-        'meta' => [
-          'current_page' => $activeAuctions->currentPage(),
-          'last_page' => $activeAuctions->lastPage(),
-          'per_page' => $activeAuctions->perPage(),
-          'total' => $activeAuctions->total(),
-        ]
-      ]);
+      $perPage = $request->input('per_page', 10);
+  
+      $activeAuctions = Auction::where('auction_status', 'open') 
+          ->where('approval_status', 'approved') 
+          ->paginate($perPage);
+  
+      return AuctionResource::collection($activeAuctions)
+          ->additional([
+              'meta' => [
+                  'current_page' => $activeAuctions->currentPage(),
+                  'last_page' => $activeAuctions->lastPage(),
+                  'per_page' => $activeAuctions->perPage(),
+                  'total' => $activeAuctions->total(),
+              ]
+          ]);
   }
-
+  
+  
   /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   public function store(Request $request)
   {
+    // return response()->json(['message' => $request->file('item_media')], 403);
     // Prevent admin users from creating auctions
     if (Auth::user()->role === 'admin') {
       return response()->json([
@@ -243,6 +244,15 @@ class AuctionController extends Controller
           'total' => $auctions->total(),
         ]
       ]);
+
+    // return response()->json([
+    //   'data' => $auctions->items(),
+    //   'meta' => [
+    //     'current_page' => $auctions->currentPage(),
+    //     'last_page' => $auctions->lastPage(),
+    //     'total' => $auctions->total(),
+    //   ],
+    // ]);
   }
 
   /**

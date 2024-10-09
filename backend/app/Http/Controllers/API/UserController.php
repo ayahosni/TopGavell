@@ -208,7 +208,7 @@ class UserController extends Controller
             \Storage::delete($user->profile_image);
         }
 
-        $path = $request->file('profile_picture')->store('profile_images', 'public');
+        $path = $request->file('profile_picture')->store('images', 'public');
         $user->profile_image = $path;
     }
 

@@ -49,7 +49,6 @@ export class BidsComponent implements OnInit {
       }
     });
   }
-
   loadAuctionDetails(): void {
     this.auctionService.getAuctionById(this.auctionId).subscribe({
       next: (response: any) => {

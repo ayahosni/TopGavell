@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { AuctionService, Auction, PaginatedAuctions } from '../../services/auction.service';
 
 @Component({
@@ -15,7 +15,7 @@ export class AdminDashboardComponent {
   Aauctions: Auction[] = [];
   ATSauctions: Auction[] = [];
   Dauctions: Auction[] = [];
-  constructor(private authService: AuthService,private auctionService: AuctionService) { }
+  constructor(private authService: AuthService,private auctionService: AuctionService,private router: Router) { }
 
   ngOnInit(): void {
     this.loadPendingAuctions();
@@ -45,5 +45,9 @@ export class AdminDashboardComponent {
           console.error('Error loading approved auctions:', err);
         }
       });
+    }
+    goToAuctions(): void {
+      console.log("Navigating to auctions page");
+      this.router.navigate(['/auctions']);
     }
 }
