@@ -119,7 +119,7 @@ export class AuctionService {
       .set('page', page.toString())
       .set('per_page', perPage.toString());
 
-    return this.http.get<PaginatedAuctions>(`${this.apiUrl}/active-auctions`, { params ,headers: this.getAuthHeaders()})
+    return this.http.get<PaginatedAuctions>(`${this.apiUrl}/active-auctions`, { params, headers: this.getAuthHeaders() })
       .pipe(catchError(this.handleError));
   }
 
@@ -145,7 +145,7 @@ export class AuctionService {
       .set('page', page.toString())
       .set('per_page', perPage.toString());
 
-    return this.http.get<PaginatedAuctions>(`${this.apiUrl}/approved`, { params, headers: this.getAuthHeaders()  })
+    return this.http.get<PaginatedAuctions>(`${this.apiUrl}/approved`, { params, headers: this.getAuthHeaders() })
       .pipe(catchError(this.handleError));
   }
 
@@ -208,7 +208,7 @@ export class AuctionService {
       .pipe(catchError(this.handleError));
   }
 
-  approveAuction(id: number): Observable<any> {
+  approveAuction(id: string): Observable<any> {
     const headers = this.getAuthHeaders();
     if (!headers) {
       return throwError('Token is missing. Please log in.');
@@ -221,12 +221,25 @@ export class AuctionService {
    * @param id 
    * @returns 
    */
-  rejectAuction(id: number): Observable<any> {
+  rejectAuction(id: string): Observable<any> {
     const headers = this.getAuthHeaders();
     if (!headers) {
       return throwError('Token is missing. Please log in.');
     }
     return this.http.post(`${this.apiUrl}/${id}/reject`, {}, { headers })
+      .pipe(catchError(this.handleError));
+  }  
+  /**
+ * @param page 
+ * @param perPage 
+ * @returns 
+ */
+  getmyAuctions(page: number = 1, perPage: number = 10): Observable<PaginatedAuctions> {
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('per_page', perPage.toString());
+
+    return this.http.get<PaginatedAuctions>(`${this.apiUrl}/myAuctions`, { params, headers: this.getAuthHeaders() })
       .pipe(catchError(this.handleError));
   }
 }

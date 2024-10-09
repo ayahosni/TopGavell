@@ -17,10 +17,12 @@ import { PaymentService } from '../../services/payment.service';
 export class BidsComponent implements OnInit {
   @Input() auctionId: string = '';
   auction: any;
+  ceatorID: any;
   lastBid: any;
   bidAmount: number = 0;
   message: string = '';
   hasPaid: boolean | null = null;
+  canBid: boolean | null = null;
 
   constructor(
     private auctionService: AuctionService,
@@ -33,13 +35,13 @@ export class BidsComponent implements OnInit {
   ngOnInit(): void {
     this.loadAuctionDetails();
     this.checkIfBidderPaid(this.auctionId);
+    this.canbid(this.ceatorID);
   }
 
   checkIfBidderPaid(auctionId: any) {
     this.paymentService.checkPayment(auctionId).subscribe({
       next: (response) => {
         this.hasPaid = response.hasPaid;
-        console.log(response);
       },
       error: (error) => {
         console.error('Error checking payment:', error);
@@ -47,12 +49,12 @@ export class BidsComponent implements OnInit {
       }
     });
   }
-  
+
   loadAuctionDetails(): void {
     this.auctionService.getAuctionById(this.auctionId).subscribe({
       next: (response: any) => {
         this.auction = response;
-        console.log(this.auction.bids);
+        this.ceatorID = this.auction.creator.id;
         this.lastBid = this.auction.bids[1] || null;
       },
       error: (error: any) => {
@@ -80,5 +82,16 @@ export class BidsComponent implements OnInit {
         console.log('Error placing bid:', error)
       }
     });
+  }
+  canbid(ceatorID: any) {
+    const userData = localStorage.getItem('user');
+    if (userData) {
+      const user = JSON.parse(userData);
+      if (user.role == "admin" || user.id == ceatorID) {
+        this.canBid = false;
+      } else {
+        this.canBid = true;
+      }
+    }
   }
 }

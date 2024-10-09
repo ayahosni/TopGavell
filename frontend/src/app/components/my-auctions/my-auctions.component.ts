@@ -1,40 +1,39 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
 import { AuctionService, Auction, PaginatedAuctions } from '../../services/auction.service';
-import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { FormBuilder } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-pending-auctions',
+  selector: 'app-my-auctions',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './pending-auctions.component.html',
-  styleUrl: './pending-auctions.component.css'
+  templateUrl: './my-auctions.component.html',
+  styleUrl: './my-auctions.component.css'
 })
-export class PendingAuctionsComponent implements OnInit {
+export class MyAuctionsComponent implements OnInit {
   auctions: Auction[] = [];
   filteredAuctions: Auction[] = [];
   searchTerm: string = '';
   currentPage: number = 1;
   totalPages: number = 0;
   perPage: number = 10;
-
   constructor(
-    private fb: FormBuilder,
     private auctionService: AuctionService,
+    private fb: FormBuilder,
     private router: Router
   ) { }
 
   ngOnInit(): void {
-    this.loadPendingAuctions(this.currentPage);
+    this.loadmyAuctions();
   }
 
   /**
-   * 
-   * @param page 
-   */
-  loadPendingAuctions(page: number = 1): void {
-    this.auctionService.getPendingAuctions(page, this.perPage).subscribe({
+ * 
+ * @param page 
+ */
+  loadmyAuctions(page: number = 1): void {
+    this.auctionService.getmyAuctions(page, this.perPage).subscribe({
       next: (response: PaginatedAuctions) => {
         this.auctions = response.data;
         this.filteredAuctions = [...this.auctions];
@@ -49,7 +48,7 @@ export class PendingAuctionsComponent implements OnInit {
 
   goToAuctionDetails(auctionId: string): void {
     console.log(auctionId);
-    this.router.navigate(['/auction_details', auctionId]);
+    this.router.navigate(['/auction', auctionId]);
   }
 
   /**
@@ -79,7 +78,7 @@ export class PendingAuctionsComponent implements OnInit {
  */
   fetchAuctions(page: number = 1): void {
     this.currentPage = page;
-    this.auctionService.getApprovedAuctions(page, this.perPage).subscribe({
+    this.auctionService.getmyAuctions(page, this.perPage).subscribe({
       next: (response: PaginatedAuctions) => {
         this.auctions = response.data;
         this.filteredAuctions = [...this.auctions];
@@ -92,14 +91,10 @@ export class PendingAuctionsComponent implements OnInit {
     });
   }
 
-  rejectAuction(auctionId: string){
-    this.auctionService.rejectAuction(auctionId).subscribe({
-      next:(response)=>{
-        this.loadPendingAuctions(this.currentPage);
-      },
-      error:(error)=>{
-        console.log(error.error)
-      }
-    })
+  updateAuction(id: any){
+    console.log(id);
+  }
+  deleteAuction(id: any){
+    console.log(id);
   }
 }

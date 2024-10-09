@@ -17,6 +17,7 @@ export class HeaderComponent implements OnInit {
   isLoggedIn: boolean = false;
   isRegistered: boolean = false;
   userName: string = '';
+  isAdmin:boolean=false;
   userProfileImage: string = 'assets/images/user.jpeg'; 
   showDropdown: boolean = false;
   notificationCount: number = 0;  
@@ -45,8 +46,12 @@ export class HeaderComponent implements OnInit {
       const user = JSON.parse(userData);
       this.userName = user.name; 
       this.isLoggedIn = true;  
-      this.isRegistered = true;  
+      this.isRegistered = true;
+      if(user.role=="admin"){
+        this.isAdmin=true;
+      }
     }
+    console.log(this.isAdmin);
   }
 
   toggleDropdown(event: Event): void {

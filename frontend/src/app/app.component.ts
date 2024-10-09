@@ -10,7 +10,7 @@ import { ContactComponent } from './components/contact/contact.component';
 import { HomeComponent } from './components/home/home.component';
 import { CommentsComponent } from './components/comments/comments.component';
 import { AuctionsComponent } from './components/auctions/auctions.component'; 
-import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { AdminDashboardComponent } from './components/adminDashboard/adminDashboard.component';
 import { GuidesComponent } from './components/guides/guides.component';
 import { EmailVerficationComponent } from './components/email-verfication/email-verfication.component';
 
@@ -30,7 +30,7 @@ import { EmailVerficationComponent } from './components/email-verfication/email-
     AuctionsComponent,
     FormsModule,
     GuidesComponent,
-    DashboardComponent,
+    AdminDashboardComponent,
     EmailVerficationComponent,
     CommentsComponent
   ],

@@ -19,6 +19,8 @@ export class AuthService {
         if (response && response.token) {
           const userData = {
             token: response.token,
+            role: response.user.role,
+            id:response.user.id,
             is_email_verified: response.user.is_email_verified,
             email: response.user.email,
             name: response.user.name
@@ -38,6 +40,7 @@ export class AuthService {
           const userData = {
             token: response.token,
             role: response.user.role,
+            id:response.user.id,
             is_email_verified: response.user.is_email_verified,
             email: response.user.email,
             name: response.user.name
