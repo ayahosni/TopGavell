@@ -7,10 +7,10 @@ import { AuctionService, Auction, PaginatedAuctions } from '../../services/aucti
   selector: 'app-dashboard',
   standalone: true,
   imports: [RouterLink],
-  templateUrl: './dashboard.component.html',
-  styleUrl: './dashboard.component.css'
+  templateUrl: './adminDashboard.component.html',
+  styleUrl: './adminDashboard.component.css'
 })
-export class DashboardComponent {
+export class AdminDashboardComponent {
   Pauctions: Auction[] = [];
   Aauctions: Auction[] = [];
   ATSauctions: Auction[] = [];

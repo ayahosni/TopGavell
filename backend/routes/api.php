@@ -21,10 +21,11 @@ Route::get('/auction/approved', [AuctionController::class, 'getApprovedAuctions'
 Route::get('/auction/pending', [AuctionController::class, 'pendingAuctions']); 
 Route::get('/auction/deleted', [AuctionController::class, 'getDeletedAuctions']); 
 Route::get('/auction/search', [AuctionController::class, 'search']); 
-Route::get('/auction/search-by-category', [AuctionController::class, 'searchByCategory']); 
+Route::get('/auction/search-by-category', [AuctionController::class, 'searchByCategory']);
+Route::get('/auction/myAuctions', [AuctionController::class, 'myAuctions'])->middleware('auth:sanctum');
 
-Route::post('/auction/approve/{id}', [AuctionController::class, 'approve']); 
-Route::post('/auction/rejected/{id}', [AuctionController::class, 'rejected']);
+Route::post('/auction/{id}/approve', [AuctionController::class, 'approve']); 
+Route::post('/auction/{id}/reject', [AuctionController::class, 'rejected']);
 
 // Then resource route
 Route::apiResource('auction', AuctionController::class);

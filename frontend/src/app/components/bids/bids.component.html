@@ -1,5 +1,6 @@
 <div class="bids-container" *ngIf="auction; else loading">
-  <div *ngIf="message" class="message" [ngClass]="{'error': message.includes('Error'), 'success': message.includes('success')}">
+  <div *ngIf="message" class="message"
+    [ngClass]="{'error': message.includes('Error'), 'success': message.includes('success')}">
     {{ message }}
   </div>
 
@@ -14,14 +15,18 @@
   </div>
 
   <div *ngIf="auction.bids.length === 0">
-    <p class="no-bids-message">No previous bids. You can place a bid starting from <strong>{{ auction.starting_bid }} USD</strong>.</p>
+    <p class="no-bids-message">No bids. You can place a bid starting from <strong>{{ auction.starting_bid }} USD</strong>.</p>
   </div>
 
-  <form class="bid-form" (ngSubmit)="placeBid()">
+  <form class="bid-form" (ngSubmit)="placeBid()" *ngIf="canBid; else can_not_bid">
     <label for="bidAmount" class="bid-label">Your Bid:</label>
-    <input type="number" id="bidAmount" [(ngModel)]="bidAmount" name="bidAmount" [min]="auction.starting_bid" required class="bid-input">
+    <input type="number" id="bidAmount" [(ngModel)]="bidAmount" name="bidAmount" [min]="auction.starting_bid" required
+      class="bid-input">
     <button type="submit" class="submit-bid-button">Place Bid</button>
   </form>
+  <ng-template #can_not_bid>
+    <p>You Can't Bid on this auction</p>
+  </ng-template>
 </div>
 
 <ng-template #loading>

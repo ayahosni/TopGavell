@@ -3,8 +3,16 @@
   <div *ngIf="filteredAuctions.length > 0; else noAuctions">
     <div class="auction-items">
       <div *ngFor="let auction of filteredAuctions" class="auction-item" style="cursor: pointer;">
-        <div *ngIf="auction.item_media && auction.item_media.length > 0" (click)="goToAuctionDetails(auction.auction_id)">
-          <img [src]="'http://localhost:8000/uploads/images/' + auction.item_media[0].path" alt="{{ auction.item_name }}">
+        <div *ngIf=" auction.approval_status == 'rejected'; else approved">
+          <p class="rejected">{{ auction.approval_status}}</p>
+        </div>
+        <ng-template #approved>
+          <p class="approved">{{ auction.approval_status}}</p>
+        </ng-template>
+        <div *ngIf="auction.item_media && auction.item_media.length > 0"
+          (click)="goToAuctionDetails(auction.auction_id)">
+          <img [src]="'http://localhost:8000/uploads/images/' + auction.item_media[0].path"
+            alt="{{ auction.item_name }}">
         </div>
         <div class="auction-info">
           <p class="item-description">
@@ -19,8 +27,8 @@
           <p class="date">Starts: {{ auction.auction_start_time | date:'short' }}</p>
           <p class="date">Ends: {{ auction.auction_end_time | date:'short' }}</p>
           <div class="bid-btn">
-            <button class="Approve" (click)="goToAuctionDetails(auction.auction_id)">Approve</button>
-            <button class="Deny" (click)="rejectAuction(auction.auction_id)">Deny</button>
+            <button class="Approve" (click)="updateAuction(auction.auction_id)">Edit</button>
+            <button class="Deny" (click)="deleteAuction(auction.auction_id)">Delete</button>
           </div>
         </div>
       </div>

@@ -9,7 +9,7 @@
     <ul class="navbar-menu">
       <li><a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Home</a></li>
       <li><a routerLink="/auctions" routerLinkActive="active">Open Auctions</a></li>
-      <li class="dropdown">
+      <!-- <li class="dropdown">
         <a routerLink="/items" routerLinkActive="active" class="dropdown-toggle">
           Browse Items <i class="fa fa-caret-down"></i>
         </a>
@@ -22,9 +22,9 @@
           <li><a routerLink="/items/category6">Fine Arts</a></li>
           <li><a routerLink="/items/category7">View All Auctions</a></li>
         </ul>
-      </li>
+      </li> -->
 
-      <li><a routerLink="/guides" routerLinkActive="active">Buying Guides & Tips</a></li>
+      <!-- <li><a routerLink="/guides" routerLinkActive="active">Buying Guides & Tips</a></li> -->
     </ul>
 
     <div class="navbar-buttons">
@@ -40,9 +40,16 @@
           <i class="fa fa-caret-down"></i>
 
           <ul *ngIf="showDropdown" class="dropdown-menu user-dropdown">
-            <li><a routerLink="/profile">Profile</a></li>
-            <li><a routerLink="/settings">Settings</a></li>
-            <li><a routerLink="/dashboard">Dashboard</a></li>
+            <!-- <li><a routerLink="/profile">Profile</a></li> -->
+            <!-- <li><a routerLink="/settings">Settings</a></li> -->
+
+            <div *ngIf="isAdmin ; else noAuctions">
+              <li><a routerLink="/adminDashboard">Dashboard</a></li>
+            </div>
+            <ng-template #noAuctions>
+              <li><a routerLink="/userDashboard">Dashboard</a></li>
+            </ng-template>
+            
             <li><a (click)="logout()">Logout</a></li>
           </ul>
         </div>

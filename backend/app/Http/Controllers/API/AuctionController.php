@@ -68,11 +68,28 @@ class AuctionController extends Controller
   }
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+  
   public function show(Auction $auction)
   {
     // $auction = Auction::findOrFail($auction->id)->where('approval_status', 'pending');
     return new AuctionResource($auction);
+  }
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  public function myAuctions(Request $request)
+  {
+    $customer = Customer::where('user_id', Auth::id())->first();
+    $perPage = $request->input('per_page', 10);
+    $auctions = Auction::where('customer_id',$customer->id)->paginate($perPage);
+    return AuctionResource::collection($auctions)
+      ->additional([
+        'meta' => [
+          'current_page' => $auctions->currentPage(),
+          'last_page' => $auctions->lastPage(),
+          'per_page' => $auctions->perPage(),
+          'total' => $auctions->total(),
+        ]
+      ]);
   }
   /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -82,11 +99,8 @@ class AuctionController extends Controller
     $currentTime = Carbon::now('UTC')->setTimezone('Europe/Bucharest')->format('Y-m-d H:i:s');
     $activeAuctions = Auction::where('auction_start_time', '<=', $currentTime)
       ->where('auction_end_time', '>', $currentTime)
-      // ->where('approval_status', 'approved')
+      ->where('approval_status', 'approved')
       ->paginate($perPage);
-
-    // $auction = Auction::findOrFail(2);
-    // return response()->json(['auction_start_time' => $auction->auction_start_time,'currentTime' => $currentTime], 404);
 
     return AuctionResource::collection($activeAuctions)
       ->additional([
@@ -103,7 +117,6 @@ class AuctionController extends Controller
 
   public function store(Request $request)
   {
-    // return response()->json(['message' => $request->file('item_media')], 403);
     // Prevent admin users from creating auctions
     if (Auth::user()->role === 'admin') {
       return response()->json([
@@ -230,15 +243,6 @@ class AuctionController extends Controller
           'total' => $auctions->total(),
         ]
       ]);
-
-    // return response()->json([
-    //   'data' => $auctions->items(),
-    //   'meta' => [
-    //     'current_page' => $auctions->currentPage(),
-    //     'last_page' => $auctions->lastPage(),
-    //     'total' => $auctions->total(),
-    //   ],
-    // ]);
   }
 
   /**
