@@ -121,17 +121,17 @@ class BidController extends Controller
 
 
         // check if the customer is bidding for the first time or not for the Insurance payment 
-        // $isFound = Bid::where('auction_id', $auction->id)
-        //     ->where('customer_id', $customer->id)
-        //     ->exists();
+        $isFound = Bid::where('auction_id', $auction->id)
+            ->where('customer_id', $customer->id)
+            ->exists();
 
-        // if (!$isFound) {
-        //     // return route('checkout', ['auctionID' => $auction->id]);
-        //     return response()->json([
-        //         'payment'=>false,
-        //         'message' => 'You have to pay insurance',
-        //     ], 400);
-        // }
+        if (!$isFound) {
+            // return route('checkout', ['auctionID' => $auction->id]);
+            return response()->json([
+                'payment'=>false,
+                'message' => 'You have to pay insurance',
+            ], 400);
+        }
 
 
         // Create the new bid
