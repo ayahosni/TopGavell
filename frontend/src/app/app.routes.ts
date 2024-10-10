@@ -24,11 +24,12 @@ import { DeletedAuctionsComponent } from './components/deleted-auctions/deleted-
 import { UserDashboardComponent } from './components/user-dashboard/user-dashboard.component';
 import { MyAuctionsComponent } from './components/my-auctions/my-auctions.component';
 import { FinishedAuctionsComponent } from './components/finished-auctions/finished-auctions.component';
+import { NotificationComponent } from './components/notifications/notifications.component';
 
 export const routes: Routes = [
     {path: '', component:HomeComponent},
-    {path: 'auctions', component:AuctionsComponent, canActivate: [verifyemailGuard]},
-    {path: 'auction/:id', component: AuctionComponent, canActivate: [verifyemailGuard]},
+    {path: 'auctions', component:AuctionsComponent, },
+    {path: 'auction/:id', component: AuctionComponent, },
     {path: 'bids', component: BidsComponent , canActivate: [verifyemailGuard]},
     {path: 'bid/:id', component: BidsComponent , canActivate: [verifyemailGuard]},
 
@@ -49,6 +50,8 @@ export const routes: Routes = [
     {path: 'deletedAuctions',component:DeletedAuctionsComponent,canActivate:[adminGuard]},
     {path: 'errors', component: ErrorsComponent},
     { path: 'finished-auctions', component: FinishedAuctionsComponent },
+    // { path: 'auctions/:id', component: AuctionDetailsComponent }
+    { path: 'notifications', component: NotificationComponent, canActivate: [verifyemailGuard] },
 
     {path: '**', redirectTo: '/errors'},
 
