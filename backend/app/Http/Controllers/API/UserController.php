@@ -203,14 +203,14 @@ class UserController extends Controller
         $user->password = Hash::make($request->password);
     }
     
-    if ($request->hasFile('profile_picture')) {
-        if ($user->profile_image) {
-            \Storage::delete($user->profile_image);
-        }
+    // if ($request->hasFile('profile_picture')) {
+    //     if ($user->profile_image) {
+    //         \Storage::delete($user->profile_image);
+    //     }
 
-        $path = $request->file('profile_picture')->store('images', 'public');
-        $user->profile_image = $path;
-    }
+    //     $path = $request->file('profile_picture')->store('images', 'public');
+    //     $user->profile_image = $path;
+    // }
 
     $user->save();
 
@@ -233,7 +233,7 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        return new UserResource($user);
+        return new UserRescource($user);
     }
 
     /**

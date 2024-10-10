@@ -134,7 +134,7 @@ class AuctionController extends Controller
 
     // Validation for auction data and images
     $validation = Validator::make($request->all(), [
-      'category_id' => ['required', 'exists:categories,id'],
+      // 'category_id' => ['required', 'exists:categories,id'],
       'item_name' => ['required', 'string', 'min:4', 'max:75'],
       'item_description' => ['required', 'string', 'min:15', 'max:255'],
       'starting_bid' => ['required', 'integer'],
@@ -154,6 +154,7 @@ class AuctionController extends Controller
     $customer = Customer::where('user_id', Auth::id())->first();
     $data = $request->all();
     $data['customer_id'] = $customer->id;
+    $data['category_id'] = 2;
     $data['auction_actual_end_time'] = $data['auction_end_time'];
 
     // Create the auction

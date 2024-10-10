@@ -17,7 +17,7 @@ export class AddAuctionComponent {
 
   constructor(private fb: FormBuilder, private auctionService: AuctionService, private router: Router) {
     this.auctionForm = this.fb.group({
-      category_id: ['', Validators.required],
+      // category_id: ['', Validators.required],
       item_name: ['', Validators.required],
       item_description: ['', [Validators.required, Validators.minLength(15)]],
       starting_bid: ['', Validators.required],

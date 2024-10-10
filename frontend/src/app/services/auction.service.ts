@@ -163,19 +163,6 @@ export class AuctionService {
         .pipe(catchError(this.handleError));
     }
   /**
- * @param id 
- * @returns 
- */
-  getApprovedAuctions(page: number = 1, perPage: number = 10): Observable<PaginatedAuctions> {
-    let params = new HttpParams()
-      .set('page', page.toString())
-      .set('per_page', perPage.toString());
-
-    return this.http.get<PaginatedAuctions>(`${this.apiUrl}/approved`, { params, headers: this.getAuthHeaders() })
-      .pipe(catchError(this.handleError));
-  }
-
-  /**
    * @param searchTerm 
    * @param page 
    * @param perPage 
