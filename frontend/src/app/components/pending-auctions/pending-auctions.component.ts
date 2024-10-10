@@ -102,4 +102,15 @@ export class PendingAuctionsComponent implements OnInit {
       }
     })
   }
+
+  approveAuction(auctionId: string){
+    this.auctionService.approveAuction(auctionId).subscribe({
+      next:(response)=>{
+        this.loadPendingAuctions(this.currentPage);
+      },
+      error:(error)=>{
+        console.log(error.error)
+      }
+    })
+  }
 }

@@ -230,9 +230,6 @@ class AuctionController extends Controller
   /////////////////////////////////////////////////////////////////////////////////////////////////////////
   public function getApprovedAuctions(Request $request)
   {
-    dd($request->per_page);
-
-
     $auctions = Auction::where('approval_status', 'approved')
       ->paginate($request->per_page);
 

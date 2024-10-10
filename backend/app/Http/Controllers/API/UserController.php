@@ -35,7 +35,10 @@ class UserController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => [
-                'required','string','min:8','confirmed',
+                'required',
+                'string',
+                'min:8',
+                'confirmed',
                 'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/'
             ],
             'phone_number' => ['required'],
@@ -61,7 +64,7 @@ class UserController extends Controller
             'token' => $user->createToken('auth_token')->plainTextToken,
         ], 200);
     }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
     public function email_verify(Request $request)
@@ -108,11 +111,12 @@ class UserController extends Controller
             return response()->json(['message' => 'Invalid Username or Password'], 400);
         }
 
-        if ($user->role === 'customer') {
+        if ($user->role == 'customer') {
             $cust = Customer::where('user_id', $user->id)->first();
             $userdata = new CustomerResource($cust);
+        } else {
+            $userdata = new UserRescource($user);
         }
-        $userdata= new UserRescource($user);
         return response()->json([
             'message' => 'User successfully logged in',
             'user' => $userdata,
@@ -122,11 +126,11 @@ class UserController extends Controller
 
     #######################################################################################################    
 
-  #######################################################################################################
+    #######################################################################################################
 
     public function logout(Request $request)
     {
-        $request->user()->currentAccessToken()->delete(); 
+        $request->user()->currentAccessToken()->delete();
         return response()->json(['message' => 'Logged out successfully'], 200);
     }
     /**
