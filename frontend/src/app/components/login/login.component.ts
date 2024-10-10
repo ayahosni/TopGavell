@@ -25,13 +25,36 @@ export class LoginComponent {
   }
 
 
+// onSubmit() {
+//   this.authService.logIn(this.loginForm.value).subscribe({
+//     next: (response) => {
+//       this.router.navigate(['/']);
+//     },
+//     error: (error) => {
+//       this.message = error.error;
+//     }
+//   });
+// }
+// }
 onSubmit() {
   this.authService.logIn(this.loginForm.value).subscribe({
-    next: (response) => {
-      this.router.navigate(['/']);
+    next: (response: any) => {
+      const token = response.token;
+      
+      if (token) {
+        
+        localStorage.setItem('authToken', token);
+        console.log('Token stored:', token);
+
+        
+        this.router.navigate(['/']);
+      } else {
+        this.errorMessage = 'Login failed. No token received.';
+      }
     },
     error: (error) => {
       this.message = error.error;
+      this.errorMessage = 'Invalid login credentials. Please try again.';
     }
   });
 }
