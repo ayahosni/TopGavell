@@ -109,13 +109,18 @@ export class HomeComponent implements OnInit {
   }
 
   /**
-   * @param auctionEndTime 
+   * @param auctionEndTime
+   * @param auctionStartDate
    * @returns 
    */
-  checkAuctionStatus(auctionEndTime: string): string {
+  checkAuctionStatus(auctionEndTime: string,auctionStartTime:string): string {
     const currentTime = new Date();
     const auctionEndDate = new Date(auctionEndTime);
-    return auctionEndDate < currentTime ? 'closed' : 'opened';
+    const auctionStartDate = new Date(auctionStartTime)
+    if(auctionEndDate < currentTime && currentTime > auctionStartDate){
+      return 'closed'
+    }
+      return 'opened'
   }
 
   /**

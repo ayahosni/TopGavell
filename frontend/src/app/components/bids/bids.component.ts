@@ -54,6 +54,7 @@ export class BidsComponent implements OnInit {
       next: (response: any) => {
         this.auction = response;
         this.ceatorID = this.auction.creator.id;
+        console.log(this.ceatorID);
         this.lastBid = this.auction.bids[1] || null;
       },
       error: (error: any) => {
@@ -86,6 +87,7 @@ export class BidsComponent implements OnInit {
     const userData = localStorage.getItem('user');
     if (userData) {
       const user = JSON.parse(userData);
+      console.log(user.id)
       if (user.role == "admin" || user.id == ceatorID) {
         this.canBid = false;
       } else {

@@ -21,15 +21,15 @@ class Customer extends Model
             'password' => 'hashed',
         ];
     }
-      public function user()
-      {
-          return $this->belongsTo(User::class);
-      }
-  
-
-   
-      public function bids()
-      {
-          return $this->hasMany(Bid::class);
-      }
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
+
+
+
+    public function bids()
+    {
+        return $this->hasMany(Bid::class);
+    }
+}

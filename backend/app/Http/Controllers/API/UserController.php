@@ -122,12 +122,14 @@ class UserController extends Controller
             return response()->json(['message' => 'Invalid Username or Password'], 400);
         }
 
-        if ($user->role == 'customer') {
-            $cust = Customer::where('user_id', $user->id)->first();
-            $userdata = new CustomerResource($cust);
-        } else {
+        $cust = Customer::where('user_id', $user->id)->first();
+
+        if (!$cust) {
             $userdata = new UserRescource($user);
+        } else {
+            $userdata = new CustomerResource($cust);
         }
+        
         return response()->json([
             'message' => 'User successfully logged in',
             'user' => $userdata,

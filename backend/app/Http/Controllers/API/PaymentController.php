@@ -24,12 +24,12 @@ class PaymentController extends Controller
 
         $item_name = $auction->item_name;
 
-        if($auction->auction_status == "Closed") {
+        
             $amount = Bid::where('auction_id', $auction->id)->max('bid_amount');
             if(!$amount){
                 $amount = $auction->starting_bid;
             }
-        }
+        
         $amount = $amount*100;
         // Create a new checkout session
         $session = Session::create([
