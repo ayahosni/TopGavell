@@ -28,14 +28,9 @@
             ],
             "styles": [
               "src/styles.css",
-            
-
-
-  "node_modules/@fortawesome/fontawesome-free/css/all.min.css",
-  "src/styles.css"
-],
-
-
+              "node_modules/@fortawesome/fontawesome-free/css/all.min.css",
+              "src/styles.css"
+            ],
             "scripts": []
           },
           "configurations": {
@@ -89,12 +84,11 @@
               {
                 "glob": "**/*",
                 "input": "public"
-                
               }
             ],
             "styles": [
               "src/styles.css",
-                "node_modules/@fortawesome/fontawesome-free/css/all.min.css"
+              "node_modules/@fortawesome/fontawesome-free/css/all.min.css"
             ],
             "scripts": []
           }
@@ -105,5 +99,4 @@
   "cli": {
     "analytics": false
   }
-
 }
