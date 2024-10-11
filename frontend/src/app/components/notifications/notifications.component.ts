@@ -4,7 +4,6 @@ import { RouterModule, Router } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
 
 interface Notification {
   id: string;
@@ -16,12 +15,12 @@ interface Notification {
   created_at: string;   // تاريخ الإشعار
 }
 
-interface PaginatedNotifications {
-  current_page: number;
-  data: Notification[]; 
-  last_page: number;
-  total: number;
-}
+// interface PaginatedNotifications {
+//   current_page: number;
+//   data: Notification[]; 
+//   last_page: number;
+//   total: number;
+// }
 
 @Component({
   standalone: true,
