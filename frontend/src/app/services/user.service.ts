@@ -7,14 +7,14 @@ import { catchError } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class UserService {
-  // private apiUrl = 'http://localhost:8000/api';
-  private apiUrl = 'http://172.18.0.4:80/api';
+  public apiUrl = 'http://localhost:8000/api'; 
+  /*   private apiUrl = 'http://172.18.0.4:80/api'; */
 
   constructor(private http: HttpClient) { }
 
   /**
    * @param includeContentType 
-   * @returns 
+   * @returns
    */
   private getAuthHeaders(includeContentType: boolean = true): HttpHeaders | undefined {
     const userJson = localStorage.getItem('user');
@@ -51,7 +51,8 @@ export class UserService {
   }
 
   /**
-   * @returns 
+   * Retrieve user profile data
+   * @returns
    */
   getUserProfile(): Observable<any> {
     const headers = this.getAuthHeaders();
@@ -62,24 +63,26 @@ export class UserService {
   }
 
   /**
-   * @param data
+   * Update user profile data without image (using JSON)
+   * @param data 
    * @returns 
    */
   updateUserProfile(data: any): Observable<any> {
     const headers = this.getAuthHeaders(); 
-    return this.http.put(`${this.apiUrl}/profile`, data, { headers })
+    return this.http.put(`${this.apiUrl}/edit_profile`, data, { headers })
       .pipe(
         catchError(this.handleError)
       );
   }
 
   /**
+   * Update user profile data with image (using FormData)
    * @param formData 
-   * @returns 
+   * @returns
    */
   updateUserProfileWithImage(formData: FormData): Observable<any> {
-    const headers = this.getAuthHeaders(false); 
-    return this.http.put(`${this.apiUrl}/profile`, formData, { headers })
+    const headers = this.getAuthHeaders(false); // Don't include 'Content-Type' when using FormData
+    return this.http.put(`${this.apiUrl}/edit_profile`, formData, { headers })
       .pipe(
         catchError(this.handleError)
       );

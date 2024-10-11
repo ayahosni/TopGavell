@@ -8,8 +8,8 @@ import { catchError, map, tap } from 'rxjs/operators';
 })
 export class AuthService {
 
-  private Url = 'http://172.18.0.4:80/api'; // ===> Docker URL
-  // private Url = 'http://localhost:8000/api'; // ===> Localhost URL
+/*  private Url = 'http://172.18.0.4:80/api'; // ===> Docker URL
+ */   private Url = 'http://localhost:8000/api'; // ===> Localhost URL
 
   constructor(private http: HttpClient) { }
 

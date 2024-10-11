@@ -32,7 +32,6 @@ export const routes: Routes = [
     {path: 'auction/:id', component: AuctionComponent, },
     {path: 'bids', component: BidsComponent , canActivate: [verifyemailGuard]},
     {path: 'bid/:id', component: BidsComponent , canActivate: [verifyemailGuard]},
-
     { path: 'profile', component: ProfileComponent ,canActivate:[verifyemailGuard]},
    {path: 'auction-details/:id', component: AuctionDetailsComponent , canActivate: [verifyemailGuard]},
     {path: 'contact', component: ContactComponent, canActivate: [verifyemailGuard]},

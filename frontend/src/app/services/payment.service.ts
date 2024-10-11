@@ -7,9 +7,9 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class PaymentService {
-  // private apiUrl = 'http://localhost:8000/api';
-  private apiUrl = 'http://172.18.0.4:80/api';
-  constructor(private http: HttpClient) { }
+  private apiUrl = 'http://localhost:8000/api';
+/*   private apiUrl = 'http://172.18.0.4:80/api';
+ */  constructor(private http: HttpClient) { }
 
   private getAuthHeaders(includeContentType: boolean = true): HttpHeaders | undefined {
     const userJson = localStorage.getItem('user');

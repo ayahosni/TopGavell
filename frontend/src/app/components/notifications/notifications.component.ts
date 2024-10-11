@@ -19,13 +19,17 @@ export class NotificationComponent implements OnInit {
   constructor(private notificationService: NotificationService) {}
 
   ngOnInit(): void {
-    this.notificationService.getNotifications().subscribe(
-      (data: any) => {
-        this.notifications = data; 
+    this.notificationService.getNotifications().subscribe({
+      next: (data: any) => {
+        this.notifications = data;
       },
-      (error) => {
-        console.error('Error fetching notifications:', error); 
+      error: (error) => {
+        console.error('Error fetching notifications:', error);
+      },
+      complete: () => {
+        console.log('Notifications fetching completed');
       }
-    );
+    });
   }
+  
 }

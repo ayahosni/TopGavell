@@ -19,9 +19,9 @@ export interface PaginatedNotifications {
   providedIn: 'root'
 })
 export class NotificationService {
-  // private apiUrl = 'http://localhost:8000/api/notifications';
-  private apiUrl = 'http://172.18.0.4:80/api/notifications';
-
+   private apiUrl = 'http://localhost:8000/api/notifications';
+/*   private apiUrl = 'http://172.18.0.4:80/api/notifications';
+ */
   constructor(private http: HttpClient) {}
 
   private handleError(error: HttpErrorResponse) {

@@ -15,11 +15,9 @@ Route::get('/logout', [UserController::class, 'logout'])->name('logout')->middle
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/profile', [UserController::class, 'profile']);
-    Route::put('/profile', [UserController::class, 'updateProfile']);
+    Route::put('/edit_profile', [UserController::class, 'updateProfile']);
 });
-
 Route::apiResource('user', UserController::class);
-
 // Auction Routes - specific first
 Route::get('/auction/active-auctions', [AuctionController::class, 'showActiveAuctions']); 
 Route::get('/auction/approved', [AuctionController::class, 'getApprovedAuctions']); 
