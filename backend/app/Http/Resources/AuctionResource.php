@@ -38,7 +38,7 @@ class AuctionResource extends JsonResource
         'winning_bidder' => $this->winningBidder ? [
             'name' => $this->winningBidder->user->name,
         ] : null,
-        'winning bid' => $lastBid ? $lastBid->bid_amount : null, 
+        'winning_bid' => $lastBid ? $lastBid->bid_amount : null, 
 
             ];
 

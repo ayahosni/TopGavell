@@ -1,11 +1,19 @@
-<!-- <div *ngFor="let auction of filteredAuctions" class="auction-item">
-  <h3>{{ auction.title }}</h3>
-  <p>{{ auction.description }}</p>
-  <button (click)="goToAuctionDetails(auction.id)">View Details</button>
+<div class="auction-cards-container">
+
+  <div *ngFor="let auction of filteredAuctions" class="auction-card">
+
+    <div class="auction-card-body">
+      
+      <h3 class="auction-item-title">{{ auction.item_name }}</h3>
+      <img class="auction-item-image" [src]="auction.item_media[0]" alt="Auction image">
+      <p class="auction-item-description">{{ auction.item_description }}</p>
+      <p class="auction-item-category"><strong>Category:</strong> {{ auction.item_category }}</p>
+      <p class="auction-item-start-time"><strong>Start:</strong> {{ auction.auction_start_time }}</p>
+      <p class="auction-item-end-time"><strong>End:</strong> {{ auction.auction_end_time }}</p>
+      <p class="auction-winning-bidder"><strong>Winner:</strong> {{ auction.winning_bidder?.name || 'N/A' }}</p>
+      <p class="auction-winning-bid"><strong>Winning Bid:</strong> {{ auction.winning_bid | currency }}</p>
+    </div>
+  </div>
 </div>
 
-<div class="pagination-controls">
-  <button (click)="prevPage()" [disabled]="currentPage === 1">Previous</button>
-  <span>Page {{ currentPage }} of {{ totalPages }}</span>
-  <button (click)="nextPage()" [disabled]="currentPage === totalPages">Next</button>
-</div> -->
+

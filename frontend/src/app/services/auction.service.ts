@@ -271,7 +271,7 @@ export interface Auction {
   auction_status: string;
   approval_status: string;
   winning_bidder: { name: string } | null;
-  'winning bid': number | null; 
+  winning_bid: number | null; 
 }
 
 export interface PaginatedAuctions {
