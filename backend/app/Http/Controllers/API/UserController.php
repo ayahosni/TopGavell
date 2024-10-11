@@ -26,8 +26,15 @@ class UserController extends Controller
      */
     public function index()
     {
+        $user = auth()->user();
+ 
+        if ($user->role !== 'admin') {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+    
         return CustomerResource::collection(Customer::all());
     }
+    
 
     /**
      */
@@ -172,13 +179,9 @@ class UserController extends Controller
     //////////////////////////////////////////////////////////////////////////////
     public function updateProfile(Request $request)
     {
-        // Get the authenticated user
         $user = auth()->user();
-        
-        // Find the associated customer profile
         $customer = Customer::where('user_id', $user->id)->first();
         
-        // Validate the request with sometimes for optional fields
         $validation = Validator::make($request->all(), [
             'name' => ['sometimes', 'string', 'max:255'],
             'password' => [
@@ -192,17 +195,14 @@ class UserController extends Controller
             'address' => ['sometimes', 'string'],
         ]);
         
-        // If validation fails, return error messages
         if ($validation->fails()) {
             return response()->json($validation->messages(), 400);
         }
         
-        // Update user fields if present in the request
         if ($request->has('name')) {
             $user->name = $request->name;
         }
     
-        // Update customer fields if present in the request
         if ($customer) {
             if ($request->has('phone_number')) {
                 $customer->phone_number = $request->phone_number;
@@ -213,7 +213,6 @@ class UserController extends Controller
             }
         }
     
-        // Hash and update the password (since it is required)
         if ($request->filled('password')) {
             $user->password = Hash::make($request->password);
         }
@@ -230,7 +229,7 @@ class UserController extends Controller
         return response()->json([
             'message' => 'Profile updated successfully!',
             'user' => $user,
-            'customer' => $customer, // Include updated customer data
+            'customer' => $customer, 
         ], 200);
     }
     
