@@ -349,7 +349,7 @@ export class AuctionService {
       .set('page', page.toString())
       .set('per_page', perPage.toString());
 
-    return this.http.get<PaginatedAuctions>(`${this.apiUrl}/pending`, { params })
+    return this.http.get<PaginatedAuctions>(`${this.apiUrl}/pending`, { params, headers: this.getAuthHeaders() })
       .pipe(catchError(this.handleError));
   }
 

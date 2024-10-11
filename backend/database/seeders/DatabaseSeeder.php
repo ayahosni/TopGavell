@@ -84,9 +84,8 @@ class DatabaseSeeder extends Seeder
             ['name' => 'Others', 'created_at' => now(), 'updated_at' => now()],
         ]);
 ##############################################################################################
-        $now = Carbon::now();
-        
-        // Auction data with dynamic time adjustments
+        // $now = Carbon::now();
+        $currentTime = Carbon::now('UTC')->setTimezone('Africa/Cairo');
         $auctions = [
             [
                 'customer_id' => 1,
@@ -96,14 +95,14 @@ class DatabaseSeeder extends Seeder
                 'item_description' => 'Latest model smartphone.',
                 'starting_bid' => 800.00,
                 'bid_increment' => 50.00,
-                'auction_start_time' => $now->copy()->subDays(5)->setTime(10, 0), // started 5 days ago
-                'auction_end_time' => $now->copy()->subDays(4)->setTime(10, 0),   // ended 4 days ago
-                'auction_actual_end_time' => $now->copy()->subDays(4)->setTime(10, 0),
+                'auction_start_time' => $currentTime->copy()->subDays(5)->setTime(10, 0), // started 5 days ago
+                'auction_end_time' => $currentTime->copy()->subDays(4)->setTime(10, 0),   // ended 4 days ago
+                'auction_actual_end_time' => $currentTime->copy()->subDays(4)->setTime(10, 0),
                 'auction_status' => 'Closed',
                 'approval_status' => 'approved',
                 'item_country' => 'USA',
-                'created_at' => $now,
-                'updated_at' => $now,
+                'created_at' => $currentTime,
+                'updated_at' => $currentTime,
             ],
             [
                 'customer_id' => 2,
@@ -113,14 +112,14 @@ class DatabaseSeeder extends Seeder
                 'item_description' => 'Luxury diamond ring.',
                 'starting_bid' => 5000.00,
                 'bid_increment' => 100.00,
-                'auction_start_time' => $now->copy()->subHours(2),  // started 2 hours ago
-                'auction_end_time' => $now->copy()->addHours(22),   // ends tomorrow
+                'auction_start_time' => $currentTime->copy()->subHours(2),  // started 2 hours ago
+                'auction_end_time' => $currentTime->copy()->addHours(22),   // ends tomorrow
                 'auction_actual_end_time' =>null,
                 'auction_status' => 'Open',
                 'approval_status' => 'approved',
                 'item_country' => 'France',
-                'created_at' => $now,
-                'updated_at' => $now,
+                'created_at' => $currentTime,
+                'updated_at' => $currentTime,
             ],
             [
                 'customer_id' => 1,
@@ -130,14 +129,14 @@ class DatabaseSeeder extends Seeder
                 'item_description' => 'Famous artwork.',
                 'starting_bid' => 1500.00,
                 'bid_increment' => 100.00,
-                'auction_start_time' => $now->copy()->subDays(2)->setTime(12, 0),  // started 2 days ago
-                'auction_end_time' => $now->copy()->subDay()->setTime(12, 0),      // ended yesterday
-                'auction_actual_end_time' => $now->copy()->subDay()->setTime(12, 0),
+                'auction_start_time' => $currentTime->copy()->subDays(2)->setTime(12, 0),  // started 2 days ago
+                'auction_end_time' => $currentTime->copy()->subDay()->setTime(12, 0),      // ended yesterday
+                'auction_actual_end_time' => $currentTime->copy()->subDay()->setTime(12, 0),
                 'auction_status' => 'Closed',
                 'approval_status' => 'approved',
                 'item_country' => 'Italy',
-                'created_at' => $now,
-                'updated_at' => $now,
+                'created_at' => $currentTime,
+                'updated_at' => $currentTime,
             ],
             [
                 'customer_id' => 2,
@@ -147,14 +146,14 @@ class DatabaseSeeder extends Seeder
                 'item_description' => 'High-end sports car.',
                 'starting_bid' => 30000.00,
                 'bid_increment' => 500.00,
-                'auction_start_time' => $now->copy()->addDays(1)->setTime(14, 0), // starts tomorrow
-                'auction_end_time' => $now->copy()->addDays(2)->setTime(14, 0),   // ends in 2 days
+                'auction_start_time' => $currentTime->copy()->addDays(1)->setTime(14, 0), // starts tomorrow
+                'auction_end_time' => $currentTime->copy()->addDays(2)->setTime(14, 0),   // ends in 2 days
                 'auction_actual_end_time' => null,
                 'auction_status' => 'Closed',
                 'approval_status' => 'pending',
                 'item_country' => 'Germany',
-                'created_at' => $now,
-                'updated_at' => $now,
+                'created_at' => $currentTime,
+                'updated_at' => $currentTime,
             ],
             [
                 'customer_id' => 1,
@@ -164,14 +163,14 @@ class DatabaseSeeder extends Seeder
                 'item_description' => 'Rare card from a limited edition set.',
                 'starting_bid' => 200.00,
                 'bid_increment' => 20.00,
-                'auction_start_time' => $now->copy()->addDays(3)->setTime(10, 0), // starts in 3 days
-                'auction_end_time' => $now->copy()->addDays(4)->setTime(10, 0),   // ends in 4 days
+                'auction_start_time' => $currentTime->copy()->addDays(3)->setTime(10, 0), // starts in 3 days
+                'auction_end_time' => $currentTime->copy()->addDays(4)->setTime(10, 0),   // ends in 4 days
                 'auction_actual_end_time' => null,
                 'auction_status' => 'Closed',
                 'approval_status' => 'pending',
                 'item_country' => 'USA',
-                'created_at' => $now,
-                'updated_at' => $now,
+                'created_at' => $currentTime,
+                'updated_at' => $currentTime,
             ],
             [
                 'customer_id' => 2,
@@ -181,30 +180,30 @@ class DatabaseSeeder extends Seeder
                 'item_description' => 'Luxury leather sofa.',
                 'starting_bid' => 1000.00,
                 'bid_increment' => 50.00,
-                'auction_start_time' => $now->copy()->subDay()->setTime(10, 0), // Started yesterday at 10:00 AM
-                'auction_end_time' => $now->copy()->addMinutes(5), // Ends in 5 minutes
+                'auction_start_time' => $currentTime->copy()->subDay()->setTime(10, 0), // Started yesterday at 10:00 AM
+                'auction_end_time' => $currentTime->copy()->addMinutes(5), // Ends in 5 minutes
                 'auction_actual_end_time' => null,
                 'auction_status' => 'Open',
                 'approval_status' => 'approved',
                 'item_country' => 'UK',
-                'created_at' => $now,
-                'updated_at' => $now,
+                'created_at' => $currentTime,
+                'updated_at' => $currentTime,
             ],
         ];
         DB::table('auctions')->insert($auctions);
         DB::table('images')->insert([
-            ['auction_id' => 1, 'path' => 'smartphone_image1.jpg', 'created_at' => $now, 'updated_at' => $now],
-            ['auction_id' => 1, 'path' => 'smartphone_image2.jpg', 'created_at' => $now, 'updated_at' => $now],
-            ['auction_id' => 2, 'path' => 'diamond_ring_image1.jpg', 'created_at' => $now, 'updated_at' => $now],
-            ['auction_id' => 2, 'path' => 'diamond_ring_image2.jpg', 'created_at' => $now, 'updated_at' => $now],
-            ['auction_id' => 3, 'path' => 'painting_image1.jpg', 'created_at' => $now, 'updated_at' => $now],
-            ['auction_id' => 3, 'path' => 'painting_image2.jpg', 'created_at' => $now, 'updated_at' => $now],
-            ['auction_id' => 4, 'path' => 'sportscar_image1.jpg', 'created_at' => $now, 'updated_at' => $now],
-            ['auction_id' => 4, 'path' => 'sportscar_image2.jpg', 'created_at' => $now, 'updated_at' => $now],
-            ['auction_id' => 5, 'path' => 'collectible_card_image1.jpg', 'created_at' => $now, 'updated_at' => $now],
-            ['auction_id' => 5, 'path' => 'collectible_card_image2.jpg', 'created_at' => $now, 'updated_at' => $now],
-            ['auction_id' => 6, 'path' => 'leather_sofa_image1.jpg', 'created_at' => $now, 'updated_at' => $now],
-            ['auction_id' => 6, 'path' => 'leather_sofa_image2.jpg', 'created_at' => $now, 'updated_at' => $now],
+            ['auction_id' => 1, 'path' => 'smartphone_image1.jpg', 'created_at' => $currentTime, 'updated_at' => $currentTime],
+            ['auction_id' => 1, 'path' => 'smartphone_image2.jpg', 'created_at' => $currentTime, 'updated_at' => $currentTime],
+            ['auction_id' => 2, 'path' => 'diamond_ring_image1.jpg', 'created_at' => $currentTime, 'updated_at' => $currentTime],
+            ['auction_id' => 2, 'path' => 'diamond_ring_image2.jpg', 'created_at' => $currentTime, 'updated_at' => $currentTime],
+            ['auction_id' => 3, 'path' => 'painting_image1.jpg', 'created_at' => $currentTime, 'updated_at' => $currentTime],
+            ['auction_id' => 3, 'path' => 'painting_image2.jpg', 'created_at' => $currentTime, 'updated_at' => $currentTime],
+            ['auction_id' => 4, 'path' => 'sportscar_image1.jpg', 'created_at' => $currentTime, 'updated_at' => $currentTime],
+            ['auction_id' => 4, 'path' => 'sportscar_image2.jpg', 'created_at' => $currentTime, 'updated_at' => $currentTime],
+            ['auction_id' => 5, 'path' => 'collectible_card_image1.jpg', 'created_at' => $currentTime, 'updated_at' => $currentTime],
+            ['auction_id' => 5, 'path' => 'collectible_card_image2.jpg', 'created_at' => $currentTime, 'updated_at' => $currentTime],
+            ['auction_id' => 6, 'path' => 'leather_sofa_image1.jpg', 'created_at' => $currentTime, 'updated_at' => $currentTime],
+            ['auction_id' => 6, 'path' => 'leather_sofa_image2.jpg', 'created_at' => $currentTime, 'updated_at' => $currentTime],
         ]);
     }
 }
