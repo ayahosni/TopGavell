@@ -151,85 +151,92 @@ class UserController extends Controller
      */
     public function profile(Request $request)
     {
-        $user = $request->user();
-        $customer = Customer::where('user_id', $user->id)->first();
-
+        $user = $request->user();  // Get the logged-in user
+        $customer = Customer::where('user_id', $user->id)->first();  // Retrieve the associated customer profile
+    
         if ($customer) {
+            // Return customer resource if the user has a customer profile
             return response()->json([
                 'user' => new CustomerResource($customer),
+                'profile_image_url' => $user->profile_picture ? url('storage/' . $user->profile_picture) : null,
+            ], 200);
+        } else {
+            // Return user resource if no customer profile exists
+            return response()->json([
+                'user' => new UserRescource($user),
+                'profile_image_url' => $user->profile_picture ? url('storage/' . $user->profile_picture) : null,
             ], 200);
         }
+    }
 
+    //////////////////////////////////////////////////////////////////////////////
+    public function updateProfile(Request $request)
+    {
+        // Get the authenticated user
+        $user = auth()->user();
+        
+        // Find the associated customer profile
+        $customer = Customer::where('user_id', $user->id)->first();
+        
+        // Validate the request with sometimes for optional fields
+        $validation = Validator::make($request->all(), [
+            'name' => ['sometimes', 'string', 'max:255'],
+            'password' => [
+                'sometimes',  
+                'string',
+                'min:8',
+                'confirmed',
+                'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/'
+            ],
+            'phone_number' => ['sometimes', 'string'],
+            'address' => ['sometimes', 'string'],
+        ]);
+        
+        // If validation fails, return error messages
+        if ($validation->fails()) {
+            return response()->json($validation->messages(), 400);
+        }
+        
+        // Update user fields if present in the request
+        if ($request->has('name')) {
+            $user->name = $request->name;
+        }
+    
+        // Update customer fields if present in the request
+        if ($customer) {
+            if ($request->has('phone_number')) {
+                $customer->phone_number = $request->phone_number;
+            }
+    
+            if ($request->has('address')) {
+                $customer->address = $request->address;
+            }
+        }
+    
+        // Hash and update the password (since it is required)
+        if ($request->filled('password')) {
+            $user->password = Hash::make($request->password);
+        }
+        
+        // Save the updated user
+        $user->save();
+    
+        // Save the updated customer profile if it exists
+        if ($customer) {
+            $customer->save();
+        }
+        
+        // Return a response with the updated user and customer data
         return response()->json([
-            'message' => 'Customer not found.',
-        ], 404);
-    }
-
-    /**
-     */
-   public function updateProfile(Request $request)
-{
-    $user = $request->user();
-    $customer = Customer::where('user_id', $user->id)->first();
-
-    if (!$customer) {
-        return response()->json([
-            'message' => 'Customer profile not found.',
-        ], 404);
-    }
-
-    $validation = Validator::make($request->all(), [
-        'name' => ['sometimes', 'string', 'max:255'],
-        'email' => ['sometimes', 'string', 'email', 'max:255', 'unique:users,email,' . $user->id],
-        'phone_number' => ['sometimes', 'string'],
-        'address' => ['sometimes', 'string'],
-        'password' => [
-            'sometimes', 'string', 'min:8', 'confirmed',
-            'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/'
-        ],
-        'profile_picture' => ['sometimes', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'], 
-    ]);
-
-    if ($validation->fails()) {
-        return response()->json($validation->messages(), 400);
-    }
-
-    if ($request->has('name')) {
-        $user->name = $request->name;
-    }
-    if ($request->has('email')) {
-        $user->email = $request->email;
-        $user->is_email_verified = false; 
-    }
-    if ($request->has('password')) {
-        $user->password = Hash::make($request->password);
+            'message' => 'Profile updated successfully!',
+            'user' => $user,
+            'customer' => $customer, // Include updated customer data
+        ], 200);
     }
     
-    // if ($request->hasFile('profile_picture')) {
-    //     if ($user->profile_image) {
-    //         \Storage::delete($user->profile_image);
-    //     }
-
-    //     $path = $request->file('profile_picture')->store('images', 'public');
-    //     $user->profile_image = $path;
-    // }
-
-    $user->save();
-
-    if ($request->has('phone_number')) {
-        $customer->phone_number = $request->phone_number;
-    }
-    if ($request->has('address')) {
-        $customer->address = $request->address;
-    }
-    $customer->save();
-
-    return response()->json([
-        'message' => 'Profile updated successfully.',
-        'user' => new CustomerResource($customer),
-        'profile_image_url' => $user->profile_image ? url('storage/' . $user->profile_image) : null, // إرجاع رابط الصورة
-    ], 200);
-}
+    
+    
+    
 
     /**
      */
