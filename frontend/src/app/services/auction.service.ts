@@ -288,8 +288,8 @@ export interface PaginatedAuctions {
   providedIn: 'root',
 })
 export class AuctionService {
-  // private apiUrl = 'http://localhost:8000/api/auction';
-  private apiUrl = 'http://172.18.0.4:80/api/auction';
+  private apiUrl = 'http://localhost:8000/api/auction';
+  // private apiUrl = 'http://172.18.0.4:80/api/auction';
 
   constructor(private http: HttpClient) { }
 

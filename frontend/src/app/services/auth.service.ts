@@ -8,8 +8,8 @@ import { catchError, map, tap } from 'rxjs/operators';
 })
 export class AuthService {
 
-  private Url = 'http://172.18.0.4:80/api'; // ===> Docker URL
-  // private Url = 'http://localhost:8000/api'; // ===> Localhost URL
+  // private Url = 'http://172.18.0.4:80/api'; // ===> Docker URL
+  private Url = 'http://localhost:8000/api'; // ===> Localhost URL
 
   constructor(private http: HttpClient) { }
 
@@ -43,7 +43,8 @@ export class AuthService {
             id:response.user.id,
             is_email_verified: response.user.is_email_verified,
             email: response.user.email,
-            name: response.user.name
+            name: response.user.name,
+            
           };
           localStorage.setItem('user', JSON.stringify(userData));
         }

@@ -32,7 +32,12 @@
     <div class="navbar-buttons">
       <!-- Display if user is registered -->
       <ng-container *ngIf="isRegistered">
+        <ng-container *ngIf="isAdmin">    
+
+        </ng-container>
+
         <button class="sell-btn" routerLink="/addAuction">Sell on <span class="gavel">T</span>OPGAVEL</button>
+
         <a href="/notifications"><i class="fa-solid fa-bell bell"></i></a>
 
         <!-- User profile with dropdown -->

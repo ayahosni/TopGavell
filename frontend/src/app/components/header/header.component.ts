@@ -42,6 +42,7 @@ export class HeaderComponent implements OnInit {
     });
 
     const userData = localStorage.getItem('user');
+    console.log(userData)
     if (userData) {
       const user = JSON.parse(userData);
       this.userName = user.name; 

@@ -101,41 +101,41 @@ class UserController extends Controller
     }
 
     /**
-     */
+     */////////////////////////////////////////////////////////////////////////////////////////
     public function login(Request $request)
-    {
-        $validation = Validator::make(
-            $request->all(),
-            [
-                'email' => 'required|email',
-                'password' => 'required',
-            ]
-        );
+{
+    $validation = Validator::make(
+        $request->all(),
+        [
+            'email' => 'required|email',
+            'password' => 'required',
+        ]
+    );
 
-        if ($validation->fails()) {
-            return response()->json($validation->messages(), 400);
-        }
-
-        $user = User::where('email', $request->email)->first();
-
-        if (! $user || ! Hash::check($request->password, $user->password)) {
-            return response()->json(['message' => 'Invalid Username or Password'], 400);
-        }
-
-        $cust = Customer::where('user_id', $user->id)->first();
-
-        if (!$cust) {
-            $userdata = new UserRescource($user);
-        } else {
-            $userdata = new CustomerResource($cust);
-        }
-        
-        return response()->json([
-            'message' => 'User successfully logged in',
-            'user' => $userdata,
-            'token' => $user->createToken('auth_token')->plainTextToken,
-        ]);
+    if ($validation->fails()) {
+        return response()->json($validation->messages(), 400);
     }
+
+    $user = User::where('email', $request->email)->first();
+
+    if (! $user || ! Hash::check($request->password, $user->password)) {
+        return response()->json(['message' => 'Invalid Username or Password'], 400);
+    }
+
+    $userdata = null;
+    if ($user->role === 'admin') {
+        $userdata = new UserRescource($user); 
+    } else {
+        $cust = Customer::where('user_id', $user->id)->first();
+        $userdata = new CustomerResource($cust);
+    }
+
+    return response()->json([
+        'message' => 'User successfully logged in',
+        'user' => $userdata,
+        'token' => $user->createToken('auth_token')->plainTextToken,
+    ]);
+}
 
     #######################################################################################################    
 
