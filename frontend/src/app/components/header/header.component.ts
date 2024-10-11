@@ -69,14 +69,13 @@ export class HeaderComponent implements OnInit {
       this.isLoggedIn = true;  
       this.isRegistered = true;
   
-      // Verify role value and ensure it's correctly retrieved
       if (user.role === "admin") {
         this.isAdmin = true;
       }
     }
-    console.log('Is Admin:', this.isAdmin); // Debug log
+    console.log('Is Admin:', this.isAdmin); 
   }
-  
+
   toggleDropdown(event: Event): void {
     event.stopPropagation();
     this.showDropdown = !this.showDropdown;

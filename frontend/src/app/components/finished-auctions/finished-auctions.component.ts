@@ -57,4 +57,15 @@ export class FinishedAuctionsComponent implements OnInit {
       this.loadAuctions(this.currentPage - 1);
     }
   }
+  firstPage(): void {
+    if (this.currentPage > 1) {
+      this.loadAuctions(1); 
+    }
+  }
+  
+  lastPage(): void {
+    if (this.currentPage < this.totalPages) {
+      this.loadAuctions(this.totalPages);  
+    }
+  }
 }

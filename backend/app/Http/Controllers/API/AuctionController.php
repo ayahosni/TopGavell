@@ -19,7 +19,7 @@ class AuctionController extends Controller
 {
   public function __construct()
   {
-    $this->middleware('auth:sanctum')->only('store', 'update', 'destroy', 'pendingAuctions', 'approve', 'rejected','finishedAuctions');
+    $this->middleware('auth:sanctum')->only('store', 'update', 'destroy', 'pendingAuctions', 'approve', 'rejected',);
   }
 
   public function index(Request $request)
@@ -118,7 +118,7 @@ class AuctionController extends Controller
   /////////////////////////////////////////////////////////////////////////////////////////////////////////
   public function finishedAuctions()
 {
-  if (Auth::user()->role === 'admin') {
+  // if (Auth::user()->role === 'admin') {
 
     $finishedAuctions = Auction::with(['winningBidder.user', 'customer'])
         ->where('auction_end_time', '<', Carbon::now())
@@ -128,10 +128,12 @@ class AuctionController extends Controller
         // ->paginate(10);
     return AuctionResource::collection($finishedAuctions);
   }
-  return response()->json([
-    'message' => 'Unautherized'
-  ], 401);
-}
+  // return response()->json([
+  //   'message' => 'Unautherized'
+  // ], 401);
+// }
+
+
   ////////////////////////////////////////////////////////////////////////////////////////////////////////
   public function store(Request $request)
   {
