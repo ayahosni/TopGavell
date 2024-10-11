@@ -50,8 +50,7 @@ export const routes: Routes = [
     { path: 'deletedAuctions', component: DeletedAuctionsComponent, canActivate: [adminGuard] },
     { path: 'finished-auctions', component: FinishedAuctionsComponent, canActivate: [verifyemailGuard] },
     { path: 'notifications', component: NotificationComponent, canActivate: [verifyemailGuard] },
-    
     { path: 'customers', component: CustomersComponent, canActivate: [verifyemailGuard] },
-{ path: 'errors', component: ErrorsComponent },
+    { path: 'errors', component: ErrorsComponent },
     { path: '**', redirectTo: '/errors' },
 ];

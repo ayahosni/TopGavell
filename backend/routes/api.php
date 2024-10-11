@@ -17,7 +17,6 @@ Route::get('/logout', [UserController::class, 'logout'])->name('logout')->middle
 
 
 Route::apiResource('user', UserController::class);
-
 // Auction Routes - specific first
 Route::get('/auction/active-auctions', [AuctionController::class, 'showActiveAuctions']); 
 Route::get('/auction/approved', [AuctionController::class, 'getApprovedAuctions']); 

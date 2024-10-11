@@ -1,30 +1,71 @@
+<br>
+<br>
+<br>
+<br>
 <div class="profile-info" *ngIf="!isEditing">
-    <div class="profile-picture">
-      <img
-        *ngIf="profileImageUrl"
-        [src]="profileImageUrl"
-        alt="User Image"
-      />
-      <img
-        *ngIf="!profileImageUrl"
-        src="assets/images/default-profile.png"
-        alt="Default Profile Image"
-      />
-      <button class="edit-picture-button" (click)="changePicture()">
-        <i class="fas fa-edit"></i>
-      </button>
-      <input type="file" id="profile_picture_input" (change)="onFileSelect($event)" hidden />
-    </div>
-  
-    <div class="user-name">
-      <p><strong>{{ user.name }}</strong></p>
-    </div>
-  
-    <div class="user-details">
-      <p><strong>Email:</strong> {{ user.email }}</p>
-      <p><strong>Phone Number:</strong> {{ user.phone_number }}</p>
-      <p><strong>Address:</strong> {{ user.address }}</p>
-      <button class="btn btn-primary" (click)="enableEditing()">Edit Profile</button>
-    </div>
+  <div class="profile-picture">
+    <img *ngIf="profileImageUrl" [src]="profileImageUrl" alt="User Image" class="user-image" />
+    <img *ngIf="!profileImageUrl" src="assets/images/user.jpeg" alt="Default Profile Image" />
+
+      
+    <button class="edit-picture-button" (click)="changePicture()">
+      <i class="fas fa-edit"></i>
+    </button>
+    <input type="file" id="profile_picture_input" (change)="onFileSelect($event)" hidden />
   </div>
-  
+
+  <div class="user-name">
+    <p><i></i> <strong>{{ user.name }}</strong></p>
+  </div>
+
+  <div class="user-details">
+    <p><i class="fas fa-envelope"></i> <strong>Email:</strong> {{ user.email }}</p>
+    <br>
+    <p><i class="fas fa-phone"></i> <strong>Phone Number:</strong> {{ user.phone_number }}</p>
+    <br>
+    <p><i class="fas fa-map-marker-alt"></i> <strong>Address:</strong> {{ user.address }}</p>
+  </div>
+
+  <button class="btn btn-primary edit-btn" (click)="enableEditing()">Edit Profile</button>
+</div>
+
+<div class="edit-profile-container" *ngIf="isEditing">
+  <h2>Edit Profile</h2>
+
+  <form (ngSubmit)="onSubmit()">
+
+    <div class="form-group">
+      <label for="profile_picture">Profile Image:</label>
+      <div class="profile-picture">
+        <img *ngIf="profileImageUrl" [src]="profileImageUrl" alt="User Image" class="user-image" />
+        <img *ngIf="!profileImageUrl" src="assets/images/default-profile.png" alt="Default Profile Image" />
+      </div>
+      <input type="file" id="profile_picture" (change)="onFileSelect($event)" />
+    </div>
+
+    <div class="form-group">
+      <label for="name">Name:</label>
+      <input type="text" id="name" [(ngModel)]="user.name" name="name" required />
+    </div>
+
+    <div class="form-group">
+      <label for="email">Email:</label>
+      <input type="email" id="email" [(ngModel)]="user.email" name="email" required />
+    </div>
+
+    <div class="form-group">
+      <label for="phone_number">Phone Number:</label>
+      <input type="tel" id="phone_number" [(ngModel)]="user.phone_number" name="phone_number" required />
+    </div>
+
+    <div class="form-group">
+      <label for="address">Address:</label>
+      <input type="text" id="address" [(ngModel)]="user.address" name="address" required />
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn btn-success">Save</button>
+      <button type="button" class="btn btn-secondary" (click)="cancelEdit()">Cancel</button>
+    </div>
+  </form>
+</div>

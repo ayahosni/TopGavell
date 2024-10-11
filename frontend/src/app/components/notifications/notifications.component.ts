@@ -74,4 +74,5 @@ export class NotificationComponent implements OnInit {
   onPageChange(page: number): void {
     this.fetchNotifications(page);
   }
+  
 }

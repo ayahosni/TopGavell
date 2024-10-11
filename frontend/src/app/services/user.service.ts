@@ -12,7 +12,7 @@ export class UserService {
 
   /**
    * @param includeContentType 
-   * @returns 
+   * @returns
    */
   private getAuthHeaders(includeContentType: boolean = true): HttpHeaders | undefined {
     const userJson = localStorage.getItem('user');
@@ -49,7 +49,8 @@ export class UserService {
   }
 
   /**
-   * @returns 
+   * Retrieve user profile data
+   * @returns
    */
   getUserProfile(): Observable<any> {
     const headers = this.getAuthHeaders();
@@ -60,7 +61,8 @@ export class UserService {
   }
 
   /**
-   * @param data
+   * Update user profile data without image (using JSON)
+   * @param data 
    * @returns 
    */
   updateUserProfile(data: any): Observable<any> {
@@ -72,8 +74,9 @@ export class UserService {
   }
 
   /**
+   * Update user profile data with image (using FormData)
    * @param formData 
-   * @returns 
+   * @returns
    */
   updateUserProfileWithImage(formData: FormData): Observable<any> {
     const headers = this.getAuthHeaders(false); 
