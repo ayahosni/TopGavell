@@ -33,6 +33,27 @@ export class HeaderComponent implements OnInit {
 
   constructor(private router: Router) {}
 
+  // ngOnInit(): void {
+  //   this.router.events.subscribe(event => {
+  //     if (event instanceof NavigationEnd) {
+  //       this.isLoginActive = this.router.url === '/login';
+  //       this.isSignupActive = this.router.url === '/register';
+  //     }
+  //   });
+
+  //   const userData = localStorage.getItem('user');
+  //   console.log(userData)
+  //   if (userData) {
+  //     const user = JSON.parse(userData);
+  //     this.userName = user.name; 
+  //     this.isLoggedIn = true;  
+  //     this.isRegistered = true;
+  //     if(user.role=="admin"){
+  //       this.isAdmin=true;
+  //     }
+  //   }
+  //   console.log(this.isAdmin);
+  // }
   ngOnInit(): void {
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
@@ -40,21 +61,22 @@ export class HeaderComponent implements OnInit {
         this.isSignupActive = this.router.url === '/register';
       }
     });
-
+  
     const userData = localStorage.getItem('user');
-    console.log(userData)
     if (userData) {
       const user = JSON.parse(userData);
       this.userName = user.name; 
       this.isLoggedIn = true;  
       this.isRegistered = true;
-      if(user.role=="admin"){
-        this.isAdmin=true;
+  
+      // Verify role value and ensure it's correctly retrieved
+      if (user.role === "admin") {
+        this.isAdmin = true;
       }
     }
-    console.log(this.isAdmin);
+    console.log('Is Admin:', this.isAdmin); // Debug log
   }
-
+  
   toggleDropdown(event: Event): void {
     event.stopPropagation();
     this.showDropdown = !this.showDropdown;
