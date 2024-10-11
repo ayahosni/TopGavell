@@ -226,11 +226,19 @@ class UserController extends Controller
         }
         
         // Return a response with the updated user and customer data
-        return response()->json([
+        
+            if($user->role=="admin"){
+                return response()->json([
             'message' => 'Profile updated successfully!',
             'user' => $user,
-            'customer' => $customer, 
         ], 200);
+            }
+            return response()->json([
+                'message' => 'Profile updated successfully!',
+                'user' => $user,
+            'customer' => $customer, 
+                    ], 200);
+
     }
     
     
