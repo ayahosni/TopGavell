@@ -73,11 +73,14 @@
             <p class="auction-end-date">Ends: {{ auction.auction_end_time | date:'short' }}</p>
 
             <p class="auction-status"
-              [ngClass]="{'opened': checkAuctionStatus(auction.auction_end_time,auction.auction_start_time) === 'opened', 'closed': checkAuctionStatus(auction.auction_end_time,auction.auction_start_time) === 'closed'}">
-              {{ checkAuctionStatus(auction.auction_end_time,auction.auction_start_time) | titlecase }}
+              [ngClass]="{
+              'opened': checkAuctionStatus(auction)==='opened',
+              'closed': checkAuctionStatus(auction)==='closed'
+              }">
+              {{ checkAuctionStatus(auction) | titlecase }}
             </p>
 
-            <div class="bid-btn" *ngIf="checkAuctionStatus(auction.auction_end_time,auction.auction_start_time) === 'opened'">
+            <div class="bid-btn" *ngIf="checkAuctionStatus(auction) === 'opened'">
               <button routerLink="/payment-verification">Bid Now</button>
             </div>
 
@@ -85,7 +88,7 @@
               <button routerLink="http://localhost:8000/api/auction/{{auction.auction_id}}/delete">delete</button>
             </div> -->
 
-            <div class="bid-btn" *ngIf="checkAuctionStatus(auction.auction_end_time,auction.auction_start_time) === 'opened'">
+            <div class="bid-btn" *ngIf="checkAuctionStatus(auction) === 'opened'">
               <button (click)="deleteAuction(auction.auction_id)">Delete</button>
             </div>
             

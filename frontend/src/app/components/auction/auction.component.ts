@@ -16,7 +16,7 @@ import { AuctionService } from '../../services/auction.service';
 })
 export class AuctionComponent implements OnInit {
   auctionId: string = '';
-  auctionEndTime: Date | null = null; 
+  auctionEndTime: Date | null = null;
   isAuctionEnded: boolean = false;
 
   constructor(private route: ActivatedRoute, private router: Router, private auctionService: AuctionService) { }
@@ -40,4 +40,3 @@ export class AuctionComponent implements OnInit {
     this.isAuctionEnded = this.auctionEndTime ? this.auctionEndTime < currentTime : false;
   }
 }
-

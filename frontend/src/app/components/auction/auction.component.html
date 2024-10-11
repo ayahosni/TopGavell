@@ -1,9 +1,5 @@
 <div class="auction-container" style="padding-top: 80px;">
   <app-auction-details [auctionId]='auctionId'></app-auction-details>
-  <app-bids [auctionId]='auctionId' *ngIf="!isAuctionEnded"></app-bids>
-  <div *ngIf="isAuctionEnded">
-    <p>The auction has ended, you cannot place a bid or comment.</p>
-  </div>
-  
-  <app-comments [auctionId]='auctionId' *ngIf="!isAuctionEnded"></app-comments>
+  <app-bids [auctionId]='auctionId'></app-bids>
+  <app-comments [auctionId]='auctionId'></app-comments>
 </div>

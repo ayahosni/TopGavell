@@ -10,6 +10,7 @@ use App\Models\Auction;
 use Illuminate\Http\Request;
 use App\Http\Resources\BidResource;
 use App\Models\Customer;
+use App\Models\Payment;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use App\Notifications\NewBidNotification;
@@ -26,9 +27,23 @@ class BidController extends Controller
     public function index($auction)
     {
         $auction = Auction::findOrFail($auction);
-        return BidResource::collection($auction->bids);
+        $bidsdata = []; // Initialize an empty array
+        foreach ($auction->bids as $bid) {
+            $customer = Customer::findOrFail($bid->customer_id);
+
+            $bidsdata[] = [ // Push each bid's data into the array
+                'bid_amount' => $bid->bid_amount,
+                'customer_name'=> $customer->user->name,
+                'created_at' => $bid->created_at,
+            ];
+        }
+    
+        return response()->json([
+            'data' => $bidsdata
+        ], 200);
+        // return BidResource::collection($auction->bids);
     }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public function show($id)
     {
         $auction = Auction::with(['bids.customer.user'])->findOrFail($id);
@@ -52,9 +67,9 @@ class BidController extends Controller
         // Fetch the auction or throw a 404 error if not found
         $auction = Auction::findOrFail($auctionId);
 
-
         // Get the authenticated customer's ID
         $customer = Customer::where('user_id', Auth::id())->first();
+
         if (!$customer) {
             return response()->json(['error' => 'Customer not found.'], 404);
         }
@@ -79,12 +94,12 @@ class BidController extends Controller
             ], 400);
         }
 
-        if ($auction->approval_status !=='approved') {
+        if ($auction->approval_status !== 'approved') {
             return response()->json([
                 "message" => "This auction is not approved yet.",
             ], 400);
         }
-     
+
 
 
         // Get the last bid on the auction, if available
@@ -125,18 +140,17 @@ class BidController extends Controller
 
 
         // check if the customer is bidding for the first time or not for the Insurance payment 
-        $isFound = Bid::where('auction_id', $auction->id)
-            ->where('customer_id', $customer->id)
+        $isFound = Payment::where('auction_id', $auction->id)
+            ->where('bidder_id', $customer->id)
             ->exists();
 
         if (!$isFound) {
             // return route('checkout', ['auctionID' => $auction->id]);
             return response()->json([
-                'payment'=>false,
+                'payment' => false,
                 'message' => 'You have to pay insurance',
             ], 400);
         }
-
 
         // Create the new bid
         $data = $request->all();
@@ -144,12 +158,12 @@ class BidController extends Controller
         $data['auction_id'] = $auction->id;
         $bid = Bid::create($data);
 
-            // Extend the auction end time by 2 minutes if placed in last 2 minutes of auction
-  
+        // Extend the auction end time by 2 minutes if placed in last 2 minutes of auction
+
         $auctionEndTime = Carbon::parse($auction->auction_end_time);
 
         $bidCreatedAt = Carbon::parse($bid->created_at);
-        
+
         // Check if the bid is placed within the last 2 minutes of the auction
         $twoMinutesBeforeEnd = $auctionEndTime->copy()->subMinutes(2);
         if ($bidCreatedAt > $twoMinutesBeforeEnd) {
@@ -157,14 +171,14 @@ class BidController extends Controller
             $auction->auction_end_time = $auctionEndTime->addMinutes(2)->toDateTimeString();
             $auction->save();
         }
-     
+
         $winningBid = Bid::where('auction_id', $auction->id)->latest('created_at')->first();
-            if ($winningBid) {
-                $auction->winning_bidder_id = $winningBid->customer_id;
-                $auction->save();
-                    }
-                
-        
+        if ($winningBid) {
+            $auction->winning_bidder_id = $winningBid->customer_id;
+            $auction->save();
+        }
+
+
 
         $admins = User::where('role', 'admin')->get();
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Models\Auction;
 use App\Models\Bid;
+use App\Models\Customer;
 use App\Models\Payment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -17,7 +18,9 @@ class PaymentController extends Controller
     {   
         $data=$request->all();
         $auctionID = $data['auction_id'];
-        $bidderID = Auth::id();
+        
+        $bidder=Customer::where('user_id', Auth::id())->first();
+
         // return response()->json(['id' => $bidderID]);
         $auction = Auction::findOrFail($auctionID);
         Stripe::setApiKey(env('STRIPE_SECRET'));
@@ -47,7 +50,7 @@ class PaymentController extends Controller
                 ],
             ],
             'mode' => 'payment',
-            'success_url' => route('success',['auctionID' => $auctionID,'bidderID'=> $bidderID]),
+            'success_url' => route('success',['auctionID' => $auctionID,'bidderID'=> $bidder->id]),
             'cancel_url' => route('cancel'),   // URL after payment cancellation
         ]);
 
@@ -82,9 +85,9 @@ class PaymentController extends Controller
         $request->validate([
             'auction_id' => 'required|exists:auctions,id',
         ]);
-        $bidderID = Auth::id();
+        $bidder=Customer::where('user_id', Auth::id())->first();
         $paymentExists = DB::table('payments')
-            ->where('bidder_id', $bidderID)
+            ->where('bidder_id', $bidder->id)
             ->where('auction_id', $request->auction_id)
             ->exists();
 

@@ -115,8 +115,6 @@ class AuctionController extends Controller
         ]
       ]);
   }
-  
-  
   /////////////////////////////////////////////////////////////////////////////////////////////////////////
   public function finishedAuctions()
 {
@@ -134,12 +132,10 @@ class AuctionController extends Controller
   //   'message' => 'Unautherized'
   // ], 401);
 }
-
-
   ////////////////////////////////////////////////////////////////////////////////////////////////////////
   public function store(Request $request)
   {
-    // return response()->json(['message' => $request->file('item_media')], 403);
+    return response()->json(['message' => $request->all()], 403);
     // Prevent admin users from creating auctions
     if (Auth::user()->role === 'admin') {
       return response()->json([
@@ -224,10 +220,7 @@ class AuctionController extends Controller
       'auction' => new AuctionResource($auction)
     ], 200);
   }
-
-
   /////////////////////////////////////////////////////////////////////////////////////////////////////////
-
   public function update(Request $request, Auction $auction)
   {
     if (Auth::id() !== $auction->user_id) {
@@ -298,9 +291,6 @@ class AuctionController extends Controller
     // ]);
   }
 
-  /**
-   * Remove the specified resource from storage.
-   */
   public function destroy($id)
   {
     
@@ -383,11 +373,6 @@ class AuctionController extends Controller
 
   }
 
-
-  
-
-
-  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
   public function searchByCategory(Request $request)
   {
     $categoryId = $request->input('category_id');

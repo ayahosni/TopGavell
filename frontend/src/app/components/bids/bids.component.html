@@ -1,36 +1,56 @@
-<div class="bids-container" *ngIf="auction; else loading">
+<div class="bids-container">
+  <h4 class="bids-title">Bids:</h4>
+  <div class="bids-list">
+    <div class="bid-card" *ngFor="let bid of bids">
+      <p class="bid-amount"><strong>Bid Amount:</strong> {{ bid.bid_amount }} USD</p>
+      <p class="bid-by"><strong>By:</strong> {{ bid.customer_name }}</p>
+      <p class="bid-time"><strong>At:</strong> {{ bid.created_at | date: 'short' }}</p>
+      <hr>
+    </div>
+  </div>
+  <div *ngIf="auction.bids.length === 0">
+    <p class="no-bids-message">This auction has no bids</p>
+  </div>
+  <!-- ############################################################################################## -->
   <div *ngIf="message" class="message"
     [ngClass]="{'error': message.includes('Error'), 'success': message.includes('success')}">
     {{ message }}
   </div>
 
-  <h4 class="bids-title">Bids:</h4>
-  <div class="bids-list">
-    <div class="bid-card" *ngFor="let bid of auction.bids;">
-      <p class="bid-amount"><strong>Bid Amount:</strong> {{ bid.bid_amount }} USD</p>
-      <p class="bid-by"><strong>By:</strong> {{ bid.customer_id }}</p>
-      <!-- <p class="bid-by"><strong>By:</strong> {{ bid.bidder }}</p> -->
-
-      <p class="bid-time"><strong>At:</strong> {{ bid.created_at | date: 'short' }}</p>
-      <hr>
+  <div *ngIf="loading">
+    <div class="loading-wave">
+      <div class="loading-bar"></div>
+      <div class="loading-bar"></div>
+      <div class="loading-bar"></div>
+      <div class="loading-bar"></div>
     </div>
   </div>
-
-  <div *ngIf="auction.bids.length === 0">
-    <p class="no-bids-message">No bids. You can place a bid starting from <strong>{{ auction.starting_bid }} USD</strong>.</p>
+  <div *ngIf="canBid; else can_not_bid">
+    <div *ngIf="!isAuctionEnded; else ended">
+      <div *ngIf="isAuctionStarted; else notstarted">
+        <div *ngIf="!hasPaid else placeyourbid">
+          This is your first participation in this auction. Please add your payment method first.
+          <br><br>
+          <button (click)="payment()" class="submit-bid-button">Payment</button>
+        </div>
+        <ng-template #placeyourbid>
+          <form class="bid-form" (ngSubmit)="placeBid()">
+            <label for="bidAmount" class="bid-label">Your Bid:</label>
+            <input type="number" id="bidAmount" [(ngModel)]="bidAmount" name="bidAmount" [min]="auction.starting_bid"
+              required class="bid-input">
+            <button type="submit" class="submit-bid-button">Place Bid</button>
+          </form>
+        </ng-template>
+      </div>
+      <ng-template #notstarted>
+        <p>You Can't Bid on this auction, This auction Not started yet</p>
+      </ng-template>
+    </div>
+    <ng-template #ended>
+      <p>You Can't Bid on this auction, This auction has ended</p>
+    </ng-template>
   </div>
-
-  <form class="bid-form" (ngSubmit)="placeBid()" *ngIf="canBid; else can_not_bid">
-    <label for="bidAmount" class="bid-label">Your Bid:</label>
-    <input type="number" id="bidAmount" [(ngModel)]="bidAmount" name="bidAmount" [min]="auction.starting_bid" required
-class="bid-input">
-    <button type="submit" class="submit-bid-button">Place Bid</button>
-  </form>
   <ng-template #can_not_bid>
     <p>You Can't Bid on this auction</p>
   </ng-template>
 </div>
-
-<ng-template #loading>
-  <p class="loading-message">Loading auction details...</p>
-</ng-template>

@@ -62,7 +62,10 @@ export class HomeComponent implements OnInit {
       price: 4135.08
     }
   ];
-
+  auctionEndTime: Date | null = null;
+  auctionStartTime: Date | null = null;
+  isAuctionEnded: boolean = false;
+  isAuctionStarted: boolean = false;
   constructor(
     private fb: FormBuilder,
     private auctionService: AuctionService,
@@ -84,16 +87,31 @@ export class HomeComponent implements OnInit {
         this.filteredAuctions = [...this.auctions];
         this.currentPage = response.meta.current_page;
         this.totalPages = response.meta.last_page;
-        // console.log('Loaded Approved Auctions:', this.auctions);
         this.auctions.forEach((auction) => {
-          console.log(auction.item_media[0]?.path);
-          // auction.item_media.forEach((img)=>{console.log(img.path)});
+        //   console.log(
+        //     'currentTime===>'+currentTime+'\n'+
+        //     'auctionEndTime===>'+this.auctionEndTime+'\n'+
+        //     'isAuctionEnded===>'+this.isAuctionEnded+'\n'+
+        //     'auctionStartTime===>'+this.auctionStartTime+'\n'+
+        //     'isAuctionStarted===>'+this.isAuctionStarted
+        //   )
         })
       },
       error: (err) => {
         console.error('Error loading approved auctions:', err);
       }
     });
+  }
+  checkAuctionStatus(auction: { auction_end_time: string | number | Date; auction_start_time: string | number | Date; }): string {
+    const currentTime = new Date();
+    const auctionEndTime = new Date(auction.auction_end_time);
+    const isAuctionEnded = currentTime >= auctionEndTime;
+    const auctionStartTime = new Date(auction.auction_start_time);
+    const isAuctionStarted = currentTime >= auctionStartTime;
+    if(isAuctionStarted && !isAuctionEnded){
+      return 'opened'
+    }
+    return 'closed'
   }
 
   deleteAuction(auctionId: string) {
@@ -106,21 +124,6 @@ export class HomeComponent implements OnInit {
         console.error('Error deleting auction:', error);
       }
     });
-  }
-
-  /**
-   * @param auctionEndTime
-   * @param auctionStartDate
-   * @returns 
-   */
-  checkAuctionStatus(auctionEndTime: string,auctionStartTime:string): string {
-    const currentTime = new Date();
-    const auctionEndDate = new Date(auctionEndTime);
-    const auctionStartDate = new Date(auctionStartTime)
-    if(auctionEndDate < currentTime && currentTime > auctionStartDate){
-      return 'closed'
-    }
-      return 'opened'
   }
 
   /**

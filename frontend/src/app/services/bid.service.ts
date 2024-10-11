@@ -1,6 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
+
+export interface Bid {
+  bid_amount: string;
+  customer_name: string;
+  created_at: string; // Use string or Date depending on how you handle it
+}
 
 @Injectable({
   providedIn: 'root'
@@ -27,16 +34,15 @@ export class BidService {
     return undefined; 
   }
 
-  placeBid(auctionId: string, bidAmount: number, bidData: any): Observable<any> {
-    const isFormData = bidData instanceof FormData; 
-    const headers = this.getAuthHeaders(!isFormData);
+  placeBid(auctionId: string, bidAmount: number): Observable<any> {
+    const headers = this.getAuthHeaders();
     const options = headers ? { headers } : {};
-    return this.http.post(`${this.apiUrl}/${auctionId}/bids`, { bid_amount: bidAmount, ...bidData }, options);
+    return this.http.post(`${this.apiUrl}/${auctionId}/bids`, { bid_amount: bidAmount }, options);
   }
 
   getBidsByAuctionId(auctionId: string): Observable<any> {
     const headers = this.getAuthHeaders();
     const options = headers ? { headers } : {};
-    return this.http.get(`${this.apiUrl}/${auctionId}/bids`, options);
+    return this.http.get<any>(`${this.apiUrl}/${auctionId}/bids`, options);
   }
 }
