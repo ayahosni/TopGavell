@@ -33,7 +33,7 @@
       <!-- Display if user is registered -->
       <ng-container *ngIf="isRegistered">
         <button class="sell-btn" routerLink="/addAuction">Sell on <span class="gavel">T</span>OPGAVEL</button>
-        <i class="fa-solid fa-bell bell"></i>
+        <a href="/notifications"><i class="fa-solid fa-bell bell"></i></a>
 
         <!-- User profile with dropdown -->
         <div class="user-profile" (click)="toggleDropdown($event)">

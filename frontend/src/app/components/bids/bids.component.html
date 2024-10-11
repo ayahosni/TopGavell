@@ -9,6 +9,8 @@
     <div class="bid-card" *ngFor="let bid of auction.bids;">
       <p class="bid-amount"><strong>Bid Amount:</strong> {{ bid.bid_amount }} USD</p>
       <p class="bid-by"><strong>By:</strong> {{ bid.customer_id }}</p>
+      <!-- <p class="bid-by"><strong>By:</strong> {{ bid.bidder }}</p> -->
+
       <p class="bid-time"><strong>At:</strong> {{ bid.created_at | date: 'short' }}</p>
       <hr>
     </div>

@@ -37,7 +37,7 @@ class NewCommentNotification extends Notification
     {
         return [
             'auction' => $this->auction->item_name,
-            "user"=>$this->comment->user->name ."commented on your auction",
+            "user"=>$this->comment->user->name ."commented on this auction",
             "content"=>$this->comment->comment_text];
     }
     /**

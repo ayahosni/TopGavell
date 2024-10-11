@@ -28,8 +28,12 @@ class BidController extends Controller
         $auction = Auction::findOrFail($auction);
         return BidResource::collection($auction->bids);
     }
-
-
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public function show($id)
+    {
+        $auction = Auction::with(['bids.customer.user'])->findOrFail($id);
+        return response()->json($auction);
+    }
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public function store(Request $request, $auctionId)
@@ -62,7 +66,7 @@ class BidController extends Controller
             ], 400);
         }
 
-        $currentTime = Carbon::now('UTC')->setTimezone('Europe/Bucharest')->format('Y-m-d H:i:s');
+        $currentTime = Carbon::now('UTC')->setTimezone('Africa/Cairo')->format('Y-m-d H:i:s');
         if ($auction->auction_start_time > $currentTime) {
             return response()->json([
                 "message" => "You can't participate in this auction. This auction didn't start yet.",

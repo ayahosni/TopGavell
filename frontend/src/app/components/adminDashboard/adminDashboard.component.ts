@@ -13,7 +13,7 @@ import { AuctionService, Auction, PaginatedAuctions } from '../../services/aucti
 export class AdminDashboardComponent {
   Pauctions: Auction[] = [];
   Aauctions: Auction[] = [];
-  ATSauctions: Auction[] = [];
+  Fauctions: Auction[] = [];
   Dauctions: Auction[] = [];
   constructor(private authService: AuthService,private auctionService: AuctionService,private router: Router) { }
 

@@ -49,8 +49,7 @@ export const routes: Routes = [
     {path: 'pendingAuctions',component:PendingAuctionsComponent,canActivate:[adminGuard]},
     {path: 'deletedAuctions',component:DeletedAuctionsComponent,canActivate:[adminGuard]},
     {path: 'errors', component: ErrorsComponent},
-    { path: 'finished-auctions', component: FinishedAuctionsComponent },
-    // { path: 'auctions/:id', component: AuctionDetailsComponent }
+    { path: 'finished-auctions', component: FinishedAuctionsComponent,canActivate: [verifyemailGuard] },
     { path: 'notifications', component: NotificationComponent, canActivate: [verifyemailGuard] },
 
     {path: '**', redirectTo: '/errors'},

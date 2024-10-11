@@ -8,10 +8,10 @@
       <img class="auction-item-image" [src]="auction.item_media[0]" alt="Auction image">
       <p class="auction-item-description">{{ auction.item_description }}</p>
       <p class="auction-item-category"><strong>Category:</strong> {{ auction.item_category }}</p>
-      <p class="auction-item-start-time"><strong>Start:</strong> {{ auction.auction_start_time }}</p>
-      <p class="auction-item-end-time"><strong>End:</strong> {{ auction.auction_end_time }}</p>
+      <p class="auction-item-start-time"><strong>Start:</strong> {{ auction.auction_start_time | date: 'short'}}</p>
+      <p class="auction-item-end-time"><strong>End:</strong> {{ auction.auction_end_time | date: 'short'}}</p>
       <p class="auction-winning-bidder"><strong>Winner:</strong> {{ auction.winning_bidder?.name || 'N/A' }}</p>
-      <p class="auction-winning-bid"><strong>Winning Bid:</strong> {{ auction.winning_bid | currency }}</p>
+      <p class="auction-winning-bid"><strong>Winning Bid:</strong> {{ auction.winning_bid !== null ? (auction.winning_bid | currency) : 'N/A' }}</p>
     </div>
   </div>
 </div>

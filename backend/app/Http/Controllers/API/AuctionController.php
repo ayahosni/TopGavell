@@ -120,14 +120,19 @@ class AuctionController extends Controller
   /////////////////////////////////////////////////////////////////////////////////////////////////////////
   public function finishedAuctions()
 {
+  // if (Auth::user()->role === 'admin') {
 
     $finishedAuctions = Auction::with(['winningBidder.user', 'customer'])
         ->where('auction_end_time', '<', Carbon::now())
         ->where('approval_status','approved')
-        ->whereNotNull('winning_bidder_id')
+        // ->whereNotNull('winning_bidder_id')
         ->get();
         // ->paginate(10);
     return AuctionResource::collection($finishedAuctions);
+  // }
+  // return response()->json([
+  //   'message' => 'Unautherized'
+  // ], 401);
 }
 
 

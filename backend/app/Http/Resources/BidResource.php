@@ -15,5 +15,12 @@ class BidResource extends JsonResource
     public function toArray(Request $request): array
     {
         return parent::toArray($request);
+
+        // return [
+        //     "bidder" => $this->customer->user->name, 
+        //     "bid_amount" => $this->bid_amount,      
+        //     "created_at" => $this->created_at,       
+        //     "auction" => $this->auction->item_name, 
+        // ];
     }
 }
