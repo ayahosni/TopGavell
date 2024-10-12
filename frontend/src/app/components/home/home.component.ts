@@ -21,6 +21,7 @@ interface TopAuction {
   price: number;
 }
 
+
 @Component({
   selector: 'app-home',
   standalone: true,
@@ -34,7 +35,6 @@ export class HomeComponent implements OnInit {
   isRegistered: boolean = false;
   userName: string = '';
   isAdmin:boolean=false;
-  isAuctionOwner:boolean=false;
 
 
   auctions: Auction[] = [];
@@ -94,6 +94,7 @@ export class HomeComponent implements OnInit {
       }
     }
     console.log(this.isAdmin);
+    
   }
 
   /**
@@ -108,6 +109,9 @@ export class HomeComponent implements OnInit {
         this.currentPage = response.meta.current_page;
         this.totalPages = response.meta.last_page;
         this.auctions.forEach((auction) => {
+          // if(this.User==auction.auction_id){
+          //   this.isAuctionOwner=true;
+          // }
         //   console.log(
         //     'currentTime===>'+currentTime+'\n'+
         //     'auctionEndTime===>'+this.auctionEndTime+'\n'+
@@ -116,6 +120,7 @@ export class HomeComponent implements OnInit {
         //     'isAuctionStarted===>'+this.isAuctionStarted
         //   )
         })
+
       },
       error: (err) => {
         console.error('Error loading approved auctions:', err);
@@ -134,17 +139,15 @@ export class HomeComponent implements OnInit {
     return 'closed'
   }
 
-  checkAuctionOwnwer(auction: { auction_id: string | number ; }) {
+  checkAuctionOwnwer(auction: Auction) {
     const userData = localStorage.getItem('user');
     if (userData) {
       const user = JSON.parse(userData);
-      console.log("user");
-      console.log(user);
       if(user.id==auction.auction_id){
-        this.isAuctionOwner=true;
+        return true;
       }
     }
-    console.log(this.isAdmin);
+    return false;
   }
 
   deleteAuction(auctionId: string) {
