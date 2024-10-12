@@ -15,6 +15,8 @@ import { CommonModule } from '@angular/common';
 export class DeletedAuctionsComponent {
 
 
+
+
   auctions: Auction[] = [];
   filteredAuctions: Auction[] = [];
   searchTerm: string = '';
@@ -49,6 +51,17 @@ export class DeletedAuctionsComponent {
         console.error('Error loading deleted auctions:', err);
       }
     });
+  }
+
+  restoreAuction(id: string) {
+    this.auctionService.restoreAuction(id).subscribe(
+      response => {
+        console.log('Auction restored successfully:', response);
+      },
+      error => {
+        console.error('Error restoring auction:', error);
+      }
+    );
   }
 
   goToAuctionDetails(auctionId: string): void {

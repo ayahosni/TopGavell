@@ -439,6 +439,16 @@ export class AuctionService {
       .pipe(catchError(this.handleError));
   }
 
+  restoreAuction(id: string): Observable<any> {
+
+    const headers = this.getAuthHeaders();
+    if (!headers) {
+      return throwError('Token is missing. Please log in.');
+    }
+
+    return this.http.put(`${environment.apiUrl}/${id}/restore`, {}, { headers });
+  }
+
   /**
    * Approve auction (requires authentication)
    * @param id 

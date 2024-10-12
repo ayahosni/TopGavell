@@ -18,7 +18,11 @@
             </div>
             <p class="date">Starts: {{ auction.auction_start_time | date:'short' }}</p>
             <p class="date">Ends: {{ auction.auction_end_time | date:'short' }}</p>
-  
+            
+
+            <div class="bid-btn" >
+              <button (click)="restoreAuction(auction.auction_id)">Restore Auction</button>
+            </div>
             
           </div>
         </div>

@@ -30,6 +30,8 @@ Route::get('/auction/myAuctions', [AuctionController::class, 'myAuctions'])->mid
 Route::post('/auction/{id}/approve', [AuctionController::class, 'approve']); 
 Route::post('/auction/{id}/reject', [AuctionController::class, 'rejected']);
 Route::delete('/auction/{id}/delete', [AuctionController::class, 'destroy']);
+Route::put('/auction/{id}/restore', [AuctionController::class, 'restore']);
+
 
 
 // Then resource route

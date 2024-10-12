@@ -20,6 +20,7 @@ export class AdminDashboardComponent {
   ngOnInit(): void {
     this.loadPendingAuctions();
     this.loadActiveAuctions();
+    this.loadDeletedAuctions();
   }
     /**
    * 
@@ -46,6 +47,18 @@ export class AdminDashboardComponent {
         }
       });
     }
+
+    loadDeletedAuctions(page: number = 1): void {
+      this.auctionService.getDeletedAuctions(page).subscribe({
+        next: (response: PaginatedAuctions) => {
+          this.Dauctions = response.data;
+        },
+        error: (err) => {
+          console.error('Error loading approved auctions:', err);
+        }
+      });
+    }
+
     goToAuctions(): void {
       console.log("Navigating to auctions page");
       this.router.navigate(['/auctions']);

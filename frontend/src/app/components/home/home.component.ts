@@ -29,6 +29,14 @@ interface TopAuction {
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
+
+  isLoggedIn: boolean = false;
+  isRegistered: boolean = false;
+  userName: string = '';
+  isAdmin:boolean=false;
+  isAuctionOwner:boolean=false;
+
+
   auctions: Auction[] = [];
   filteredAuctions: Auction[] = [];
   searchTerm: string = '';
@@ -74,6 +82,18 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadApprovedAuctions(this.currentPage);
+
+    const userData = localStorage.getItem('user');
+    if (userData) {
+      const user = JSON.parse(userData);
+      this.userName = user.name; 
+      this.isLoggedIn = true;  
+      this.isRegistered = true;
+      if(user.role=="admin"){
+        this.isAdmin=true;
+      }
+    }
+    console.log(this.isAdmin);
   }
 
   /**
@@ -112,6 +132,19 @@ export class HomeComponent implements OnInit {
       return 'opened'
     }
     return 'closed'
+  }
+
+  checkAuctionOwnwer(auction: { auction_id: string | number ; }) {
+    const userData = localStorage.getItem('user');
+    if (userData) {
+      const user = JSON.parse(userData);
+      console.log("user");
+      console.log(user);
+      if(user.id==auction.auction_id){
+        this.isAuctionOwner=true;
+      }
+    }
+    console.log(this.isAdmin);
   }
 
   deleteAuction(auctionId: string) {
