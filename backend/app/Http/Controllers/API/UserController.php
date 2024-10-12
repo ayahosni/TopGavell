@@ -167,13 +167,13 @@ class UserController extends Controller
         return response()->json(['message' => 'Logged out successfully'], 200);
     }
 
-    /**
-     */
+    
+    //////////////////////////////////////////////////////////////////////////////
     public function profile(Request $request)
     {
         $user = $request->user();  // Get the logged-in user
         $customer = Customer::where('user_id', $user->id)->first();  // Retrieve the associated customer profile
-
+    
         if ($customer) {
             // Return customer resource if the user has a customer profile
             return response()->json([
@@ -192,64 +192,57 @@ class UserController extends Controller
     //////////////////////////////////////////////////////////////////////////////
     public function updateProfile(Request $request)
     {
-        $user = Auth::user();
+        $user = auth()->user();
         $customer = Customer::where('user_id', $user->id)->first();
-
+        
         $validation = Validator::make($request->all(), [
             'name' => ['sometimes', 'string', 'max:255'],
             'password' => [
-                'sometimes',
+                'sometimes',  
                 'string',
                 'min:8',
                 'confirmed',
-                'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/'
+                'regex:/^(?=.[a-z])(?=.[A-Z])(?=.\d)(?=.[@$!%?&])[A-Za-z\d@$!%?&]{8,}$/'
             ],
             'phone_number' => ['sometimes', 'string'],
             'address' => ['sometimes', 'string'],
         ]);
-
+        
         if ($validation->fails()) {
             return response()->json($validation->messages(), 400);
         }
-
+        
         if ($request->has('name')) {
             $user->name = $request->name;
         }
-
+    
         if ($customer) {
             if ($request->has('phone_number')) {
                 $customer->phone_number = $request->phone_number;
             }
-
+    
             if ($request->has('address')) {
                 $customer->address = $request->address;
             }
         }
-
+    
         if ($request->filled('password')) {
             $user->password = Hash::make($request->password);
         }
-
+        
         // Save the updated user
-        // $user->save();
-
+        $user->save();
+    
         // Save the updated customer profile if it exists
         if ($customer) {
             $customer->save();
         }
-
+        
         // Return a response with the updated user and customer data
-
-        if ($user->role == "admin") {
-            return response()->json([
-                'message' => 'Profile updated successfully!',
-                'user' => $user,
-            ], 200);
-        }
         return response()->json([
             'message' => 'Profile updated successfully!',
             'user' => $user,
-            'customer' => $customer,
+            'customer' => $customer, 
         ], 200);
     }
 
