@@ -363,7 +363,7 @@ export class AuctionService {
       .set('page', page.toString())
       .set('per_page', perPage.toString());
 
-    return this.http.get<PaginatedAuctions>(`${environment.apiUrl}/auction/approved/`, { params })
+    return this.http.get<PaginatedAuctions>(`${environment.apiUrl}/auction/approved`, { params })
       .pipe(catchError(this.handleError));
   }
 

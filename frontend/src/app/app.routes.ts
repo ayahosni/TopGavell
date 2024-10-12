@@ -25,6 +25,7 @@ import { UserDashboardComponent } from './components/user-dashboard/user-dashboa
 import { MyAuctionsComponent } from './components/my-auctions/my-auctions.component';
 import { FinishedAuctionsComponent } from './components/finished-auctions/finished-auctions.component';
 import { NotificationComponent } from './components/notifications/notifications.component';
+import { CustomersComponent } from './components/customers/customers.component';
 
 export const routes: Routes = [
     { path: '', component: HomeComponent },
@@ -49,6 +50,8 @@ export const routes: Routes = [
     { path: 'deletedAuctions', component: DeletedAuctionsComponent, canActivate: [adminGuard] },
     { path: 'finished-auctions', component: FinishedAuctionsComponent, canActivate: [verifyemailGuard] },
     { path: 'notifications', component: NotificationComponent, canActivate: [verifyemailGuard] },
-    { path: 'errors', component: ErrorsComponent },
+    
+    { path: 'customers', component: CustomersComponent, canActivate: [verifyemailGuard] },
+{ path: 'errors', component: ErrorsComponent },
     { path: '**', redirectTo: '/errors' },
 ];

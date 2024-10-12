@@ -82,4 +82,11 @@ export class UserService {
         catchError(this.handleError)
       );
   }
+  getCustomers(page: number = 1): Observable<any> {
+    const headers = this.getAuthHeaders();
+    return this.http.get(`${environment.apiUrl}/customers?page=${page}`, { headers })
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
 }

@@ -63,3 +63,4 @@ Route::middleware('auth:sanctum')->group(function () {
 
 // Get all categories
 Route::get('/categories', [CategoryController::class, 'index']);  
+Route::get('/customers', [UserController::class, 'index']);

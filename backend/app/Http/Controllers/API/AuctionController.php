@@ -314,7 +314,7 @@ class AuctionController extends Controller
     
   
     $user = Auth::user();
-    $currentTime = Carbon::now('UTC')->setTimezone('Europe/Bucharest')->format('Y-m-d H:i:s');
+    $currentTime = Carbon::now('UTC')->setTimezone('Africa/Cairo')->format('Y-m-d H:i:s');
     // Check if the time is before auction start
     if ($currentTime < $auction->auction_start_time) {
       // Check if the user is either the owner of the auction or an admin

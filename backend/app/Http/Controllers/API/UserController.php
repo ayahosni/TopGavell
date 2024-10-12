@@ -26,14 +26,27 @@ class UserController extends Controller
      */
     public function index()
     {
-        $user = Auth::user();
-
-        if ($user->role !== 'admin') {
-            return response()->json(['message' => 'Unauthorized'], 403);
-        }
-
-        return CustomerResource::collection(Customer::all());
+        $customers = Customer::with('user')->paginate(10);
+        return response()->json([
+            'data' => $customers->map(function ($customer) {
+                return [
+                    'id' => $customer->id,
+                    'user_id' => $customer->user_id,
+                    'name' => $customer->user->name,  
+                    'email' => $customer->user->email, 
+                    'phone number'=>$customer->phone_number,
+                    'address'=>$customer->address, 
+                ];
+            }),
+            'meta' => [
+                'current_page' => $customers->currentPage(),
+                'last_page' => $customers->lastPage(),
+                'per_page' => $customers->perPage(),
+                'total' => $customers->total()
+            ]
+        ]);
     }
+    
 
 
     /**
