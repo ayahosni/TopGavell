@@ -63,6 +63,16 @@ textarea:focus {
     outline: none;
 }
 
+select {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 20px;
+    border: 2px solid #ced4da;
+    border-radius: 8px;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease;
+}
+
 textarea {
     resize: vertical;
     min-height: 100px;

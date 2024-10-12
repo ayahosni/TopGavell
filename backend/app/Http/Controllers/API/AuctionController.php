@@ -137,7 +137,7 @@ class AuctionController extends Controller
   ////////////////////////////////////////////////////////////////////////////////////////////////////////
   public function store(Request $request)
   {
-    return response()->json(['message' => $request->all()], 56321);
+    // return response()->json(['message' => $request->all()], 200);
     // Prevent admin users from creating auctions
     if (Auth::user()->role === 'admin') {
       return response()->json([
@@ -151,6 +151,7 @@ class AuctionController extends Controller
         'message' => 'Please verify your mail first.'
       ], 403);
     }
+
 
     // Validation for auction data and images
     // $validation = Validator::make($request->all(), [
@@ -193,11 +194,17 @@ class AuctionController extends Controller
     // Retrieve customer linked to authenticated user
     $customer = Customer::where('user_id', Auth::id())->first();
     $data = $request->all();
-    $data['customer_id'] = $customer->id;
-    $data['category_id'] = 2;
-    $data['auction_actual_end_time'] = $data['auction_end_time'];
+    // $data['customer_id'] = $customer->id;
+    // $data['category_id'] = 2;
+    // $data.append('auction_actual_end_time', "aa"); // Adding a new key-value
 
+    // $data['auction_actual_end_time'] = 20;
+    
+    
+    $auction = Auction::find(2);
+    
     // Create the auction
+    return response()->json(['message' => $data], 200);
     $auction = Auction::create($data);
 
     if ($request->hasFile('item_media')) {

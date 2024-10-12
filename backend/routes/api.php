@@ -6,6 +6,7 @@ use App\Http\Controllers\API\BidController;
 use App\Http\Controllers\API\CommentController;
 use App\Http\Controllers\API\NotificationController;
 use App\Http\Controllers\API\PaymentController;
+use App\Http\Controllers\API\CategoryController;
 
 Route::post('/register', [UserController::class, 'register'])->name('register');
 Route::post('/email_verify', [UserController::class,'email_verify'])->name('email_verify');
@@ -59,3 +60,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/profile', [UserController::class, 'profile']);
     Route::put('/profile', [UserController::class, 'updateProfile']);
 });
+
+// Get all categories
+Route::get('/categories', [CategoryController::class, 'index']);  
