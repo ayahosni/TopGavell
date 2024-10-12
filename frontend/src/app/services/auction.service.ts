@@ -402,13 +402,14 @@ export class AuctionService {
    * @param auctionData 
    * @returns 
    */
-  createAuction(auctionData: FormData): Observable<Auction> {
+ createAuction(auctionData: FormData): Observable<Auction> {
     const headers = this.getAuthHeaders();
     const options = headers ? { headers } : {};
 
     return this.http.post<Auction>(`${environment.apiUrl}/auction`, auctionData, options)
       .pipe(catchError(this.handleError));
-  }
+}
+
 
   /**
    * Update auction (requires authentication)
