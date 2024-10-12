@@ -4,24 +4,6 @@ import { RouterModule, Router } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
-
-interface Notification {
-  id: string;
-  data: {
-    auction: string;  // اسم المزاد
-    user: string;       // اسم المستخدم الذي قام بالتعليق
-    content: string;    // محتوى التعليق أو الإشعار
-  };
-  created_at: string;   // تاريخ الإشعار
-}
-
-interface PaginatedNotifications {
-  current_page: number;
-  data: Notification[]; 
-  last_page: number;
-  total: number;
-}
 
 @Component({
   standalone: true,
@@ -44,13 +26,13 @@ export class NotificationComponent implements OnInit {
 
   getNotifications(page: number = 1) {
     this.notificationService.getNotifications(page, this.perPage).subscribe({
-      next: (response: PaginatedNotifications) => {
+      next: (response : PaginatedNotifications) => {
         this.notifications = response.data;
         this.currentPage = response.meta.current_page;
         this.totalPages = response.meta.last_page;
         console.log(this.notifications);
       },
-      error: (error) => {
+      error:(error) => {
         console.error('Error fetching notifications:', error);
       }
     });
@@ -69,7 +51,7 @@ export class NotificationComponent implements OnInit {
       error: (err) => {
         console.error('Error fetching auctions:', err);
       }
-    });
+  });
   }
 
   nextPage(): void {

@@ -193,7 +193,7 @@ class UserController extends Controller
     //////////////////////////////////////////////////////////////////////////////
     public function updateProfile(Request $request)
     {
-        $user = auth()->user();
+        $user = Auth::user();
         $customer = Customer::where('user_id', $user->id)->first();
 
         $validation = Validator::make($request->all(), [
@@ -203,7 +203,7 @@ class UserController extends Controller
                 'string',
                 'min:8',
                 'confirmed',
-                'regex:/^(?=.[a-z])(?=.[A-Z])(?=.\d)(?=.[@$!%?&])[A-Za-z\d@$!%?&]{8,}$/'
+                'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/'
             ],
             'phone_number' => ['sometimes', 'string'],
             'address' => ['sometimes', 'string'],
@@ -232,7 +232,7 @@ class UserController extends Controller
         }
 
         // Save the updated user
-        $user->save();
+        // $user->save();
 
         // Save the updated customer profile if it exists
         if ($customer) {
@@ -240,14 +240,19 @@ class UserController extends Controller
         }
 
         // Return a response with the updated user and customer data
+
+        if ($user->role == "admin") {
+            return response()->json([
+                'message' => 'Profile updated successfully!',
+                'user' => $user,
+            ], 200);
+        }
         return response()->json([
             'message' => 'Profile updated successfully!',
             'user' => $user,
             'customer' => $customer,
         ], 200);
     }
-
-
 
     public function banUser($id)
     {
@@ -279,7 +284,6 @@ class UserController extends Controller
             return response()->json(['message' => 'Unautherized.']);
         }
     }
-
 
     /**
      */
