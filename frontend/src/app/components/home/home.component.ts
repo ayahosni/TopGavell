@@ -133,6 +133,10 @@ export class HomeComponent implements OnInit {
     const isAuctionEnded = currentTime >= auctionEndTime;
     const auctionStartTime = new Date(auction.auction_start_time);
     const isAuctionStarted = currentTime >= auctionStartTime;
+    const isAuctionBeforeStarting = currentTime <= auctionStartTime;
+    if (isAuctionBeforeStarting) {
+      return 'before starting';
+    }
     if(isAuctionStarted && !isAuctionEnded){
       return 'opened'
     }
