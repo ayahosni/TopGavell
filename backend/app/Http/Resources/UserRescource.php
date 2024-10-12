@@ -24,6 +24,7 @@ class UserRescource extends JsonResource
             "profile_picture"=>$this->profile_picture,
             // "address"=>$this->customer->address,
             "role"=>$this->role,
+          "banned"=>$this->banned,
         ];
     }
 }
