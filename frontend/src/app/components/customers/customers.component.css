@@ -110,3 +110,17 @@ table {
     font-weight: bold;
   }
   
+  .ban{
+    background-color: red;
+    color: white;
+    font-size: 18px;
+
+
+  }
+
+  .unban{
+    background-color: green;
+    color: white;
+    font-size: 18px;
+
+  }

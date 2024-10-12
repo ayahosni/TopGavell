@@ -35,4 +35,19 @@ export class CustomersComponent implements OnInit {
       this.loadCustomers(page);
     }
   }
+
+  banUser(userId: number): void {
+    this.userService.banUser(userId).subscribe(response => {
+      alert(response.message);
+      this.loadCustomers(this.currentPage);
+    });
+  }
+  
+  unbanUser(userId: number): void {
+    this.userService.unbanUser(userId).subscribe(response => {
+      alert(response.message);
+      this.loadCustomers(this.currentPage);
+    });
+  }
+  
 }

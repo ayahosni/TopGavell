@@ -41,6 +41,11 @@ class CommentController extends Controller
                 'message' => 'Please verify your mail first.'
             ], 403);
         }
+        if (Auth::user()->banned === 1) {
+            return response()->json([
+              'message' => 'You can\'t make a comment,You are banned'
+            ], 403);
+          }
         // Validate the comment input
         $validation = Validator::make($request->all(), [
             'comment_text' => 'required|string|min:3|max:255',
@@ -94,6 +99,11 @@ class CommentController extends Controller
 
     public function update(Request $request, $auctionid, $commentId)
     {
+        if (Auth::user()->banned === 1) {
+            return response()->json([
+              'message' => 'You can\'t edit a comment,You are banned'
+            ], 403);
+          }
 
         $validation = Validator::make($request->all(), [
             'comment_text' => 'required|string|min:3|max:255'
@@ -117,6 +127,11 @@ class CommentController extends Controller
 
     public function destroy($auctionid, $commentId)
     {
+        if (Auth::user()->banned === 1) {
+            return response()->json([
+              'message' => 'You are banned'
+            ], 403);
+          }
         $comment = Comment::findOrFail($commentId);
 
         // Allow admin users to delete comments

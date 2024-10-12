@@ -89,4 +89,17 @@ export class UserService {
         catchError(this.handleError)
       );
   }
+
+  banUser(userId: number): Observable<any> {
+    const headers = this.getAuthHeaders();
+    return this.http.post(`${environment.apiUrl}/users/${userId}/ban`, {}, { headers })
+      .pipe(catchError(this.handleError));
+  }
+  
+  unbanUser(userId: number): Observable<any> {
+    const headers = this.getAuthHeaders();
+    return this.http.post(`${environment.apiUrl}/users/${userId}/unban`, {}, { headers })
+      .pipe(catchError(this.handleError));
+  }
+  
 }

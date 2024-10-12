@@ -30,12 +30,13 @@ class UserController extends Controller
         return response()->json([
             'data' => $customers->map(function ($customer) {
                 return [
-                    'id' => $customer->id,
-                    'user_id' => $customer->user_id,
+                    // 'id' => $customer->id,
+                    'id' => $customer->user_id,
                     'name' => $customer->user->name,  
                     'email' => $customer->user->email, 
                     'phone number'=>$customer->phone_number,
                     'address'=>$customer->address, 
+                    'banned'=>$customer->user->banned
                 ];
             }),
             'meta' => [
@@ -248,7 +249,41 @@ class UserController extends Controller
 
 
 
+    public function banUser($id)
+    {
+        $ad = auth()->user();
+        $admin=$ad->role=="admin";
+        if($admin){
+                 $user = User::findOrFail($id);
+        $user->banned = true;
+        $user->save();
+    
+        return response()->json(['message' => 'User banned successfully.']);
+    }else{
+        return response()->json(['message' => 'Unautherized.']);
 
+    }
+
+   
+    }
+    
+    public function unbanUser($id)
+    {
+        $ad = auth()->user();
+        $admin=$ad->role=="admin"; 
+
+        if($admin){
+        $user = User::findOrFail($id);
+        $user->banned = false;
+        $user->save();
+    
+        return response()->json(['message' => 'User unbanned successfully.']);
+        }else{
+            return response()->json(['message' => 'Unautherized.']);
+
+        }
+    }
+    
 
     /**
      */

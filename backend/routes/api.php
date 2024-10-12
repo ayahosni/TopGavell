@@ -64,3 +64,8 @@ Route::middleware('auth:sanctum')->group(function () {
 // Get all categories
 Route::get('/categories', [CategoryController::class, 'index']);  
 Route::get('/customers', [UserController::class, 'index']);
+
+Route::middleware(['auth:sanctum', ])->group(function () {
+    Route::post('/users/{id}/ban', [UserController::class, 'banUser']);
+    Route::post('/users/{id}/unban', [UserController::class, 'unbanUser']);
+});

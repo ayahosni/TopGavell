@@ -12,27 +12,38 @@
 <h2>Customers list</h2>
 
 <table class="table">
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>User ID</th>
-        <th>Name</th>
-        <th>Email</th>
-        <th>Phone Number</th>
-        <th>Address</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let customer of customers">
-        <td>{{ customer.id }}</td>
-        <td>{{ customer.user_id }}</td>
-        <td>{{ customer.name }}</td>
-        <td>{{ customer.email }}</td>
-        <td>{{ customer['phone number'] }}</td>
-        <td>{{ customer.address }}</td>
-      </tr>
-    </tbody>
-  </table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <!-- <th>User ID</th> -->
+      <th>Name</th>
+      <th>Email</th>
+      <th>Phone Number</th>
+      <th>Address</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let customer of customers">
+      <td>{{ customer.id }}</td>
+      <!-- <td>{{ customer.user_id }}</td> -->
+      <td>{{ customer.name }}</td>
+      <td>{{ customer.email }}</td>
+      <td>{{ customer['phone number'] }}</td>
+      <td>{{ customer.address }}</td>
+      <td>
+        <ng-container *ngIf="!customer.banned; else bannedUser">
+          <button class="ban"(click)="banUser(customer.id)">Ban</button>
+        </ng-container>
+        <ng-template #bannedUser>
+          <!-- <span>Banned</span> -->
+          <button class="unban"(click)="unbanUser(customer.id)">Unban</button>
+        </ng-template>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
   
   <div class="pagination">
     <button (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 1">Previous</button>

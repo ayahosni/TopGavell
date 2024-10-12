@@ -151,6 +151,12 @@ class AuctionController extends Controller
         'message' => 'Please verify your mail first.'
       ], 403);
     }
+    
+    if (Auth::user()->banned === 1) {
+      return response()->json([
+        'message' => "You can't create an auction,You are banned"
+      ], 403);
+    }
 
 
     // Validation for auction data and images
@@ -235,6 +241,11 @@ class AuctionController extends Controller
     if (Auth::id() !== $auction->user_id) {
       return response()->json(['message' => 'Unauthorized'], 403);
     }
+    if (Auth::user()->banned === 1) {
+      return response()->json([
+        'message' => 'You can\'t edit auction,You are banned'
+      ], 403);
+    }
     $currentTime = Carbon::now('UTC')->setTimezone('Africa/Cairo')->format('Y-m-d H:i:s');
     // Check if the time is before auction start
     if ($currentTime < $auction->auction_start_time) {
@@ -311,7 +322,11 @@ class AuctionController extends Controller
     //  return response()->json([
     //   'message' => $auction
     // ], 200);
-    
+    if (Auth::user()->banned === 1) {
+      return response()->json([
+        'message' => 'You can\'t delete auction,You are banned'
+      ], 403);
+    }
   
     $user = Auth::user();
     $currentTime = Carbon::now('UTC')->setTimezone('Africa/Cairo')->format('Y-m-d H:i:s');
