@@ -1,9 +1,8 @@
-
-
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { environment } from '../environments/environment';
 
 export interface PaginatedNotifications {
   data: Notification[];
@@ -19,9 +18,6 @@ export interface PaginatedNotifications {
   providedIn: 'root'
 })
 export class NotificationService {
-  private apiUrl = 'http://localhost:8000/api/notifications';
-  // private apiUrl = 'http://172.18.0.4:80/api/notifications';
-
   constructor(private http: HttpClient) {}
 
   private handleError(error: HttpErrorResponse) {
@@ -50,7 +46,7 @@ export class NotificationService {
       .set('page', page.toString())
       .set('per_page', perPage.toString());
 
-    return this.http.get<PaginatedNotifications>(this.apiUrl, { headers, params })
+    return this.http.get<PaginatedNotifications>(`${environment.apiUrl}/notifications`, { headers, params })
       .pipe(catchError(this.handleError));
   }
 }

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { NotificationService } from '../../services/notification.service'; 
+import { NotificationService } from '../../services/notification.service';
 
 import { RouterModule, Router } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
@@ -14,17 +14,17 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
   imports: [FormsModule, ReactiveFormsModule, CommonModule, RouterModule],
 })
 export class NotificationComponent implements OnInit {
-  notifications: any[] = []; 
+  notifications: any[] = [];
 
-  constructor(private notificationService: NotificationService) {}
+  constructor(private notificationService: NotificationService) { }
 
   ngOnInit(): void {
     this.notificationService.getNotifications().subscribe(
       (data: any) => {
-        this.notifications = data; 
+        this.notifications = data;
       },
       (error) => {
-        console.error('Error fetching notifications:', error); 
+        console.error('Error fetching notifications:', error);
       }
     );
   }

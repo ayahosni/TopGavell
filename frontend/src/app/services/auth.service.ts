@@ -2,19 +2,16 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Observable, of, throwError } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
+import { environment } from '../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-
-  // private Url = 'http://172.18.0.4:80/api'; // ===> Docker URL
-  private Url = 'http://localhost:8000/api'; // ===> Localhost URL
-
   constructor(private http: HttpClient) { }
 
   register(userData: any): Observable<any> {
-    return this.http.post(`${this.Url}/register`, userData).pipe(
+    return this.http.post(`${environment.apiUrl}/register`, userData).pipe(
       map((response: any) => {
         if (response && response.token) {
           const userData = {
@@ -34,7 +31,7 @@ export class AuthService {
 
 
   logIn(userData: any): Observable<any> {
-    return this.http.post(`${this.Url}/login`, userData).pipe(
+    return this.http.post(`${environment.apiUrl}/login`, userData).pipe(
       map((response: any) => {
         if (response && response.token) {
           const userData = {
@@ -61,7 +58,7 @@ export class AuthService {
         'Authorization': `Bearer ${token}` // Add token to Authorization header
       });
   
-      return this.http.get(`${this.Url}/logout`, { headers }).pipe(
+      return this.http.get(`${environment.apiUrl}/logout`, { headers }).pipe(
         tap(() => {
           localStorage.removeItem('user'); // Clear local storage after successful logout
         }),
@@ -78,7 +75,7 @@ export class AuthService {
 
 
   verifyEmail(email: string, otp: string): Observable<any> {
-    return this.http.post(`${this.Url}/email_verify`, { email, otp });
+    return this.http.post(`${environment.apiUrl}/email_verify`, { email, otp });
   }
 
   is_email_verified(): boolean {

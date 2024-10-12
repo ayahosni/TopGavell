@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
+import { environment } from '../environments/environment';
 
 export interface Bid {
   bid_amount: string;
@@ -13,9 +14,6 @@ export interface Bid {
   providedIn: 'root'
 })
 export class BidService {
-
-  private apiUrl = 'http://localhost:8000/api'; // API URL
-  // private apiUrl = 'http://172.18.0.4:80/api';
 
   constructor(private http: HttpClient) { }
 
@@ -37,12 +35,12 @@ export class BidService {
   placeBid(auctionId: string, bidAmount: number): Observable<any> {
     const headers = this.getAuthHeaders();
     const options = headers ? { headers } : {};
-    return this.http.post(`${this.apiUrl}/${auctionId}/bids`, { bid_amount: bidAmount }, options);
+    return this.http.post(`${environment.apiUrl}/${auctionId}/bids`, { bid_amount: bidAmount }, options);
   }
 
   getBidsByAuctionId(auctionId: string): Observable<any> {
     const headers = this.getAuthHeaders();
     const options = headers ? { headers } : {};
-    return this.http.get<any>(`${this.apiUrl}/${auctionId}/bids`, options);
+    return this.http.get<any>(`${environment.apiUrl}/${auctionId}/bids`, options);
   }
 }

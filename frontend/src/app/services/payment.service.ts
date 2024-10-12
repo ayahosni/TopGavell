@@ -7,8 +7,6 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class PaymentService {
-  private apiUrl = 'http://localhost:8000/api';
-  // private apiUrl = 'http://172.18.0.4:80/api';
   constructor(private http: HttpClient) { }
 
   private getAuthHeaders(includeContentType: boolean = true): HttpHeaders | undefined {
@@ -37,6 +35,6 @@ export class PaymentService {
     const headers = this.getAuthHeaders();
     const options = headers ? { headers } : {};
     const body = {auction_id: auctionId,};
-    return this.http.post<{ hasPaid: boolean }>(`${this.apiUrl}/check-payment`, body,options);
+    return this.http.post<{ hasPaid: boolean }>(`${environment.apiUrl}/check-payment`, body,options);
   }
 }
