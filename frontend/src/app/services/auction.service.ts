@@ -107,7 +107,7 @@
 //       .set('page', page.toString())
 //       .set('per_page', perPage.toString());
 
-//     return this.http.get<PaginatedAuctions>(`${environment.apiUrl}/`, { params }).pipe(
+//     return this.http.get<PaginatedAuctions>(`${environment.apiUrl}/auction/`, { params }).pipe(
 //       catchError(this.handleError)
 //     );
 //   }
@@ -123,7 +123,7 @@
 //       .set('page', page.toString())
 //       .set('per_page', perPage.toString());
 
-//     return this.http.get<PaginatedAuctions>(`${environment.apiUrl}/active-auctions`, { params ,headers: this.getAuthHeaders()})
+//     return this.http.get<PaginatedAuctions>(`${environment.apiUrl}/auction/active-auctions`, { params ,headers: this.getAuthHeaders()})
 //       .pipe(catchError(this.handleError));
 //   }
 
@@ -137,7 +137,7 @@
 //       .set('page', page.toString())
 //       .set('per_page', perPage.toString());
 
-//     return this.http.get<PaginatedAuctions>(`${environment.apiUrl}/pending`, { params, headers: this.getAuthHeaders() })
+//     return this.http.get<PaginatedAuctions>(`${environment.apiUrl}/auction/pending`, { params, headers: this.getAuthHeaders() })
 //       .pipe(catchError(this.handleError));
 //   }
 //   /**
@@ -149,7 +149,7 @@
 //       .set('page', page.toString())
 //       .set('per_page', perPage.toString());
 
-//     return this.http.get<PaginatedAuctions>(`${environment.apiUrl}/approved`, { params, headers: this.getAuthHeaders()  })
+//     return this.http.get<PaginatedAuctions>(`${environment.apiUrl}/auction/approved`, { params, headers: this.getAuthHeaders()  })
 //       .pipe(catchError(this.handleError));
 //   }
 
@@ -165,7 +165,7 @@
 //       .set('page', page.toString())
 //       .set('per_page', perPage.toString());
 
-//     return this.http.get<PaginatedAuctions>(`${environment.apiUrl}/search`, { params: httpParams })
+//     return this.http.get<PaginatedAuctions>(`${environment.apiUrl}/auction/search`, { params: httpParams })
 //       .pipe(catchError(this.handleError));
 //   }
 
@@ -178,7 +178,7 @@
 //     if (!headers) {
 //       return throwError('Token is missing. Please log in.'); // Return error if token is missing
 //     }
-//     return this.http.get<any>(`${environment.apiUrl}/${id}`, { headers })
+//     return this.http.get<any>(`${environment.apiUrl}/auction/${id}`, { headers })
 //       .pipe(
 //         map(response => response.data || []),
 //         catchError(this.handleError)
@@ -195,7 +195,7 @@
 //     const headers = this.getAuthHeaders(!isFormData);
 //     const options = headers ? { headers } : {};
 
-//     return this.http.put<Auction>(`${environment.apiUrl}/${id}`, auctionData, options)
+//     return this.http.put<Auction>(`${environment.apiUrl}/auction/${id}`, auctionData, options)
 //       .pipe(catchError(this.handleError));
 //   }
 
@@ -208,7 +208,7 @@
 //     if (!headers) {
 //       return throwError('Token is missing. Please log in.');
 //     }
-//     return this.http.delete(`${environment.apiUrl}/${id}`, { headers })
+//     return this.http.delete(`${environment.apiUrl}/auction/${id}`, { headers })
 //       .pipe(catchError(this.handleError));
 //   }
 
@@ -217,7 +217,7 @@
 //     if (!headers) {
 //       return throwError('Token is missing. Please log in.');
 //     }
-//     return this.http.post(`${environment.apiUrl}/${id}/approve`, {}, { headers })
+//     return this.http.post(`${environment.apiUrl}/auction/${id}/approve`, {}, { headers })
 //       .pipe(catchError(this.handleError));
 //   }
 
@@ -230,7 +230,7 @@
 //     if (!headers) {
 //       return throwError('Token is missing. Please log in.');
 //     }
-//     return this.http.post(`${environment.apiUrl}/${id}/reject`, {}, { headers })
+//     return this.http.post(`${environment.apiUrl}/auction/${id}/reject`, {}, { headers })
 //       .pipe(catchError(this.handleError));
 //   }
 
@@ -239,7 +239,7 @@
 //       .set('page', page.toString())
 //       .set('per_page', perPage.toString());
 
-//     return this.http.get<PaginatedAuctions>(`${environment.apiUrl}/finished`, { params, headers: this.getAuthHeaders() })
+//     return this.http.get<PaginatedAuctions>(`${environment.apiUrl}/auction/finished`, { params, headers: this.getAuthHeaders() })
 //       .pipe(catchError(this.handleError));
 //   }
 
@@ -318,7 +318,7 @@ export class AuctionService {
       .set('page', page.toString())
       .set('per_page', perPage.toString());
 
-    return this.http.get<PaginatedAuctions>(`${environment.apiUrl}/`, { params })
+    return this.http.get<PaginatedAuctions>(`${environment.apiUrl}/auction/`, { params })
       .pipe(catchError(this.handleError));
   }
 
@@ -333,7 +333,7 @@ export class AuctionService {
       .set('page', page.toString())
       .set('per_page', perPage.toString());
 
-    return this.http.get<PaginatedAuctions>(`${environment.apiUrl}/active-auctions`, { params })
+    return this.http.get<PaginatedAuctions>(`${environment.apiUrl}/auction/active-auctions`, { params })
       .pipe(catchError(this.handleError));
   }
 
@@ -348,7 +348,7 @@ export class AuctionService {
       .set('page', page.toString())
       .set('per_page', perPage.toString());
 
-    return this.http.get<PaginatedAuctions>(`${environment.apiUrl}/pending`, { params, headers: this.getAuthHeaders() })
+    return this.http.get<PaginatedAuctions>(`${environment.apiUrl}/auction/pending`, { params, headers: this.getAuthHeaders() })
       .pipe(catchError(this.handleError));
   }
 
@@ -363,7 +363,7 @@ export class AuctionService {
       .set('page', page.toString())
       .set('per_page', perPage.toString());
 
-    return this.http.get<PaginatedAuctions>(`${environment.apiUrl}/approved`, { params })
+    return this.http.get<PaginatedAuctions>(`${environment.apiUrl}/auction/approved`, { params })
       .pipe(catchError(this.handleError));
   }
 
@@ -380,7 +380,7 @@ export class AuctionService {
       .set('page', page.toString())
       .set('per_page', perPage.toString());
 
-    return this.http.get<PaginatedAuctions>(`${environment.apiUrl}/search`, { params: httpParams })
+    return this.http.get<PaginatedAuctions>(`${environment.apiUrl}/auction/search`, { params: httpParams })
       .pipe(catchError(this.handleError));
   }
 
@@ -390,7 +390,7 @@ export class AuctionService {
    * @returns 
    */
   getAuctionById(id: string): Observable<any> {
-    return this.http.get<any>(`${environment.apiUrl}/${id}`)
+    return this.http.get<any>(`${environment.apiUrl}/auction/${id}`)
       .pipe(
         map(response => response.data || []),
         catchError(this.handleError)
@@ -421,7 +421,7 @@ export class AuctionService {
     const headers = this.getAuthHeaders(!isFormData);
     const options = headers ? { headers } : {};
 
-    return this.http.put<Auction>(`${environment.apiUrl}/${id}`, auctionData, options)
+    return this.http.put<Auction>(`${environment.apiUrl}/auction/${id}`, auctionData, options)
       .pipe(catchError(this.handleError));
   }
 
@@ -435,7 +435,7 @@ export class AuctionService {
     if (!headers) {
       return throwError('Token is missing. Please log in.');
     }
-    return this.http.delete(`${environment.apiUrl}/${id}`, { headers })
+    return this.http.delete(`${environment.apiUrl}/auction/${id}`, { headers })
       .pipe(catchError(this.handleError));
   }
 
@@ -446,7 +446,7 @@ export class AuctionService {
       return throwError('Token is missing. Please log in.');
     }
 
-    return this.http.put(`${environment.apiUrl}/${id}/restore`, {}, { headers });
+    return this.http.put(`${environment.apiUrl}/auction/${id}/restore`, {}, { headers });
   }
 
   /**
@@ -459,7 +459,7 @@ export class AuctionService {
     if (!headers) {
       return throwError('Token is missing. Please log in.');
     }
-    return this.http.post(`${environment.apiUrl}/${id}/approve`, {}, { headers })
+    return this.http.post(`${environment.apiUrl}/auction/${id}/approve`, {}, { headers })
       .pipe(catchError(this.handleError));
   }
 
@@ -473,7 +473,7 @@ export class AuctionService {
     if (!headers) {
       return throwError('Token is missing. Please log in.');
     }
-    return this.http.post(`${environment.apiUrl}/${id}/reject`, {}, { headers })
+    return this.http.post(`${environment.apiUrl}/auction/${id}/reject`, {}, { headers })
       .pipe(catchError(this.handleError));
   }
 
@@ -488,7 +488,7 @@ export class AuctionService {
       .set('page', page.toString())
       .set('per_page', perPage.toString());
 
-    return this.http.get<PaginatedAuctions>(`${environment.apiUrl}/finished`, { params })
+    return this.http.get<PaginatedAuctions>(`${environment.apiUrl}/auction/finished`, { params })
       .pipe(catchError(this.handleError));
   }
 
@@ -520,7 +520,7 @@ export class AuctionService {
       .set('page', page.toString())
       .set('per_page', perPage.toString());
 
-    return this.http.get<PaginatedAuctions>(`${environment.apiUrl}/deleted`, { params, headers: this.getAuthHeaders() })
+    return this.http.get<PaginatedAuctions>(`${environment.apiUrl}/auction/deleted`, { params, headers: this.getAuthHeaders() })
       .pipe(catchError(this.handleError));
   }
   searchByCategory(categoryId: number, page: number = 1, perPage: number = 10): Observable<PaginatedAuctions> {
@@ -529,7 +529,7 @@ export class AuctionService {
       .set('page', page.toString())
       .set('per_page', perPage.toString());
 
-    return this.http.get<PaginatedAuctions>(`${environment.apiUrl}/search-by-category`, { params: httpParams })
+    return this.http.get<PaginatedAuctions>(`${environment.apiUrl}/auction/search-by-category`, { params: httpParams })
       .pipe(catchError(this.handleError));
   }
     /**
@@ -542,7 +542,7 @@ export class AuctionService {
         .set('page', page.toString())
         .set('per_page', perPage.toString());
   
-      return this.http.get<PaginatedAuctions>(`${environment.apiUrl}/myAuctions`, { params, headers: this.getAuthHeaders() })
+      return this.http.get<PaginatedAuctions>(`${environment.apiUrl}/auction/myAuctions`, { params, headers: this.getAuthHeaders() })
         .pipe(catchError(this.handleError));
     }
 }
