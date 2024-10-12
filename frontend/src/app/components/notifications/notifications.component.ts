@@ -4,6 +4,24 @@ import { RouterModule, Router } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
+
+interface Notification {
+  id: string;
+  data: {
+    auction: string;  // اسم المزاد
+    user: string;       // اسم المستخدم الذي قام بالتعليق
+    content: string;    // محتوى التعليق أو الإشعار
+  };
+  created_at: string;   // تاريخ الإشعار
+}
+
+interface PaginatedNotifications {
+  current_page: number;
+  data: Notification[]; 
+  last_page: number;
+  total: number;
+}
 
 @Component({
   standalone: true,

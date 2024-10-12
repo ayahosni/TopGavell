@@ -17,6 +17,7 @@ class NewBidNotification extends Notification
     {
         $this->auction = $auction;
         $this->bid = $bid;
+        
     }
 
     /**
