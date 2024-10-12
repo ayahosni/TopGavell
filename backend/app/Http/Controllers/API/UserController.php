@@ -26,15 +26,15 @@ class UserController extends Controller
      */
     public function index()
     {
-        $user = auth()->user();
- 
+        $user = Auth::user();
+
         if ($user->role !== 'admin') {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
-    
+
         return CustomerResource::collection(Customer::all());
     }
-    
+
 
     /**
      */
@@ -108,41 +108,41 @@ class UserController extends Controller
     }
 
     /**
-     */////////////////////////////////////////////////////////////////////////////////////////
+     */ ////////////////////////////////////////////////////////////////////////////////////////
     public function login(Request $request)
-{
-    $validation = Validator::make(
-        $request->all(),
-        [
-            'email' => 'required|email',
-            'password' => 'required',
-        ]
-    );
+    {
+        $validation = Validator::make(
+            $request->all(),
+            [
+                'email' => 'required|email',
+                'password' => 'required',
+            ]
+        );
 
-    if ($validation->fails()) {
-        return response()->json($validation->messages(), 400);
+        if ($validation->fails()) {
+            return response()->json($validation->messages(), 400);
+        }
+
+        $user = User::where('email', $request->email)->first();
+
+        if (! $user || ! Hash::check($request->password, $user->password)) {
+            return response()->json(['message' => 'Invalid Username or Password'], 400);
+        }
+
+        $userdata = null;
+        if ($user->role === 'admin') {
+            $userdata = new UserRescource($user);
+        } else {
+            $cust = Customer::where('user_id', $user->id)->first();
+            $userdata = new CustomerResource($cust);
+        }
+
+        return response()->json([
+            'message' => 'User successfully logged in',
+            'user' => $userdata,
+            'token' => $user->createToken('auth_token')->plainTextToken,
+        ]);
     }
-
-    $user = User::where('email', $request->email)->first();
-
-    if (! $user || ! Hash::check($request->password, $user->password)) {
-        return response()->json(['message' => 'Invalid Username or Password'], 400);
-    }
-
-    $userdata = null;
-    if ($user->role === 'admin') {
-        $userdata = new UserRescource($user); 
-    } else {
-        $cust = Customer::where('user_id', $user->id)->first();
-        $userdata = new CustomerResource($cust);
-    }
-
-    return response()->json([
-        'message' => 'User successfully logged in',
-        'user' => $userdata,
-        'token' => $user->createToken('auth_token')->plainTextToken,
-    ]);
-}
 
     #######################################################################################################    
 
@@ -160,7 +160,7 @@ class UserController extends Controller
     {
         $user = $request->user();  // Get the logged-in user
         $customer = Customer::where('user_id', $user->id)->first();  // Retrieve the associated customer profile
-    
+
         if ($customer) {
             // Return customer resource if the user has a customer profile
             return response()->json([
@@ -179,13 +179,13 @@ class UserController extends Controller
     //////////////////////////////////////////////////////////////////////////////
     public function updateProfile(Request $request)
     {
-        $user = auth()->user();
+        $user = Auth::user();
         $customer = Customer::where('user_id', $user->id)->first();
-        
+
         $validation = Validator::make($request->all(), [
             'name' => ['sometimes', 'string', 'max:255'],
             'password' => [
-                'sometimes',  
+                'sometimes',
                 'string',
                 'min:8',
                 'confirmed',
@@ -194,56 +194,55 @@ class UserController extends Controller
             'phone_number' => ['sometimes', 'string'],
             'address' => ['sometimes', 'string'],
         ]);
-        
+
         if ($validation->fails()) {
             return response()->json($validation->messages(), 400);
         }
-        
+
         if ($request->has('name')) {
             $user->name = $request->name;
         }
-    
+
         if ($customer) {
             if ($request->has('phone_number')) {
                 $customer->phone_number = $request->phone_number;
             }
-    
+
             if ($request->has('address')) {
                 $customer->address = $request->address;
             }
         }
-    
+
         if ($request->filled('password')) {
             $user->password = Hash::make($request->password);
         }
-        
+
         // Save the updated user
-        $user->save();
-    
+        // $user->save();
+
         // Save the updated customer profile if it exists
         if ($customer) {
             $customer->save();
         }
-        
+
         // Return a response with the updated user and customer data
-        
-            if($user->role=="admin"){
-                return response()->json([
-            'message' => 'Profile updated successfully!',
-            'user' => $user,
-        ], 200);
-            }
+
+        if ($user->role == "admin") {
             return response()->json([
                 'message' => 'Profile updated successfully!',
                 'user' => $user,
-            'customer' => $customer, 
-                    ], 200);
-
+            ], 200);
+        }
+        return response()->json([
+            'message' => 'Profile updated successfully!',
+            'user' => $user,
+            'customer' => $customer,
+        ], 200);
     }
-    
-    
-    
-    
+
+
+
+
 
     /**
      */
