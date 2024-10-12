@@ -15,6 +15,7 @@ import { GuidesComponent } from './components/guides/guides.component';
 import { EmailVerficationComponent } from './components/email-verfication/email-verfication.component';
 import { FinishedAuctionsComponent } from './components/finished-auctions/finished-auctions.component';
 import { NotificationComponent } from './components/notifications/notifications.component';
+import { CustomersComponent } from './components/customers/customers.component';
 
 @Component({
   selector: 'app-root',
@@ -36,7 +37,8 @@ import { NotificationComponent } from './components/notifications/notifications.
     EmailVerficationComponent,
     CommentsComponent,
     NotificationComponent,
-    FinishedAuctionsComponent
+    FinishedAuctionsComponent,
+    CustomersComponent
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']  

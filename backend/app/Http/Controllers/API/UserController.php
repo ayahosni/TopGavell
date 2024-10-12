@@ -26,7 +26,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $customers = Customer::with('user')->paginate(10);
+        $customers = Customer::with('user')->paginate(15);
         return response()->json([
             'data' => $customers->map(function ($customer) {
                 return [
