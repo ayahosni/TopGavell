@@ -36,9 +36,11 @@ class NewCommentNotification extends Notification
     public function toArray(object $notifiable): array
     {
         return [
-            'auction' => $this->auction->item_name,
-            "user"=>$this->comment->user->name ."commented on this auction",
-            "content"=>$this->comment->comment_text];
+            "auction_id"=>$this->auction->id,
+            "item"=>$this->auction->item_name,
+            "message"=>$this->comment->user->name ."commented on this auction",
+            "content"=>$this->comment->comment_text
+        ];
     }
     /**
 

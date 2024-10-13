@@ -8,8 +8,8 @@ import { RouterModule } from '@angular/router';
 import { SafeUrlPipe } from '../../pipes/safe-url.pipe';
 
 interface Category {
- id: number;
-  name: string; 
+  id: number;
+  name: string;
   image: string;
 }
 
@@ -34,25 +34,25 @@ export class HomeComponent implements OnInit {
   isLoggedIn: boolean = false;
   isRegistered: boolean = false;
   userName: string = '';
-  isAdmin:boolean=false;
+  isAdmin: boolean = false;
 
 
   auctions: Auction[] = [];
   filteredAuctions: Auction[] = [];
   searchTerm: string = '';
-  currentPage: number = 1;
-  totalPages: number = 0;
+  currentPage: any;
+  totalPages: any;
   perPage: number = 10;
 
-    categories: Category[] = [
-      { id: 1, name: 'Furniture', image: 'assets/images/furniture.jpg' },
-      { id: 2, name: 'Home Decor', image: 'assets/images/decor.jpg' },
-      { id: 3, name: 'Fine Art', image: 'assets/images/art.jpg' },
-      { id: 4, name: 'Birds', image: 'assets/images/bird.jpg' },
-      { id: 5, name: 'Animals', image: 'assets/images/animal.jpg' },
-      { id: 6, name: 'Motor Vehicles', image: 'assets/images/vehicles.jpg' }
-    ];
-    
+  categories: Category[] = [
+    { id: 1, name: 'Furniture', image: 'assets/images/furniture.jpg' },
+    { id: 2, name: 'Home Decor', image: 'assets/images/decor.jpg' },
+    { id: 3, name: 'Fine Art', image: 'assets/images/art.jpg' },
+    { id: 4, name: 'Birds', image: 'assets/images/bird.jpg' },
+    { id: 5, name: 'Animals', image: 'assets/images/animal.jpg' },
+    { id: 6, name: 'Motor Vehicles', image: 'assets/images/vehicles.jpg' }
+  ];
+
 
   topAuctions: TopAuction[] = [
     {
@@ -86,15 +86,15 @@ export class HomeComponent implements OnInit {
     const userData = localStorage.getItem('user');
     if (userData) {
       const user = JSON.parse(userData);
-      this.userName = user.name; 
-      this.isLoggedIn = true;  
+      this.userName = user.name;
+      this.isLoggedIn = true;
       this.isRegistered = true;
-      if(user.role=="admin"){
-        this.isAdmin=true;
+      if (user.role == "admin") {
+        this.isAdmin = true;
       }
     }
     console.log(this.isAdmin);
-    
+
   }
 
   /**
@@ -108,17 +108,18 @@ export class HomeComponent implements OnInit {
         this.filteredAuctions = [...this.auctions];
         this.currentPage = response.meta.current_page;
         this.totalPages = response.meta.last_page;
+        console.log(this.totalPages[0]);
         this.auctions.forEach((auction) => {
           // if(this.User==auction.auction_id){
           //   this.isAuctionOwner=true;
           // }
-        //   console.log(
-        //     'currentTime===>'+currentTime+'\n'+
-        //     'auctionEndTime===>'+this.auctionEndTime+'\n'+
-        //     'isAuctionEnded===>'+this.isAuctionEnded+'\n'+
-        //     'auctionStartTime===>'+this.auctionStartTime+'\n'+
-        //     'isAuctionStarted===>'+this.isAuctionStarted
-        //   )
+          //   console.log(
+          //     'currentTime===>'+currentTime+'\n'+
+          //     'auctionEndTime===>'+this.auctionEndTime+'\n'+
+          //     'isAuctionEnded===>'+this.isAuctionEnded+'\n'+
+          //     'auctionStartTime===>'+this.auctionStartTime+'\n'+
+          //     'isAuctionStarted===>'+this.isAuctionStarted
+          //   )
         })
 
       },
@@ -137,7 +138,7 @@ export class HomeComponent implements OnInit {
     if (isAuctionBeforeStarting) {
       return 'before starting';
     }
-    if(isAuctionStarted && !isAuctionEnded){
+    if (isAuctionStarted && !isAuctionEnded) {
       return 'opened'
     }
     return 'closed'
@@ -147,7 +148,7 @@ export class HomeComponent implements OnInit {
     const userData = localStorage.getItem('user');
     if (userData) {
       const user = JSON.parse(userData);
-      if(user.id==auction.auction_id){
+      if (user.id == auction.auction_id) {
         return true;
       }
     }
@@ -225,43 +226,36 @@ export class HomeComponent implements OnInit {
     console.log('Selected Category ID:', categoryId);
     this.auctionService.searchByCategory(categoryId).subscribe({
       next: (response: PaginatedAuctions) => {
-        this.filteredAuctions = response.data; 
-        this.currentPage = response.meta.current_page; 
-        this.totalPages = response.meta.last_page; 
+        this.filteredAuctions = response.data;
+        this.currentPage = response.meta.current_page;
+        this.totalPages = response.meta.last_page;
         console.log('Auctions for Category ID:', categoryId, this.filteredAuctions);
-        
-       /*  if (this.filteredAuctions.length > 0) {
-          const firstAuctionId = this.filteredAuctions[0].id; 
-          console.log('First Auction ID:', firstAuctionId); 
-          this.goToAuctionDetails(firstAuctionId); 
-        } else {
-          console.warn('No auctions found for the selected category.');
-        } */
+
+        /*  if (this.filteredAuctions.length > 0) {
+           const firstAuctionId = this.filteredAuctions[0].id; 
+           console.log('First Auction ID:', firstAuctionId); 
+           this.goToAuctionDetails(firstAuctionId); 
+         } else {
+           console.warn('No auctions found for the selected category.');
+         } */
       },
       error: (err) => {
         console.error('Error fetching auctions by category:', err);
       }
     });
-}
+  }
 
-  
-  
-  
-  
-  
-  /**
-   */
   nextPage(): void {
-    if (this.currentPage < this.totalPages) {
-      this.onPageChange(this.currentPage + 1);
+    if (this.currentPage[0] < this.totalPages[0]) {
+      this.onPageChange(this.currentPage[0] + 1);
     }
   }
 
   /**
    */
   prevPage(): void {
-    if (this.currentPage > 1) {
-      this.onPageChange(this.currentPage - 1);
+    if (this.currentPage[0] > 1) {
+      this.onPageChange(this.currentPage[0] - 1);
     }
   }
   goToAuctionDetails(auctionId: string): void {

@@ -16,12 +16,8 @@
     </div>
     <div class="search-container">
       <i class="map fa-solid fa-location-dot"></i>
-      <input 
-        type="text" 
-        [(ngModel)]="searchTerm" 
-        placeholder="Search by state, city or auction" 
-        (keyup.enter)="onSearch()"
-      />
+      <input type="text" [(ngModel)]="searchTerm" placeholder="Search by state, city or auction"
+        (keyup.enter)="onSearch()" />
       <button type="button" (click)="onSearch()">Search Auctions</button>
     </div>
   </div>
@@ -56,9 +52,11 @@
     <h2>Auction Listings</h2>
     <div *ngIf="filteredAuctions.length > 0; else noAuctions">
       <div class="auction-items">
-        <div *ngFor="let auction of filteredAuctions" class="auction-item" (click)="goToAuctionDetails(auction.auction_id)" style="cursor: pointer;">
+        <div *ngFor="let auction of filteredAuctions" class="auction-item"
+          (click)="goToAuctionDetails(auction.auction_id)" style="cursor: pointer;">
           <div *ngIf="auction.item_media && auction.item_media.length > 0">
-            <img [src]="'http://localhost:8000/uploads/images/' + auction.item_media[0].path" alt="{{ auction.item_name }}">
+            <img [src]="'http://localhost:8000/uploads/images/' + auction.item_media[0].path"
+              alt="{{ auction.item_name }}">
           </div>
           <div class="auction-info">
             <p class="item-description">
@@ -72,18 +70,18 @@
             </div>
             <p class="auction-end-date">Ends: {{ auction.auction_end_time | date:'short' }}</p>
 
-            <p class="auction-status"
-              [ngClass]="{
+            <p class="auction-status" [ngClass]="{
               'opened': checkAuctionStatus(auction)==='opened',
               'closed': checkAuctionStatus(auction)==='closed'
               }">
               {{ checkAuctionStatus(auction) | titlecase }}
             </p>
 
-            <div class="bid-btn" *ngIf="checkAuctionStatus(auction) === 'opened'">
-              <button routerLink="/payment-verification">Bid Now</button>
+            <div class="bid-btn"
+              *ngIf="checkAuctionStatus(auction) === 'opened' && !(isAdmin || checkAuctionOwnwer(auction))">
+              <button routerLink="/payment">Bid Now</button>
             </div>
-            
+
 
             <div *ngIf="isAdmin || checkAuctionOwnwer(auction)">
               <div class="bid-btn" *ngIf="checkAuctionStatus(auction) === 'before starting'">
@@ -91,7 +89,8 @@
               </div>
             </div>
 
-            
+
+
           </div>
         </div>
       </div>
@@ -102,10 +101,10 @@
   </div>
 
   <!-- Pagination Controls -->
-  <div class="pagination-controls" *ngIf="filteredAuctions.length > 0;">
-    <button (click)="prevPage()" [disabled]="currentPage === 1">Previous</button>
-    <button (click)="nextPage()" [disabled]="currentPage === totalPages">Next</button>
-    <span>Page {{ currentPage }} of {{ totalPages }}</span>
+  <div class="pagination-controls" *ngIf="totalPages[0] > 1;">
+    <button (click)="prevPage()" [disabled]="currentPage[0] === 1">Previous</button>
+    <button (click)="nextPage()" [disabled]="currentPage[0] === totalPages[0]">Next</button>
+    <span>Page {{ currentPage[0] }} of {{ totalPages[0] }}</span>
   </div>
 </main>
 

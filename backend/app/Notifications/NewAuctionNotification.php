@@ -41,5 +41,4 @@ class NewAuctionNotification extends Notification
         ];
     }
 
- 
 }

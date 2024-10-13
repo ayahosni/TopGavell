@@ -28,9 +28,9 @@ class AuctionEndNotification extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-                    ->subject('Auction ended')
-                    ->line('The auction ' . $this->auction->title . ' has ended.')
-                    ->action('View Auction', url('/auctions/' . $this->auction->id));
+            ->subject('Auction ended')
+            ->line('The auction ' . $this->auction->title . ' has ended.')
+            ->action('View Auction', url('/auctions/' . $this->auction->id));
     }
 
     public function toArray($notifiable)

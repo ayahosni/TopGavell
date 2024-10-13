@@ -11,19 +11,28 @@ use App\Models\Comment;
 
 class NotificationController extends Controller
 {
-    public function index(Request $request)
-    {
-        $notifications = $request->user()->unreadNotifications;
+  public function index(Request $request)
+  {
+    $notifications = $request->user()->notifications()
+    ->paginate($request->per_page);
 
-        // Assuming 'data' is the key containing the notification data
-        $notificationData = $notifications->map(function ($notification) {
-            return [
-                'id' => $notification->id,
-                'data' => $notification->data,
-                'created_at' => $notification->created_at,
-            ];
-        });
-    
-        return response()->json($notificationData);
-    }    
+    $notificationData = $notifications->map(function ($notification) {
+      return [
+        'id' => $notification->id,
+        'data' => $notification->data,
+        'created_at' => $notification->created_at,
+      ];
+    });
+
+    // Return a paginated JSON response
+    return response()->json([
+      'data' => $notificationData,
+      'meta' => [
+        'current_page' => $notifications->currentPage(),
+        'last_page' => $notifications->lastPage(),
+        'per_page' => $notifications->perPage(),
+        'total' => $notifications->total(),
+      ]
+    ]);
+  }
 }
