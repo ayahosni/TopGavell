@@ -43,7 +43,7 @@
       Cutting-edge auction platform. Competitive pricing. Unlock endless opportunities and watch your auction business
       thrive with just a few simple steps.
     </p>
-    <button class="btn" routerLink="/addAuction">Sell on TOPGAVEL</button>
+<button class="btn" routerLink="/addAuction" *ngIf="!isAdmin">Sell on TOPGAVEL</button>
   </div>
   <!-- End Selling Section -->
 

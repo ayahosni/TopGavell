@@ -26,6 +26,7 @@ import { MyAuctionsComponent } from './components/my-auctions/my-auctions.compon
 import { FinishedAuctionsComponent } from './components/finished-auctions/finished-auctions.component';
 import { NotificationComponent } from './components/notifications/notifications.component';
 import { CustomersComponent } from './components/customers/customers.component';
+import { NonAdminGuard } from './guards/non-admin.guard'; 
 
 export const routes: Routes = [
     { path: '', component: HomeComponent },
@@ -41,8 +42,8 @@ export const routes: Routes = [
     { path: 'email_verify', component: EmailVerficationComponent, canActivate: [authGuard] },
     { path: 'adminDashboard', component: AdminDashboardComponent, canActivate: [adminGuard] },
     { path: 'userDashboard', component: UserDashboardComponent, canActivate: [verifyemailGuard] },
-    { path: 'addAuction', component: AddAuctionComponent, canActivate: [verifyemailGuard] },
-    { path: 'auction/:auctionId/comments', component: CommentsComponent, canActivate: [verifyemailGuard] },
+    { path: 'addAuction',component: AddAuctionComponent,  canActivate: [verifyemailGuard, NonAdminGuard],},   
+     { path: 'auction/:auctionId/comments', component: CommentsComponent, canActivate: [verifyemailGuard] },
     { path: 'guides', component: GuidesComponent, canActivate: [verifyemailGuard] },
     { path: 'payment', component: PaymentComponent, canActivate: [verifyemailGuard] },
     { path: 'myauctions', component: MyAuctionsComponent, canActivate: [verifyemailGuard] },
