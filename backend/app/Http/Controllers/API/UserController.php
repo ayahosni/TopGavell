@@ -26,8 +26,29 @@ class UserController extends Controller
      */
     public function index()
     {
-        return CustomerResource::collection(Customer::all());
+        $customers = Customer::with('user')->paginate(15);
+        return response()->json([
+            'data' => $customers->map(function ($customer) {
+                return [
+                    // 'id' => $customer->id,
+                    'id' => $customer->user_id,
+                    'name' => $customer->user->name,
+                    'email' => $customer->user->email,
+                    'phone number' => $customer->phone_number,
+                    'address' => $customer->address,
+                    'banned' => $customer->user->banned
+                ];
+            }),
+            'meta' => [
+                'current_page' => $customers->currentPage(),
+                'last_page' => $customers->lastPage(),
+                'per_page' => $customers->perPage(),
+                'total' => $customers->total()
+            ]
+        ]);
     }
+
+
 
     /**
      */
@@ -101,7 +122,7 @@ class UserController extends Controller
     }
 
     /**
-     */
+     */ ////////////////////////////////////////////////////////////////////////////////////////
     public function login(Request $request)
     {
         $validation = Validator::make(
@@ -122,14 +143,14 @@ class UserController extends Controller
             return response()->json(['message' => 'Invalid Username or Password'], 400);
         }
 
-        $cust = Customer::where('user_id', $user->id)->first();
-
-        if (!$cust) {
+        $userdata = null;
+        if ($user->role === 'admin') {
             $userdata = new UserRescource($user);
         } else {
+            $cust = Customer::where('user_id', $user->id)->first();
             $userdata = new CustomerResource($cust);
         }
-        
+
         return response()->json([
             'message' => 'User successfully logged in',
             'user' => $userdata,
@@ -147,83 +168,123 @@ class UserController extends Controller
         return response()->json(['message' => 'Logged out successfully'], 200);
     }
 
-    /**
-     */
+
+    //////////////////////////////////////////////////////////////////////////////
     public function profile(Request $request)
     {
-        $user = $request->user();
-        $customer = Customer::where('user_id', $user->id)->first();
+        $user = $request->user();  // Get the logged-in user
+        $customer = Customer::where('user_id', $user->id)->first();  // Retrieve the associated customer profile
 
         if ($customer) {
+            // Return customer resource if the user has a customer profile
             return response()->json([
                 'user' => new CustomerResource($customer),
+                'profile_image_url' => $user->profile_picture ? url('storage/' . $user->profile_picture) : null,
+            ], 200);
+        } else {
+            // Return user resource if no customer profile exists
+            return response()->json([
+                'user' => new UserRescource($user),
+                'profile_image_url' => $user->profile_picture ? url('storage/' . $user->profile_picture) : null,
             ], 200);
         }
-
-        return response()->json([
-            'message' => 'Customer not found.',
-        ], 404);
     }
 
-    /**
-     */
+    //////////////////////////////////////////////////////////////////////////////
     public function updateProfile(Request $request)
     {
-        $user = $request->user();
+        $user = Auth::user();
         $customer = Customer::where('user_id', $user->id)->first();
-    
-        if (!$customer) {
-            return response()->json([
-                'message' => 'Customer profile not found.',
-            ], 404);
-        }
-    
+
         $validation = Validator::make($request->all(), [
             'name' => ['sometimes', 'string', 'max:255'],
-            'email' => ['sometimes', 'string', 'email', 'max:255', 'unique:users,email,' . $user->id],
+            'password' => [
+                'sometimes',
+                'string',
+                'min:8',
+                'confirmed',
+                'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/'
+            ],
             'phone_number' => ['sometimes', 'string'],
             'address' => ['sometimes', 'string'],
-            'profile_picture' => ['sometimes', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
         ]);
-    
+
         if ($validation->fails()) {
             return response()->json($validation->messages(), 400);
         }
-    
+
         if ($request->has('name')) {
             $user->name = $request->name;
         }
-        if ($request->has('email')) {
-            $user->email = $request->email;
-            $user->is_email_verified = false; 
-        }
-      
-    
-        if ($request->hasFile('profile_picture')) {
-            if ($user->profile_picture) {
-                \Storage::delete('public/' . $user->profile_picture);
+
+        if ($customer) {
+            if ($request->has('phone_number')) {
+                $customer->phone_number = $request->phone_number;
             }
-    
-            $path = $request->file('profile_picture')->store('uploads/images', 'public');
-            $user->profile_picture = $path;
+
+            if ($request->has('address')) {
+                $customer->address = $request->address;
+            }
         }
-    
-        $user->save();
-    
-        if ($request->has('phone_number')) {
-            $customer->phone_number = $request->phone_number;
+
+        if ($request->filled('password')) {
+            $user->password = Hash::make($request->password);
         }
-        if ($request->has('address')) {
-            $customer->address = $request->address;
+
+        // Save the updated user
+        // $user->save();
+
+        // Save the updated customer profile if it exists
+        if ($customer) {
+            $customer->save();
         }
-        $customer->save();
-    
+
+        // Return a response with the updated user and customer data
+
+        if ($user->role == "admin") {
+            return response()->json([
+                'message' => 'Profile updated successfully!',
+                'user' => $user,
+            ], 200);
+        }
         return response()->json([
-            'message' => 'Profile updated successfully.',
-            'user' => new CustomerResource($customer),
-            'profile_image_url' => $user->profile_picture ? url('storage/' . $user->profile_picture) : null,
+            'message' => 'Profile updated successfully!',
+            'user' => $user,
+            'customer' => $customer,
         ], 200);
     }
+
+    public function banUser($id)
+    {
+        $ad = auth()->user();
+        $admin = $ad->role == "admin";
+        if ($admin) {
+            $user = User::findOrFail($id);
+            $user->banned = true;
+            $user->save();
+
+            return response()->json(['message' => 'User banned successfully.']);
+        } else {
+            return response()->json(['message' => 'Unautherized.']);
+        }
+    }
+
+    public function unbanUser($id)
+    {
+        $ad = auth()->user();
+        $admin = $ad->role == "admin";
+
+        if ($admin) {
+            $user = User::findOrFail($id);
+            $user->banned = false;
+            $user->save();
+
+            return response()->json(['message' => 'User unbanned successfully.']);
+        } else {
+            return response()->json(['message' => 'Unautherized.']);
+        }
+    }
+
     /**
      */
     public function show(User $user)

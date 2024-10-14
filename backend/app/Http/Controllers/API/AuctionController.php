@@ -19,7 +19,7 @@ class AuctionController extends Controller
 {
   public function __construct()
   {
-    $this->middleware('auth:sanctum')->only('store', 'update', 'destroy', 'pendingAuctions', 'approve', 'rejected');
+    $this->middleware('auth:sanctum')->only('store', 'update', 'destroy', 'pendingAuctions', 'approve', 'rejected',);
   }
 
   public function index(Request $request)
@@ -127,15 +127,17 @@ class AuctionController extends Controller
         ->get();
         // ->paginate(10);
     return AuctionResource::collection($finishedAuctions);
-  // }
+  }
   // return response()->json([
   //   'message' => 'Unautherized'
   // ], 401);
-}
+// }
+
+
   ////////////////////////////////////////////////////////////////////////////////////////////////////////
   public function store(Request $request)
   {
-    return response()->json(['message' => $request->all()], 403);
+    // return response()->json(['message' => $request->all()], 200);
     // Prevent admin users from creating auctions
     if (Auth::user()->role === 'admin') {
       return response()->json([
@@ -149,53 +151,66 @@ class AuctionController extends Controller
         'message' => 'Please verify your mail first.'
       ], 403);
     }
+    
+    if (Auth::user()->banned === 1) {
+      return response()->json([
+        'message' => "You can't create an auction,You are banned"
+      ], 403);
+    }
+
 
     // Validation for auction data and images
-    $validation = Validator::make($request->all(), [
-      // 'category_id' => ['required', 'exists:categories,id'],
-      'item_name' => ['required', 'string', 'min:4', 'max:75'],
-      'item_description' => ['required', 'string', 'min:15', 'max:255'],
-      'starting_bid' => ['required', 'integer'],
-      'bid_increment' => ['required', 'integer'],
-      // 'auction_start_time' => ['required', 'date', 'after:now'],
-           'auction_start_time' => ['required', 'date', function ($attribute, $value, $fail) {
-            $startTime = \Carbon\Carbon::parse($value);
-          $minStartTime = \Carbon\Carbon::now()->addDay();
+    // $validation = Validator::make($request->all(), [
+    //   // 'category_id' => ['required', 'exists:categories,id'],
+    //   'item_name' => ['required', 'string', 'min:4', 'max:75'],
+    //   'item_description' => ['required', 'string', 'min:15', 'max:255'],
+    //   'starting_bid' => ['required', 'integer'],
+    //   'bid_increment' => ['required', 'integer'],
+    //   // 'auction_start_time' => ['required', 'date', 'after:now'],
+    //        'auction_start_time' => ['required', 'date', function ($attribute, $value, $fail) {
+    //         $startTime = \Carbon\Carbon::parse($value);
+    //       $minStartTime = \Carbon\Carbon::now()->addDay();
           
-          if ($startTime->lt($minStartTime)) {
-              $fail('The auction start time must be at least 24 hours from now.');
-          }
-      }], 
-      // 'auction_end_time' => ['required', 'date'],
-      'auction_end_time' => [
-        'required',
-        'date',
-        function ($attribute, $value, $fail) use ($request) {
-            $startTime = \Carbon\Carbon::parse($request->input('auction_start_time'));
-            $endTime = \Carbon\Carbon::parse($value);
+    //       if ($startTime->lt($minStartTime)) {
+    //           $fail('The auction start time must be at least 24 hours from now.');
+    //       }
+    //   }], 
+    //   // 'auction_end_time' => ['required', 'date'],
+    //   'auction_end_time' => [
+    //     'required',
+    //     'date',
+    //     function ($attribute, $value, $fail) use ($request) {
+    //         $startTime = \Carbon\Carbon::parse($request->input('auction_start_time'));
+    //         $endTime = \Carbon\Carbon::parse($value);
 
-            if ($endTime->lt($startTime->addHour())) {
-                $fail('The auction end time must be at least one hour after the auction start time.');
-            }
-        },
-    ],
-      'item_country' => ['required', 'string'],
-      'item_media.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
-    ]);
+    //         if ($endTime->lt($startTime->addHour())) {
+    //             $fail('The auction end time must be at least one hour after the auction start time.');
+    //         }
+    //     },
+    // ],
+    //   'item_country' => ['required', 'string'],
+    //   'item_media.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+    // ]);
 
     // Return validation errors if any
-    if ($validation->fails()) {
-      return response()->json($validation->messages(), 400);
-    }
+    // if ($validation->fails()) {
+    //   return response()->json($validation->messages(), 400);
+    // }
 
     // Retrieve customer linked to authenticated user
     $customer = Customer::where('user_id', Auth::id())->first();
     $data = $request->all();
-    $data['customer_id'] = $customer->id;
-    $data['category_id'] = 2;
-    $data['auction_actual_end_time'] = $data['auction_end_time'];
+    // $data['customer_id'] = $customer->id;
+    // $data['category_id'] = 2;
+    // $data.append('auction_actual_end_time', "aa"); // Adding a new key-value
 
+    // $data['auction_actual_end_time'] = 20;
+    
+    
+    $auction = Auction::find(2);
+    
     // Create the auction
+    return response()->json(['message' => $data], 200);
     $auction = Auction::create($data);
 
     if ($request->hasFile('item_media')) {
@@ -225,6 +240,11 @@ class AuctionController extends Controller
   {
     if (Auth::id() !== $auction->user_id) {
       return response()->json(['message' => 'Unauthorized'], 403);
+    }
+    if (Auth::user()->banned === 1) {
+      return response()->json([
+        'message' => 'You can\'t edit auction,You are banned'
+      ], 403);
     }
     $currentTime = Carbon::now('UTC')->setTimezone('Africa/Cairo')->format('Y-m-d H:i:s');
     // Check if the time is before auction start
@@ -302,10 +322,14 @@ class AuctionController extends Controller
     //  return response()->json([
     //   'message' => $auction
     // ], 200);
-    
+    if (Auth::user()->banned === 1) {
+      return response()->json([
+        'message' => 'You can\'t delete auction,You are banned'
+      ], 403);
+    }
   
     $user = Auth::user();
-    $currentTime = Carbon::now('UTC')->setTimezone('Europe/Bucharest')->format('Y-m-d H:i:s');
+    $currentTime = Carbon::now('UTC')->setTimezone('Africa/Cairo')->format('Y-m-d H:i:s');
     // Check if the time is before auction start
     if ($currentTime < $auction->auction_start_time) {
       // Check if the user is either the owner of the auction or an admin
@@ -322,6 +346,37 @@ class AuctionController extends Controller
       'message' => 'Unauthorized.'
     ], 403);
   }
+
+  public function restore($id)
+    {
+        // Find the soft-deleted auction by ID
+        $auction = Auction::withTrashed()->find($id);
+
+        // return response()->json(['message' => $auction], 200);
+
+
+        // Check if the auction exists and is soft-deleted
+        if (!$auction || !$auction->trashed()) {
+            return response()->json(['message' => 'Auction not found or not deleted'], 404);
+        }
+
+        
+        $user = Auth::user();
+        $currentTime = Carbon::now('UTC')->setTimezone('Europe/Bucharest')->format('Y-m-d H:i:s');
+        // Check if the time is before auction start
+        if ($currentTime < $auction->auction_start_time) {
+          // Check if the user is either the owner of the auction or an admin
+          if ($user->role === 'admin' || $user->id === $auction->customer->user_id) {
+          
+            // Restore the auction
+            $auction->restore();
+          
+            return response()->json(['message' => 'Auction restored successfully'], 200);
+          
+          }
+        }
+    }
+
 
   public function getDeletedAuctions(Request $request)
   {
@@ -372,6 +427,8 @@ class AuctionController extends Controller
     // ], 403);
 
   }
+
+  
 
   public function searchByCategory(Request $request)
   {

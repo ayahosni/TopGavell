@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { environment } from '../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -56,7 +57,7 @@ export class UserService {
    */
   getUserProfile(): Observable<any> {
     const headers = this.getAuthHeaders();
-    return this.http.get(`${this.apiUrl}/profile`, { headers })
+    return this.http.get(`${environment.apiUrl}/profile`, { headers })
       .pipe(
         catchError(this.handleError)
       );
@@ -69,7 +70,7 @@ export class UserService {
    */
   updateUserProfile(data: any): Observable<any> {
     const headers = this.getAuthHeaders(); 
-    return this.http.put(`${this.apiUrl}/edit_profile`, data, { headers })
+    return this.http.put(`${environment.apiUrl}/profile`, data, { headers })
       .pipe(
         catchError(this.handleError)
       );
@@ -81,10 +82,30 @@ export class UserService {
    * @returns
    */
   updateUserProfileWithImage(formData: FormData): Observable<any> {
-    const headers = this.getAuthHeaders(false); // Don't include 'Content-Type' when using FormData
-    return this.http.put(`${this.apiUrl}/edit_profile`, formData, { headers })
+    const headers = this.getAuthHeaders(false); 
+    return this.http.put(`${environment.apiUrl}/profile`, formData, { headers })
       .pipe(
         catchError(this.handleError)
       );
   }
+  getCustomers(page: number = 1): Observable<any> {
+    const headers = this.getAuthHeaders();
+    return this.http.get(`${environment.apiUrl}/customers?page=${page}`, { headers })
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  banUser(userId: number): Observable<any> {
+    const headers = this.getAuthHeaders();
+    return this.http.post(`${environment.apiUrl}/users/${userId}/ban`, {}, { headers })
+      .pipe(catchError(this.handleError));
+  }
+  
+  unbanUser(userId: number): Observable<any> {
+    const headers = this.getAuthHeaders();
+    return this.http.post(`${environment.apiUrl}/users/${userId}/unban`, {}, { headers })
+      .pipe(catchError(this.handleError));
+  }
+
 }

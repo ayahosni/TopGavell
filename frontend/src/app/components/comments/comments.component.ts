@@ -3,6 +3,7 @@ import { CommentsService } from '../../services/comments.service';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-comments',
@@ -17,11 +18,13 @@ export class CommentsComponent implements OnInit {
   newComment = { comment_text: '' };
   editMode: boolean = false;
   currentCommentId: string | null = null;
+  isBanned: boolean = false;
 
-
-  constructor(private commentsService: CommentsService) {}
+  constructor(private commentsService: CommentsService, private authService: AuthService) {}
 
   ngOnInit(): void {
+    this.isBanned = this.authService.isUserBanned();  //customer one -> isbanned = true
+
     if (this.auctionId) { 
       this.loadComments();
     } else {
@@ -41,7 +44,12 @@ export class CommentsComponent implements OnInit {
     });
   }
 
-  submitComment(): void {
+  submitComment(): void {             //customer one -> isbanned = true
+    if (this.isBanned) {                 
+      console.warn('You cannot submit comments because you are banned.');
+      return;
+    }
+
     if (this.newComment.comment_text.trim() !== '') {
       if (this.editMode) {
         this.commentsService.updateComment(this.auctionId, this.currentCommentId!, { comment_text: this.newComment.comment_text }).subscribe({
@@ -68,7 +76,7 @@ export class CommentsComponent implements OnInit {
         });
       }
     } else {
-      alert('Comment content cannot be empty.');
+      console.warn('Comment content cannot be empty.');
     }
   }
 

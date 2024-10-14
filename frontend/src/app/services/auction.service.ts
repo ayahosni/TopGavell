@@ -2,6 +2,7 @@
 // import { HttpClient, HttpHeaders, HttpErrorResponse, HttpParams } from '@angular/common/http';
 // import { Observable, throwError } from 'rxjs';
 // import { catchError, map } from 'rxjs/operators';
+// import { environment } from '../environments/environment';
 
 // export interface Image {
 //   id: number;
@@ -92,7 +93,7 @@
 //     const headers = this.getAuthHeaders(false);
 //     const options = headers ? { headers } : {};
 
-//     return this.http.post<Auction>(this.apiUrl, auctionData, options)
+//     return this.http.post<Auction>(environment.apiUrl, auctionData, options)
 //       .pipe(catchError(this.handleError));
 //   }
 
@@ -106,7 +107,7 @@
 //       .set('page', page.toString())
 //       .set('per_page', perPage.toString());
 
-//     return this.http.get<PaginatedAuctions>(`${this.apiUrl}/`, { params }).pipe(
+//     return this.http.get<PaginatedAuctions>(`${environment.apiUrl}/auction`, { params }).pipe(
 //       catchError(this.handleError)
 //     );
 //   }
@@ -122,7 +123,7 @@
 //       .set('page', page.toString())
 //       .set('per_page', perPage.toString());
 
-//     return this.http.get<PaginatedAuctions>(`${this.apiUrl}/active-auctions`, { params ,headers: this.getAuthHeaders()})
+//     return this.http.get<PaginatedAuctions>(`${environment.apiUrl}/auction/active-auctions`, { params ,headers: this.getAuthHeaders()})
 //       .pipe(catchError(this.handleError));
 //   }
 
@@ -136,7 +137,7 @@
 //       .set('page', page.toString())
 //       .set('per_page', perPage.toString());
 
-//     return this.http.get<PaginatedAuctions>(`${this.apiUrl}/pending`, { params, headers: this.getAuthHeaders() })
+//     return this.http.get<PaginatedAuctions>(`${environment.apiUrl}/auction/pending`, { params, headers: this.getAuthHeaders() })
 //       .pipe(catchError(this.handleError));
 //   }
 //   /**
@@ -148,7 +149,7 @@
 //       .set('page', page.toString())
 //       .set('per_page', perPage.toString());
 
-//     return this.http.get<PaginatedAuctions>(`${this.apiUrl}/approved`, { params, headers: this.getAuthHeaders()  })
+//     return this.http.get<PaginatedAuctions>(`${environment.apiUrl}/auction/approved`, { params, headers: this.getAuthHeaders()  })
 //       .pipe(catchError(this.handleError));
 //   }
 
@@ -164,7 +165,7 @@
 //       .set('page', page.toString())
 //       .set('per_page', perPage.toString());
 
-//     return this.http.get<PaginatedAuctions>(`${this.apiUrl}/search`, { params: httpParams })
+//     return this.http.get<PaginatedAuctions>(`${environment.apiUrl}/auction/search`, { params: httpParams })
 //       .pipe(catchError(this.handleError));
 //   }
 
@@ -177,7 +178,7 @@
 //     if (!headers) {
 //       return throwError('Token is missing. Please log in.'); // Return error if token is missing
 //     }
-//     return this.http.get<any>(`${this.apiUrl}/${id}`, { headers })
+//     return this.http.get<any>(`${environment.apiUrl}/auction/${id}`, { headers })
 //       .pipe(
 //         map(response => response.data || []),
 //         catchError(this.handleError)
@@ -194,7 +195,7 @@
 //     const headers = this.getAuthHeaders(!isFormData);
 //     const options = headers ? { headers } : {};
 
-//     return this.http.put<Auction>(`${this.apiUrl}/${id}`, auctionData, options)
+//     return this.http.put<Auction>(`${environment.apiUrl}/auction/${id}`, auctionData, options)
 //       .pipe(catchError(this.handleError));
 //   }
 
@@ -207,7 +208,7 @@
 //     if (!headers) {
 //       return throwError('Token is missing. Please log in.');
 //     }
-//     return this.http.delete(`${this.apiUrl}/${id}`, { headers })
+//     return this.http.delete(`${environment.apiUrl}/auction/${id}`, { headers })
 //       .pipe(catchError(this.handleError));
 //   }
 
@@ -216,7 +217,7 @@
 //     if (!headers) {
 //       return throwError('Token is missing. Please log in.');
 //     }
-//     return this.http.post(`${this.apiUrl}/${id}/approve`, {}, { headers })
+//     return this.http.post(`${environment.apiUrl}/auction/${id}/approve`, {}, { headers })
 //       .pipe(catchError(this.handleError));
 //   }
 
@@ -229,7 +230,7 @@
 //     if (!headers) {
 //       return throwError('Token is missing. Please log in.');
 //     }
-//     return this.http.post(`${this.apiUrl}/${id}/reject`, {}, { headers })
+//     return this.http.post(`${environment.apiUrl}/auction/${id}/reject`, {}, { headers })
 //       .pipe(catchError(this.handleError));
 //   }
 
@@ -238,7 +239,7 @@
 //       .set('page', page.toString())
 //       .set('per_page', perPage.toString());
 
-//     return this.http.get<PaginatedAuctions>(`${this.apiUrl}/finished`, { params, headers: this.getAuthHeaders() })
+//     return this.http.get<PaginatedAuctions>(`${environment.apiUrl}/auction/finished`, { params, headers: this.getAuthHeaders() })
 //       .pipe(catchError(this.handleError));
 //   }
 
@@ -249,7 +250,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
-
+import { environment } from '../environments/environment';
+import { AuthService } from '../services/auth.service';
 export interface Image {
   id: number;
   auction_id: number;
@@ -292,7 +294,7 @@ export class AuctionService {
 private apiUrl = 'http://localhost:8000/api/auction';
 /*   private apiUrl = 'http://172.18.0.4:80/api/auction';
  */
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private authService: AuthService) { }
 
   /**
    * @param error 
@@ -320,7 +322,7 @@ private apiUrl = 'http://localhost:8000/api/auction';
       .set('page', page.toString())
       .set('per_page', perPage.toString());
 
-    return this.http.get<PaginatedAuctions>(`${this.apiUrl}/`, { params })
+    return this.http.get<PaginatedAuctions>(`${environment.apiUrl}/auction`, { params })
       .pipe(catchError(this.handleError));
   }
 
@@ -335,7 +337,7 @@ private apiUrl = 'http://localhost:8000/api/auction';
       .set('page', page.toString())
       .set('per_page', perPage.toString());
 
-    return this.http.get<PaginatedAuctions>(`${this.apiUrl}/active-auctions`, { params })
+    return this.http.get<PaginatedAuctions>(`${environment.apiUrl}/auction/active-auctions`, { params })
       .pipe(catchError(this.handleError));
   }
 
@@ -350,7 +352,7 @@ private apiUrl = 'http://localhost:8000/api/auction';
       .set('page', page.toString())
       .set('per_page', perPage.toString());
 
-    return this.http.get<PaginatedAuctions>(`${this.apiUrl}/pending`, { params, headers: this.getAuthHeaders() })
+    return this.http.get<PaginatedAuctions>(`${environment.apiUrl}/auction/pending`, { params, headers: this.getAuthHeaders() })
       .pipe(catchError(this.handleError));
   }
 
@@ -365,7 +367,7 @@ private apiUrl = 'http://localhost:8000/api/auction';
       .set('page', page.toString())
       .set('per_page', perPage.toString());
 
-    return this.http.get<PaginatedAuctions>(`${this.apiUrl}/approved`, { params })
+    return this.http.get<PaginatedAuctions>(`${environment.apiUrl}/auction/approved`, { params })
       .pipe(catchError(this.handleError));
   }
 
@@ -382,7 +384,7 @@ private apiUrl = 'http://localhost:8000/api/auction';
       .set('page', page.toString())
       .set('per_page', perPage.toString());
 
-    return this.http.get<PaginatedAuctions>(`${this.apiUrl}/search`, { params: httpParams })
+    return this.http.get<PaginatedAuctions>(`${environment.apiUrl}/auction/search`, { params: httpParams })
       .pipe(catchError(this.handleError));
   }
 
@@ -392,7 +394,7 @@ private apiUrl = 'http://localhost:8000/api/auction';
    * @returns 
    */
   getAuctionById(id: string): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/${id}`)
+    return this.http.get<any>(`${environment.apiUrl}/auction/${id}`)
       .pipe(
         map(response => response.data || []),
         catchError(this.handleError)
@@ -408,9 +410,19 @@ private apiUrl = 'http://localhost:8000/api/auction';
     const headers = this.getAuthHeaders();
     const options = headers ? { headers } : {};
 
-    return this.http.post<Auction>(this.apiUrl, auctionData, options)
-      .pipe(catchError(this.handleError));
-  }
+    if (this.authService.isUserBanned()) {
+        return throwError({ message: "You can't create an auction, You are banned" });
+    }
+
+    return this.http.post<Auction>(`${environment.apiUrl}/auction`, auctionData, options)
+        .pipe(
+            catchError((error) => {
+                return this.handleError(error); 
+            })
+        );
+}
+
+
 
   /**
    * Update auction (requires authentication)
@@ -423,7 +435,7 @@ private apiUrl = 'http://localhost:8000/api/auction';
     const headers = this.getAuthHeaders(!isFormData);
     const options = headers ? { headers } : {};
 
-    return this.http.put<Auction>(`${this.apiUrl}/${id}`, auctionData, options)
+    return this.http.put<Auction>(`${environment.apiUrl}/auction/${id}`, auctionData, options)
       .pipe(catchError(this.handleError));
   }
 
@@ -437,8 +449,18 @@ private apiUrl = 'http://localhost:8000/api/auction';
     if (!headers) {
       return throwError('Token is missing. Please log in.');
     }
-    return this.http.delete(`${this.apiUrl}/${id}`, { headers })
+    return this.http.delete(`${environment.apiUrl}/auction/${id}`, { headers })
       .pipe(catchError(this.handleError));
+  }
+
+  restoreAuction(id: string): Observable<any> {
+
+    const headers = this.getAuthHeaders();
+    if (!headers) {
+      return throwError('Token is missing. Please log in.');
+    }
+
+    return this.http.put(`${environment.apiUrl}/auction/${id}/restore`, {}, { headers });
   }
 
   /**
@@ -451,7 +473,7 @@ private apiUrl = 'http://localhost:8000/api/auction';
     if (!headers) {
       return throwError('Token is missing. Please log in.');
     }
-    return this.http.post(`${this.apiUrl}/${id}/approve`, {}, { headers })
+    return this.http.post(`${environment.apiUrl}/auction/${id}/approve`, {}, { headers })
       .pipe(catchError(this.handleError));
   }
 
@@ -465,7 +487,7 @@ private apiUrl = 'http://localhost:8000/api/auction';
     if (!headers) {
       return throwError('Token is missing. Please log in.');
     }
-    return this.http.post(`${this.apiUrl}/${id}/reject`, {}, { headers })
+    return this.http.post(`${environment.apiUrl}/auction/${id}/reject`, {}, { headers })
       .pipe(catchError(this.handleError));
   }
 
@@ -480,7 +502,7 @@ private apiUrl = 'http://localhost:8000/api/auction';
       .set('page', page.toString())
       .set('per_page', perPage.toString());
 
-    return this.http.get<PaginatedAuctions>(`${this.apiUrl}/finished`, { params })
+    return this.http.get<PaginatedAuctions>(`${environment.apiUrl}/auction/finished`, { params })
       .pipe(catchError(this.handleError));
   }
 
@@ -512,7 +534,7 @@ private apiUrl = 'http://localhost:8000/api/auction';
       .set('page', page.toString())
       .set('per_page', perPage.toString());
 
-    return this.http.get<PaginatedAuctions>(`${this.apiUrl}/deleted`, { params, headers: this.getAuthHeaders() })
+    return this.http.get<PaginatedAuctions>(`${environment.apiUrl}/auction/deleted`, { params, headers: this.getAuthHeaders() })
       .pipe(catchError(this.handleError));
   }
   searchByCategory(categoryId: number, page: number = 1, perPage: number = 10): Observable<PaginatedAuctions> {
@@ -521,7 +543,7 @@ private apiUrl = 'http://localhost:8000/api/auction';
       .set('page', page.toString())
       .set('per_page', perPage.toString());
 
-    return this.http.get<PaginatedAuctions>(`${this.apiUrl}/search-by-category`, { params: httpParams })
+    return this.http.get<PaginatedAuctions>(`${environment.apiUrl}/auction/search-by-category`, { params: httpParams })
       .pipe(catchError(this.handleError));
   }
     /**
@@ -534,7 +556,11 @@ private apiUrl = 'http://localhost:8000/api/auction';
         .set('page', page.toString())
         .set('per_page', perPage.toString());
   
-      return this.http.get<PaginatedAuctions>(`${this.apiUrl}/myAuctions`, { params, headers: this.getAuthHeaders() })
+      return this.http.get<PaginatedAuctions>(`${environment.apiUrl}/auction/myAuctions`, { params, headers: this.getAuthHeaders() })
         .pipe(catchError(this.handleError));
+    }
+
+    getCategories(): Observable<any> {
+      return this.http.get(`${environment.apiUrl}/categories`);
     }
 }

@@ -22,7 +22,8 @@ class CustomerResource extends JsonResource
             "is_email_verified" => $this->user->is_email_verified,
             'phone_number' => $this->phone_number,
             'profile_picture' => $this->profile_picture,
-            'address' => $this->address
+            'address' => $this->address,
+            "banned"=>$this->user->banned
         ];
     }
 }

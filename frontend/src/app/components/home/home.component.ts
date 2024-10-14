@@ -6,10 +6,10 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { SafeUrlPipe } from '../../pipes/safe-url.pipe';
-
+import { AuthService } from '../../services/auth.service';
 interface Category {
- id: number;
-  name: string; 
+  id: number;
+  name: string;
   image: string;
 }
 
@@ -21,6 +21,7 @@ interface TopAuction {
   price: number;
 }
 
+
 @Component({
   selector: 'app-home',
   standalone: true,
@@ -29,22 +30,29 @@ interface TopAuction {
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
+
+  isLoggedIn: boolean = false;
+  isRegistered: boolean = false;
+  userName: string = '';
+  isAdmin: boolean = false;
+  isBanned: boolean = false;
+
   auctions: Auction[] = [];
   filteredAuctions: Auction[] = [];
   searchTerm: string = '';
-  currentPage: number = 1;
-  totalPages: number = 0;
+  currentPage: any;
+  totalPages: any;
   perPage: number = 10;
 
-    categories: Category[] = [
-      { id: 1, name: 'Furniture', image: 'assets/images/furniture.jpg' },
-      { id: 2, name: 'Home Decor', image: 'assets/images/decor.jpg' },
-      { id: 3, name: 'Fine Art', image: 'assets/images/art.jpg' },
-      { id: 4, name: 'Birds', image: 'assets/images/bird.jpg' },
-      { id: 5, name: 'Animals', image: 'assets/images/animal.jpg' },
-      { id: 6, name: 'Motor Vehicles', image: 'assets/images/vehicles.jpg' }
-    ];
-    
+  categories: Category[] = [
+    { id: 1, name: 'Furniture', image: 'assets/images/furniture.jpg' },
+    { id: 2, name: 'Home Decor', image: 'assets/images/decor.jpg' },
+    { id: 3, name: 'Fine Art', image: 'assets/images/art.jpg' },
+    { id: 4, name: 'Birds', image: 'assets/images/bird.jpg' },
+    { id: 5, name: 'Animals', image: 'assets/images/animal.jpg' },
+    { id: 6, name: 'Motor Vehicles', image: 'assets/images/vehicles.jpg' }
+  ];
+
 
   topAuctions: TopAuction[] = [
     {
@@ -69,12 +77,33 @@ export class HomeComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private auctionService: AuctionService,
+    private authService: AuthService, 
+
     private router: Router
   ) { }
 
   ngOnInit(): void {
     this.loadApprovedAuctions(this.currentPage);
-  }
+    
+    const userData = localStorage.getItem('user');
+    
+    if (userData) {
+      const user = JSON.parse(userData);
+      this.userName = user.name;
+      this.isLoggedIn = true;
+      this.isRegistered = true;
+
+
+      this.isBanned = user.isBanned === 1; 
+
+      if (user.role == "admin") {
+        this.isAdmin = true;
+      }
+    }
+    console.log(this.isAdmin);
+    console.log(this.isBanned);  
+}
+
 
   /**
    * 
@@ -87,15 +116,20 @@ export class HomeComponent implements OnInit {
         this.filteredAuctions = [...this.auctions];
         this.currentPage = response.meta.current_page;
         this.totalPages = response.meta.last_page;
+        console.log(this.totalPages[0]);
         this.auctions.forEach((auction) => {
-        //   console.log(
-        //     'currentTime===>'+currentTime+'\n'+
-        //     'auctionEndTime===>'+this.auctionEndTime+'\n'+
-        //     'isAuctionEnded===>'+this.isAuctionEnded+'\n'+
-        //     'auctionStartTime===>'+this.auctionStartTime+'\n'+
-        //     'isAuctionStarted===>'+this.isAuctionStarted
-        //   )
+          // if(this.User==auction.auction_id){
+          //   this.isAuctionOwner=true;
+          // }
+          //   console.log(
+          //     'currentTime===>'+currentTime+'\n'+
+          //     'auctionEndTime===>'+this.auctionEndTime+'\n'+
+          //     'isAuctionEnded===>'+this.isAuctionEnded+'\n'+
+          //     'auctionStartTime===>'+this.auctionStartTime+'\n'+
+          //     'isAuctionStarted===>'+this.isAuctionStarted
+          //   )
         })
+
       },
       error: (err) => {
         console.error('Error loading approved auctions:', err);
@@ -108,10 +142,25 @@ export class HomeComponent implements OnInit {
     const isAuctionEnded = currentTime >= auctionEndTime;
     const auctionStartTime = new Date(auction.auction_start_time);
     const isAuctionStarted = currentTime >= auctionStartTime;
-    if(isAuctionStarted && !isAuctionEnded){
+    const isAuctionBeforeStarting = currentTime <= auctionStartTime;
+    if (isAuctionBeforeStarting) {
+      return 'before starting';
+    }
+    if (isAuctionStarted && !isAuctionEnded) {
       return 'opened'
     }
     return 'closed'
+  }
+
+  checkAuctionOwnwer(auction: Auction) {
+    const userData = localStorage.getItem('user');
+    if (userData) {
+      const user = JSON.parse(userData);
+      if (user.id == auction.auction_id) {
+        return true;
+      }
+    }
+    return false;
   }
 
   deleteAuction(auctionId: string) {
@@ -185,43 +234,36 @@ export class HomeComponent implements OnInit {
     console.log('Selected Category ID:', categoryId);
     this.auctionService.searchByCategory(categoryId).subscribe({
       next: (response: PaginatedAuctions) => {
-        this.filteredAuctions = response.data; 
-        this.currentPage = response.meta.current_page; 
-        this.totalPages = response.meta.last_page; 
+        this.filteredAuctions = response.data;
+        this.currentPage = response.meta.current_page;
+        this.totalPages = response.meta.last_page;
         console.log('Auctions for Category ID:', categoryId, this.filteredAuctions);
-        
-       /*  if (this.filteredAuctions.length > 0) {
-          const firstAuctionId = this.filteredAuctions[0].id; 
-          console.log('First Auction ID:', firstAuctionId); 
-          this.goToAuctionDetails(firstAuctionId); 
-        } else {
-          console.warn('No auctions found for the selected category.');
-        } */
+
+        /*  if (this.filteredAuctions.length > 0) {
+           const firstAuctionId = this.filteredAuctions[0].id; 
+           console.log('First Auction ID:', firstAuctionId); 
+           this.goToAuctionDetails(firstAuctionId); 
+         } else {
+           console.warn('No auctions found for the selected category.');
+         } */
       },
       error: (err) => {
         console.error('Error fetching auctions by category:', err);
       }
     });
-}
+  }
 
-  
-  
-  
-  
-  
-  /**
-   */
   nextPage(): void {
-    if (this.currentPage < this.totalPages) {
-      this.onPageChange(this.currentPage + 1);
+    if (this.currentPage[0] < this.totalPages[0]) {
+      this.onPageChange(this.currentPage[0] + 1);
     }
   }
 
   /**
    */
   prevPage(): void {
-    if (this.currentPage > 1) {
-      this.onPageChange(this.currentPage - 1);
+    if (this.currentPage[0] > 1) {
+      this.onPageChange(this.currentPage[0] - 1);
     }
   }
   goToAuctionDetails(auctionId: string): void {

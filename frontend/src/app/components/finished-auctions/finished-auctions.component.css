@@ -53,3 +53,23 @@
     color: #000;
   }
   
+  .pagination-controls {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    
+  }
+  
+  .pagination-controls button {
+    margin:  10px;
+    padding: 10px 15px;
+    font-size: 16px;
+    /* border:solid 2px ; */
+  }
+  
+  .pagination-controls span {
+    align-self: center;
+    font-size: 16px;
+  }
+  
+  

@@ -6,6 +6,7 @@ use App\Http\Controllers\API\BidController;
 use App\Http\Controllers\API\CommentController;
 use App\Http\Controllers\API\NotificationController;
 use App\Http\Controllers\API\PaymentController;
+use App\Http\Controllers\API\CategoryController;
 
 Route::post('/register', [UserController::class, 'register'])->name('register');
 Route::post('/email_verify', [UserController::class,'email_verify'])->name('email_verify');
@@ -13,9 +14,10 @@ Route::get('/login', [UserController::class, 'notLoggedIn'])->name('login');
 Route::post('/login', [UserController::class, 'login'])->name('login');
 Route::get('/logout', [UserController::class, 'logout'])->name('logout')->middleware('auth:sanctum');
 
+
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/profile', [UserController::class, 'profile']);
-    Route::put('/edit_profile', [UserController::class, 'updateProfile']);
+    Route::put('/profile', [UserController::class, 'updateProfile']);
 });
 Route::apiResource('user', UserController::class);
 // Auction Routes - specific first
@@ -31,6 +33,8 @@ Route::get('/auction/myAuctions', [AuctionController::class, 'myAuctions'])->mid
 Route::post('/auction/{id}/approve', [AuctionController::class, 'approve']); 
 Route::post('/auction/{id}/reject', [AuctionController::class, 'rejected']);
 Route::delete('/auction/{id}/delete', [AuctionController::class, 'destroy']);
+Route::put('/auction/{id}/restore', [AuctionController::class, 'restore']);
+
 
 
 // Then resource route
@@ -54,3 +58,16 @@ Route::post('/check-payment', [PaymentController::class, 'checkPayment'])->middl
 // Notifications and Payment Routes
 Route::get('/notifications', [NotificationController::class, 'index'])->middleware('auth:sanctum');
 
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/profile', [UserController::class, 'profile']);
+    Route::put('/profile', [UserController::class, 'updateProfile']);
+});
+
+// Get all categories
+Route::get('/categories', [CategoryController::class, 'index']);  
+Route::get('/customers', [UserController::class, 'index']);
+
+Route::middleware(['auth:sanctum', ])->group(function () {
+    Route::post('/users/{id}/ban', [UserController::class, 'banUser']);
+    Route::post('/users/{id}/unban', [UserController::class, 'unbanUser']);
+});

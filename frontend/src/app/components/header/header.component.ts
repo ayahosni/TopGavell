@@ -1,8 +1,8 @@
-
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { RouterLink, RouterLinkActive } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-header',
@@ -17,21 +17,13 @@ export class HeaderComponent implements OnInit {
   isLoggedIn: boolean = false;
   isRegistered: boolean = false;
   userName: string = '';
-  isAdmin:boolean=false;
+  isAdmin: boolean = false;
+  isBanned: boolean = false;
   userProfileImage: string = 'assets/images/user.jpeg'; 
   showDropdown: boolean = false;
   notificationCount: number = 0;  
 
-  addNotification() {
-    this.notificationCount += 1; // Increment notification count
-  }
-
-
-  clearNotifications() {
-    this.notificationCount = 0; // clear notifications when viewed
-  }
-
-  constructor(private router: Router) {}
+  constructor(private router: Router, private authService: AuthService) {}
 
   ngOnInit(): void {
     this.router.events.subscribe(event => {
@@ -41,17 +33,26 @@ export class HeaderComponent implements OnInit {
       }
     });
 
-    const userData = localStorage.getItem('user');
+    this.isLoggedIn = this.authService.isLoggedIn();
+    const userData = this.authService.getUserData();
+    
     if (userData) {
-      const user = JSON.parse(userData);
-      this.userName = user.name; 
-      this.isLoggedIn = true;  
-      this.isRegistered = true;
-      if(user.role=="admin"){
-        this.isAdmin=true;
-      }
+      this.userName = userData.name; 
+      this.isRegistered = true;  
+      this.isAdmin = this.authService.is_admin();
+      this.isBanned = this.authService.isUserBanned();
     }
-    console.log(this.isAdmin);
+    
+    console.log('Is Admin:', this.isAdmin);
+    console.log('Is Banned:', this.isBanned);
+  }
+
+  addNotification() {
+    this.notificationCount += 1; 
+  }
+
+  clearNotifications() {
+    this.notificationCount = 0; 
   }
 
   toggleDropdown(event: Event): void {
@@ -64,9 +65,12 @@ export class HeaderComponent implements OnInit {
   }
 
   logout(): void {
-    localStorage.removeItem('user'); 
+    localStorage.removeItem('user');
     this.isLoggedIn = false;
     this.isRegistered = false;
-    this.router.navigate(['/']); 
+    this.isAdmin = false;
+    this.isBanned = false;
+
+    this.router.navigate(['/']);
   }
 }

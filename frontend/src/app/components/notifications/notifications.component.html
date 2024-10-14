@@ -1,23 +1,20 @@
+<!-- <p>notifications works!</p> -->
 <br>
 <br>
 <br>
-
 <div class="notification-container">
   <h2>Notifications</h2>
-
-  <div *ngIf="errorMessage" class="error-message">
-    {{ errorMessage }}
+  <div *ngFor="let notification of notifications" class="notification-card">    
+    <h3>{{ notification.data.item }}</h3>
+    <p>{{ notification.data.message }}</p>
+    <p>{{ notification.data.bid_amount }}</p>
+    <a [routerLink]="['/auction', notification.data.auction_id]">View Auction</a>
   </div>
 
-  <div *ngFor="let notification of notifications" class="notification-card">
-    <pre>{{ notification | json }}</pre> 
-    <p>{{ notification.data.user }} commented on {{ notification.data.auction }}: "{{ notification.data.content }}"</p>
-    <a (click)="goToAuctionDetails(notification.id)">View Auction</a> 
-  </div>
-
-  <div class="pagination-controls" *ngIf="totalPages > 1">
-    <button [disabled]="currentPage === 1" (click)="loadNotifications(currentPage - 1)">Previous</button>
+  <!-- Pagination Controls -->
+  <div class="pagination-controls" *ngIf="totalPages > 1;">
+    <button (click)="prevPage()" [disabled]="currentPage === 1">Previous</button>
+    <button (click)="nextPage()" [disabled]="currentPage === totalPages ">Next</button>
     <span>Page {{ currentPage }} of {{ totalPages }}</span>
-    <button [disabled]="currentPage === totalPages" (click)="loadNotifications(currentPage + 1)">Next</button>
   </div>
 </div>

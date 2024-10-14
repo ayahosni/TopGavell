@@ -25,36 +25,33 @@ import { UserDashboardComponent } from './components/user-dashboard/user-dashboa
 import { MyAuctionsComponent } from './components/my-auctions/my-auctions.component';
 import { FinishedAuctionsComponent } from './components/finished-auctions/finished-auctions.component';
 import { NotificationComponent } from './components/notifications/notifications.component';
+import { CustomersComponent } from './components/customers/customers.component';
+import { NonAdminGuard } from './guards/non-admin.guard'; 
 
 export const routes: Routes = [
-    {path: '', component:HomeComponent},
-    {path: 'auctions', component:AuctionsComponent, },
-    {path: 'auction/:id', component: AuctionComponent, },
-    {path: 'bids', component: BidsComponent , canActivate: [verifyemailGuard]},
-    {path: 'bid/:id', component: BidsComponent , canActivate: [verifyemailGuard]},
-    { path: 'profile', component: ProfileComponent ,canActivate:[verifyemailGuard]},
-   {path: 'auction-details/:id', component: AuctionDetailsComponent , canActivate: [verifyemailGuard]},
-    {path: 'contact', component: ContactComponent, canActivate: [verifyemailGuard]},
-    {path: 'login', component: LoginComponent, canActivate: [noAuthGuard]},
-    {path: 'register', component: RegisterComponent, canActivate: [noAuthGuard]},
-    {path: 'email_verify', component: EmailVerficationComponent, canActivate: [authGuard]},
-    {path: 'adminDashboard', component: AdminDashboardComponent, canActivate: [adminGuard]},
-    {path: 'userDashboard', component: UserDashboardComponent, canActivate: [verifyemailGuard]},
-    {path: 'addAuction', component: AddAuctionComponent , canActivate: [verifyemailGuard]},
-    {path: 'auction/:auctionId/comments', component: CommentsComponent, canActivate: [verifyemailGuard]},
-    {path: 'guides', component: GuidesComponent, canActivate: [verifyemailGuard]},
-    {path: 'payment', component: PaymentComponent, canActivate: [verifyemailGuard]},
-    {path: 'myauctions', component: MyAuctionsComponent, canActivate: [verifyemailGuard]},
-    {path: 'pendingAuctions',component:PendingAuctionsComponent,canActivate:[adminGuard]},
-    {path: 'deletedAuctions',component:DeletedAuctionsComponent,canActivate:[adminGuard]},
-    {path: 'errors', component: ErrorsComponent},
-    { path: 'finished-auctions', component: FinishedAuctionsComponent,canActivate: [verifyemailGuard] },
+    { path: '', component: HomeComponent },
+    { path: 'auctions', component: AuctionsComponent, },
+    { path: 'auction/:id', component: AuctionComponent, },
+    { path: 'bids', component: BidsComponent, canActivate: [verifyemailGuard] },
+    { path: 'bid/:id', component: BidsComponent, canActivate: [verifyemailGuard] },
+    { path: 'profile', component: ProfileComponent, canActivate: [verifyemailGuard] },
+    { path: 'auction_details/:id', component: AuctionDetailsComponent, canActivate: [verifyemailGuard] },
+    { path: 'contact', component: ContactComponent, canActivate: [verifyemailGuard] },
+    { path: 'login', component: LoginComponent, canActivate: [noAuthGuard] },
+    { path: 'register', component: RegisterComponent, canActivate: [noAuthGuard] },
+    { path: 'email_verify', component: EmailVerficationComponent, canActivate: [authGuard] },
+    { path: 'adminDashboard', component: AdminDashboardComponent, canActivate: [adminGuard] },
+    { path: 'userDashboard', component: UserDashboardComponent, canActivate: [verifyemailGuard] },
+    { path: 'addAuction',component: AddAuctionComponent,  canActivate: [verifyemailGuard, NonAdminGuard],},   
+     { path: 'auction/:auctionId/comments', component: CommentsComponent, canActivate: [verifyemailGuard] },
+    { path: 'guides', component: GuidesComponent, canActivate: [verifyemailGuard] },
+    { path: 'payment', component: PaymentComponent, canActivate: [verifyemailGuard] },
+    { path: 'myauctions', component: MyAuctionsComponent, canActivate: [verifyemailGuard] },
+    { path: 'pendingAuctions', component: PendingAuctionsComponent, canActivate: [adminGuard] },
+    { path: 'deletedAuctions', component: DeletedAuctionsComponent, canActivate: [adminGuard] },
+    { path: 'finished-auctions', component: FinishedAuctionsComponent, canActivate: [verifyemailGuard] },
     { path: 'notifications', component: NotificationComponent, canActivate: [verifyemailGuard] },
-
-    {path: '**', redirectTo: '/errors'},
-
-
-
-
-
+    { path: 'customers', component: CustomersComponent, canActivate: [verifyemailGuard] },
+    { path: 'errors', component: ErrorsComponent },
+    { path: '**', redirectTo: '/errors' },
 ];

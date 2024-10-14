@@ -64,6 +64,11 @@ class BidController extends Controller
                 'message' => 'Please verify your mail first.'
             ], 403);
         }
+        if (Auth::user()->banned === 1) {
+            return response()->json([
+              'message' => 'You can\'t place a bid,You are banned'
+            ], 403);
+          }
         // Fetch the auction or throw a 404 error if not found
         $auction = Auction::findOrFail($auctionId);
 
@@ -216,6 +221,11 @@ class BidController extends Controller
 
     public function destroy($bidId)
     {
+        if (Auth::user()->banned === 1) {
+            return response()->json([
+              'message' => 'You are banned'
+            ], 403);
+          }
         // Fetch the bid or throw a 404 error if not found
         $bid = Bid::findOrFail($bidId);
 

@@ -10,9 +10,13 @@
       <button (click)="deleteComment(comment.comment_id)">Delete</button>
     </div>
   </div>
-  
-  <form (ngSubmit)="submitComment()">
-    <textarea [(ngModel)]="newComment.comment_text" placeholder="Write a comment ..."  name="commentText" required></textarea>
+
+  <form *ngIf="!isBanned" (ngSubmit)="submitComment()">
+    <textarea [(ngModel)]="newComment.comment_text" placeholder="Write a comment ..." name="commentText" required></textarea>
     <button type="submit">{{ editMode ? 'Update' : 'Send' }}</button>
   </form>
+
+  <div *ngIf="isBanned" class="banned-message">
+    <p>You are banned from commenting.</p>
+  </div>
 </div>
