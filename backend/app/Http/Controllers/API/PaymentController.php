@@ -61,7 +61,7 @@ class PaymentController extends Controller
                     ],
                 ],
                 'mode' => 'payment',
-                'success_url' => route('success', ['auctionID' => $auctionID, 'bidderID' => $bidder->id]),
+                'success_url' => route('success', ['auctionID' => $auctionID, 'bidderID' => $bidder->id]) . '?session_id={CHECKOUT_SESSION_ID}',
                 'cancel_url' => route('cancel'),
             ]
         );
@@ -86,12 +86,29 @@ class PaymentController extends Controller
             $amount = $auction->starting_bid;
         }
 
+
+        // Get the latest Stripe session
+        Stripe::setApiKey(env('STRIPE_SECRET'));
+        $session_id = request('session_id'); 
+        // return response()->json(['data' => $session_id]);
+        $stripe = new \Stripe\StripeClient(env('STRIPE_SECRET'));
+        $session = \Stripe\Checkout\Session::retrieve($session_id);
+        $paymentIntentId = $session->payment_intent; // Get the payment intent ID
+
+
+
+
+        // Store the payment in your database
         $data = [
             "amount" => $amount,
             "auction_id" => $auctionID,
             'bidder_id' => $bidderID,
-            'type' => $paymentType
+            'type' => $paymentType,
+            'payment_intent_id' => $paymentIntentId, // Save payment intent ID for future reference
         ];
+
+
+        // return response()->json(['data' => $data]);
 
         Payment::create($data);
         return redirect('http://localhost:4200/auction/' . $auctionID);
@@ -116,5 +133,22 @@ class PaymentController extends Controller
             'hasPaid' => $paymentExists,
             'payment_type' => $payment->type
         ]);
+    }
+
+    public function refund ()
+    {
+
+        // $stripe = new Stripe();
+        // $stripe = Stripe::make(env('STRIPE_SECRET'));
+        // $stripe =  Stripe::setApiKey(env('STRIPE_SECRET'));
+
+
+        // $stripe = new StripeClient('sk_test_51Q3Y1YApxqx10PD5EjHXihoyRwFROlVjObFqB0WCjzjvyY3zGCaHnPwJoxoWS3vLGNqWDugWnXBC5FJhE3uHjkTV00NX2b8B3J');
+
+        $stripe = new \Stripe\StripeClient(env('STRIPE_SECRET'));
+
+        $stripe->refunds->create(['payment_intent' => 'pi_3Q9WPEApxqx10PD51Np3B3Ub']);
+
+
     }
 }
