@@ -18,12 +18,12 @@ import { PaymentService } from '../../services/payment.service';
 export class BidsComponent implements OnInit {
   @Input() auctionId: string = '';
   auction: any;
-  ceatorID: any;
+  creatorID: any;
+  canBid: boolean | null = null;
   lastBid: any;
   bidAmount: number = 0;
   message: string = '';
   hasPaid: boolean | null = null;
-  canBid: boolean | null = null;
   loading = false;
   bids:Bid[]=[];
   auctionEndTime: Date | null = null;
@@ -64,7 +64,7 @@ export class BidsComponent implements OnInit {
       next:(response)=>{
         this.loading = false;
         this.bids =response.data
-        console.log(this.bids);
+        // console.log(this.bids);
       }
     })
   }
@@ -75,21 +75,21 @@ export class BidsComponent implements OnInit {
       next: (response: any) => {
         this.loading = false;
         this.auction = response;
-        console.log(this.auction.bids);
-        this.ceatorID = this.auction.creator.id;
-        this.canbid(this.ceatorID);
+        // console.log(this.auction.bids);
+        this.creatorID = this.auction.creator.id;
+        this.canbid(this.creatorID);
         const currentTime = new Date();
         this.auctionEndTime = new Date(this.auction.auction_end_time);
         this.isAuctionEnded = currentTime >= this.auctionEndTime;
         this.auctionStartTime = new Date(this.auction.auction_start_time);
         this.isAuctionStarted = currentTime >= this.auctionStartTime;
-        console.log(
-          'currentTime===>'+currentTime+'\n'+
-          'auctionEndTime===>'+this.auctionEndTime+'\n'+
-          'isAuctionEnded===>'+this.isAuctionEnded+'\n'+
-          'auctionStartTime===>'+this.auctionStartTime+'\n'+
-          'isAuctionStarted===>'+this.isAuctionStarted
-        )
+        // console.log(
+        //   'currentTime===>'+currentTime+'\n'+
+        //   'auctionEndTime===>'+this.auctionEndTime+'\n'+
+        //   'isAuctionEnded===>'+this.isAuctionEnded+'\n'+
+        //   'auctionStartTime===>'+this.auctionStartTime+'\n'+
+        //   'isAuctionStarted===>'+this.isAuctionStarted
+        // )
       },
       error: (error: any) => {
         this.loading = false;
@@ -109,7 +109,7 @@ export class BidsComponent implements OnInit {
       next: (response: any) => {
         this.loading = false;
         this.message = 'Bid placed successfully!';
-        this.loadAuctionDetails();
+        this.loadAuctionBids();
       },
       error: (error: any) => {
         this.loading = false;
@@ -122,11 +122,11 @@ export class BidsComponent implements OnInit {
     });
   }
 
-  canbid(ceatorID: any) {
+  canbid(creatorID: any) {
     const userData = localStorage.getItem('user');
     if (userData) {
       const user = JSON.parse(userData);
-      if (user.role == "admin" || user.id == ceatorID) {
+      if (user.role == "admin" || user.id == creatorID) {
         this.canBid = false;
       } else {
         this.canBid = true;

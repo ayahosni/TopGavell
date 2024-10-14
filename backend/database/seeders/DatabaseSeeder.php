@@ -90,7 +90,7 @@ class DatabaseSeeder extends Seeder
             [
                 'customer_id' => 1,
                 'category_id' => 1,
-                'winning_bidder_id' => null,
+                'winning_bidder_id' => 2,
                 'item_name' => 'Smartphone',
                 'item_description' => 'Latest model smartphone.',
                 'starting_bid' => 800.00,
@@ -204,6 +204,25 @@ class DatabaseSeeder extends Seeder
             ['auction_id' => 5, 'path' => 'collectible_card_image2.jpg', 'created_at' => $currentTime, 'updated_at' => $currentTime],
             ['auction_id' => 6, 'path' => 'leather_sofa_image1.jpg', 'created_at' => $currentTime, 'updated_at' => $currentTime],
             ['auction_id' => 6, 'path' => 'leather_sofa_image2.jpg', 'created_at' => $currentTime, 'updated_at' => $currentTime],
+        ]);
+
+        DB::table('bids')->insert([
+            [
+            'bid_amount'=> 1000,
+            'bid_time'=> $currentTime->copy()->subDays(4)->setTime(9, 0),
+            'customer_id'=> 2,
+            'auction_id'=> 1,
+            'created_at' => now(),
+            'updated_at' => now()
+            ],
+            [
+            'bid_amount'=> 1600,
+            'bid_time'=> $currentTime->copy()->subDay()->setTime(11, 0),
+            'customer_id'=> 2,
+            'auction_id'=> 3,
+            'created_at' => now(),
+            'updated_at' => now()
+            ],
         ]);
     }
 }

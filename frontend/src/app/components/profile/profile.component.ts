@@ -4,6 +4,7 @@ import { UserService } from '../../services/user.service';
 import { AuthService } from '../../services/auth.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-profile',
@@ -46,7 +47,7 @@ export class ProfileComponent implements OnInit {
       next: (response) => {
         this.user = response?.user || {};
         this.profileImageUrl = this.user.profile_picture ? 
-          `${this.userService.apiUrl}/public/uploads/${this.user.profile_picture}` : this.userProfileImage;
+          `${environment.apiUrl}/public/uploads/${this.user.profile_picture}` : this.userProfileImage;
         this.profileForm.patchValue({
           name: this.user.name || '',
           email: this.user.email || '',

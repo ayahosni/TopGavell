@@ -5,16 +5,12 @@
 </div>
 <form [formGroup]="auctionForm" (ngSubmit)="onSubmit()" enctype="multipart/form-data">
   <label for="category_id">Category</label>
-
-  <!-- <input id="category_id" formControlName="category_id" type="number" required value="3" > -->
-  
+  <!-- <input id="category_id" formControlName="category_id" type="number" required value="3" >   -->
   <select id="category_id" formControlName="category_id" required>
     <option *ngFor="let category of categories" [value]="category.id">
       {{ category.name }}
     </option>
   </select>
-
-  
   <div *ngIf="auctionForm.get('category_id')?.invalid && auctionForm.get('category_id')?.touched">
     <small class="error">Category ID is required.</small>
   </div>

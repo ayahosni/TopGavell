@@ -11,7 +11,7 @@ import { CommonModule } from '@angular/common';
   templateUrl: './add-auction.component.html',
   styleUrls: ['./add-auction.component.css']
 })
-export class AddAuctionComponent {
+export class AddAuctionComponent implements OnInit {
   auctionForm: FormGroup;
   selectedFiles: File[] = [];
   categories: any[] = [];
@@ -34,14 +34,14 @@ export class AddAuctionComponent {
   ngOnInit(): void {
 
     // Fetch categories from the backend
-    this.auctionService.getCategories().subscribe(
-      (data) => {
+    this.auctionService.getCategories().subscribe({
+      next: (data) => {
         this.categories = data; // Bind the categories to the component
       },
-      (error) => {
+      error: (error) => {
         console.error('Error fetching categories', error);
       }
-    );
+    });
   }
 
   onFileChange(event: any) {
@@ -54,96 +54,40 @@ export class AddAuctionComponent {
       if (!formGroup) {
         return null;
       }
-
       const startTime = formGroup.get('auction_start_time')?.value;
       const endTime = control.value;
-
       if (startTime && endTime && new Date(endTime) <= new Date(startTime)) {
         return { endTimeBeforeStartTime: true };
       }
-
       return null;
     };
   }
 
-  // onSubmit() {
-  //   if (this.auctionForm.valid) {
-  //     console.log(this.auctionForm.value); 
-
-  //     // const formData = new FormData();
-  //     var formData = this.auctionForm.value;
-
-  //     Object.keys(this.auctionForm.value).forEach(key => {
-  //       const value = this.auctionForm.get(key)?.value;
-  //       if (key === 'item_media') {
-  //         if (this.selectedFiles.length > 0) {
-  //           this.selectedFiles.forEach(file => {
-  //             formData.append('item_media[]', file, file.name); // Append files
-  //           });
-  //         }
-  //       } else {
-  //         formData.append(key, value || ''); // Append other form values
-  //       }
-  //     });
-      
-  //     console.log("formData");
-  //     console.log(formData);
-  //     this.auctionService.createAuction(formData).subscribe({
-  //       next: (response) => {
-  //         console.log('Auction created successfully!', response);
-
-  //         // this.router.navigate(['/']);
-  //         // this.auctionForm.reset();
-  //       },
-  //       error: (error) => {
-  //         console.log('Error:', error);
-  //       }
-  //     });
-  //   }
-  //   console.log(this.auctionForm.valid);
-  // }
-
   onSubmit() {
     if (this.auctionForm.valid) {
-        console.log(this.auctionForm.value);
+      const formData = new FormData();
+      Object.keys(this.auctionForm.value).forEach(key => {
+        const value = this.auctionForm.get(key)?.value;
+        if (key === 'item_media') {
+          if (this.selectedFiles.length > 0) {
+            this.selectedFiles.forEach(file => {
+              formData.append('item_media[]', file, file.name); // Append files
+            });
+          }
+        } else {
+          formData.append(key, value || ''); // Append other form values
+        }
+      });
 
-        // Create a new FormData instance
-        const formData = new FormData(); // Use FormData
-
-        // Append the form values to the FormData object
-        Object.keys(this.auctionForm.value).forEach(key => {
-            const value = this.auctionForm.get(key)?.value;
-            if (key === 'item_media') {
-                if (this.selectedFiles.length > 0) {
-                    this.selectedFiles.forEach(file => {
-                        formData.append('item_media[]', file, file.name); // Append files
-                    });
-                }
-            } else {
-                formData.append(key, value || ''); // Append other form values
-            }
-        });
-
-        console.log("Form Data Before Sending:", formData); // Log the FormData
-        
-        // Log each key-value pair using forEach
-        formData.forEach((value, key) => {
-          console.log(key + ': ' + value); // Log each key-value pair
-        });
-
-        // Send the formData to the backend
-        this.auctionService.createAuction(formData).subscribe({
-            next: (response) => {
-                console.log('Auction created successfully!', response);
-                // this.router.navigate(['/']);
-                // this.auctionForm.reset();
-            },
-            error: (error) => {
-                console.log('Error:', error);
-            }
-        });
+      // Send the formData to the backend
+      this.auctionService.createAuction(formData).subscribe({
+        next: (response) => {
+          this.router.navigate(['/']);
+        },
+        error: (error) => {
+        }
+      });
     }
-    console.log(this.auctionForm.valid);
-}
+  }
 
 }

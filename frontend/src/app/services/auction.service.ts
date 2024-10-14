@@ -402,15 +402,14 @@ export class AuctionService {
    * @param auctionData 
    * @returns 
    */
- createAuction(auctionData: FormData): Observable<Auction> {
-    const headers = this.getAuthHeaders();
+  createAuction(auctionData: FormData): Observable<Auction> {
+    const headers = this.getAuthHeaders(false);
+    // const headers = this.getAuthHeaders();
     const options = headers ? { headers } : {};
 
     return this.http.post<Auction>(`${environment.apiUrl}/auction`, auctionData, options)
       .pipe(catchError(this.handleError));
-}
-
-
+  }
   /**
    * Update auction (requires authentication)
    * @param id 
@@ -533,21 +532,21 @@ export class AuctionService {
     return this.http.get<PaginatedAuctions>(`${environment.apiUrl}/auction/search-by-category`, { params: httpParams })
       .pipe(catchError(this.handleError));
   }
-    /**
- * @param page 
- * @param perPage 
- * @returns 
- */
-    getmyAuctions(page: number = 1, perPage: number = 10): Observable<PaginatedAuctions> {
-      let params = new HttpParams()
-        .set('page', page.toString())
-        .set('per_page', perPage.toString());
-  
-      return this.http.get<PaginatedAuctions>(`${environment.apiUrl}/auction/myAuctions`, { params, headers: this.getAuthHeaders() })
-        .pipe(catchError(this.handleError));
-    }
+  /**
+* @param page 
+* @param perPage 
+* @returns 
+*/
+  getmyAuctions(page: number = 1, perPage: number = 10): Observable<PaginatedAuctions> {
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('per_page', perPage.toString());
 
-    getCategories(): Observable<any> {
-      return this.http.get(`${environment.apiUrl}/categories`);
-    }
+    return this.http.get<PaginatedAuctions>(`${environment.apiUrl}/auction/myAuctions`, { params, headers: this.getAuthHeaders() })
+      .pipe(catchError(this.handleError));
+  }
+
+  getCategories(): Observable<any> {
+    return this.http.get(`${environment.apiUrl}/categories`);
+  }
 }
