@@ -1,10 +1,12 @@
 <div class="auctions container">
-    <h2>Auction Listings</h2>
-    <div *ngIf="filteredAuctions.length > 0; else noAuctions">
-      <div class="auction-items">
-        <div *ngFor="let auction of filteredAuctions" class="auction-item" (click)="goToAuctionDetails(auction.auction_id)" style="cursor: pointer;">
+  <h2>Auction Listings</h2>
+  <div *ngIf="filteredAuctions.length > 0; else noAuctions">
+    <div class="auction-items">
+      <div *ngFor="let auction of filteredAuctions" class="auction-item">
+        <div (click)="goToAuctionDetails(auction.auction_id)" style="cursor: pointer;">
           <div *ngIf="auction.item_media && auction.item_media.length > 0">
-            <img [src]="'http://localhost:8000/uploads/images/' + auction.item_media[0].path" alt="{{ auction.item_name }}">
+            <img [src]="'http://localhost:8000/uploads/images/' + auction.item_media[0].path"
+              alt="{{ auction.item_name }}">
           </div>
           <div class="auction-info">
             <p class="item-description">
@@ -18,17 +20,15 @@
             </div>
             <p class="date">Starts: {{ auction.auction_start_time | date:'short' }}</p>
             <p class="date">Ends: {{ auction.auction_end_time | date:'short' }}</p>
-            
-
-            <div class="bid-btn" >
-              <button (click)="restoreAuction(auction.auction_id)">Restore Auction</button>
-            </div>
-            
           </div>
+        </div>
+        <div class="bid-btn">
+          <button (click)="restoreAuction(auction.auction_id)">Restore Auction</button>
         </div>
       </div>
     </div>
-    <ng-template #noAuctions>
-      <p style="font-size: 30px; color: black; text-align: center;">No auctions available at this time.</p>
-    </ng-template>
   </div>
+  <ng-template #noAuctions>
+    <p style="font-size: 30px; color: black; text-align: center;">No auctions available at this time.</p>
+  </ng-template>
+</div>

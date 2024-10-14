@@ -136,7 +136,7 @@ export class HomeComponent implements OnInit {
     const isAuctionStarted = currentTime >= auctionStartTime;
     const isAuctionBeforeStarting = currentTime <= auctionStartTime;
     if (isAuctionBeforeStarting) {
-      return 'before starting';
+      return 'not Started';
     }
     if (isAuctionStarted && !isAuctionEnded) {
       return 'opened'
@@ -158,8 +158,7 @@ export class HomeComponent implements OnInit {
   deleteAuction(auctionId: string) {
     this.auctionService.deleteAuction(auctionId).subscribe({
       next: (response) => {
-        console.log('Auction deleted:', response);
-        // Optionally refresh the list of auctions or perform other actions
+        this.loadApprovedAuctions(this.currentPage);
       },
       error: (error) => {
         console.error('Error deleting auction:', error);
