@@ -120,5 +120,8 @@ export class AuthService {
     }
     return false;
   }
-  
+getCurrentUserId(): string {
+  return localStorage.getItem('currentUserId') || ''; 
+}
+
 }

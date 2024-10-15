@@ -1,4 +1,15 @@
-<div class="auction-container" style="padding-top: 80px;">
+<div *ngIf="winner && isAuctionEnded">
+  <div class="card" style="margin: 100px auto 10px; padding: 10px; text-align: center;" *ngIf="isWinner; else notwinner">
+    <h2 > congratulations You won this auction by bidding {{winingBid}} $  </h2> 
+  </div>
+    <ng-template #notwinner>
+      <div class="card" style="margin: 100px auto 10px; padding: 10px; text-align: center;">
+
+        <h2> Auction Winner is {{winner}} by bidding {{winingBid}} $</h2>
+      </div>
+    </ng-template>
+</div>
+<div class="auction-container" style="margin-top: 100px;">
   <app-auction-details [auctionId]='auctionId'></app-auction-details>
   <app-bids [auctionId]='auctionId'></app-bids>
   <app-comments [auctionId]='auctionId'></app-comments>

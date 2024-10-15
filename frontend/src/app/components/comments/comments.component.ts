@@ -19,11 +19,13 @@ export class CommentsComponent implements OnInit {
   editMode: boolean = false;
   currentCommentId: string | null = null;
   isBanned: boolean = false;
+  currentUserId: string = '';
 
   constructor(private commentsService: CommentsService, private authService: AuthService) {}
 
   ngOnInit(): void {
-    this.isBanned = this.authService.isUserBanned();  //customer one -> isbanned = true
+    this.isBanned = this.authService.isUserBanned();
+    this.currentUserId = this.authService.getCurrentUserId(); 
 
     if (this.auctionId) { 
       this.loadComments();
@@ -35,7 +37,7 @@ export class CommentsComponent implements OnInit {
   loadComments() {
     this.commentsService.getCommentsByAuctionId(this.auctionId).subscribe({
       next: (response) => {
-        this.comments = response.comments;
+        this.comments = response.comments; 
         console.log('Comments loaded:', this.comments);
       },
       error: (error) => {
@@ -44,8 +46,8 @@ export class CommentsComponent implements OnInit {
     });
   }
 
-  submitComment(): void {             //customer one -> isbanned = true
-    if (this.isBanned) {                 
+  submitComment(): void {
+    if (this.isBanned) {
       console.warn('You cannot submit comments because you are banned.');
       return;
     }

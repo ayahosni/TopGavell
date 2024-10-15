@@ -1,7 +1,8 @@
 
 <br>
-
-<h2>Auction Listings</h2>
+<br>
+<br>
+<h2 class="auction-title" style="color: #333;;">Auction Listings</h2>
 <br>
 
 <div *ngIf="auctions.length > 0; else noAuctions">
@@ -44,5 +45,5 @@
 </div>
 
 <ng-template #noAuctions>
-  <p>No auctions available at this time.</p>
+  <p class="no">No auctions available at this time.</p>
 </ng-template>

@@ -92,23 +92,72 @@
     font-weight: 600;
     border-bottom: 1px solid var(--dark-color);
   }
-  /* Categories Section Styles */
-  .categories-content {
-    margin-top: 50px;
-  }
-  .categories {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 20px;
-    cursor: pointer;
-  }
-  .categories img {
-    width: 150px;
-    border-radius: 50%;
-  }
-  .categories p {
-    text-align: center;
-  }
+    /* ////////////////////////// */
+    .category-title {
+      font-size: 28px;
+      font-weight: bold;
+      color: #333;
+      text-align: center;
+      margin: 20px 0;
+      position: relative;
+    }
+      
+    .category-title:hover {
+      color: var(--btn-color);
+      transition: color 0.3s ease;
+    }
+    
+    .categories-content {
+      margin-top: 50px;
+    }
+    
+    .categories {
+      display: flex;
+      align-items: center; /* Center vertically */
+      justify-content: space-between; /* Space out arrows and categories */
+      margin-top: 20px;
+    }
+    
+    .arrow {
+      background-color: transparent; /* Transparent background */
+      border: none; /* Remove border */
+      font-size: 24px; /* Increase font size for better visibility */
+      cursor: pointer; /* Pointer cursor */
+      padding: 10px; /* Add some padding */
+      color: #333; /* Set arrow color */
+    }
+    
+    .category-container {
+      display: flex; /* Flexbox for categories */
+      flex-grow: 1; /* Allow the category container to grow */
+      justify-content: center; /* Center categories */
+    }
+    
+    .category {
+      display: flex; /* Center content inside each category */
+      flex-direction: column; /* Stack image and text */
+      align-items: center; /* Center items horizontally */
+      margin: 0 15px; /* Add space between categories */
+      transition: transform 0.3s ease; /* Smooth transition on hover */
+    }
+    
+    .category:hover {
+      transform: scale(1.1); /* Enlarge on hover */
+    }
+    
+    .categories img {
+      width: 150px;
+      border-radius: 50%;
+    }
+    
+    .categories p {
+      text-align: center;
+      font-size: 18px; /* Increase font size for category names */
+      margin-top: 10px; /* Space between image and text */
+    }
+    
+  
+
   /* Selling Section Styles */
   .selling {
     background-color: var(--dark-color);
@@ -128,6 +177,25 @@
     font-size: 24px;
     margin: 0;
   }
+
+
+
+  .auction-title {
+    font-size: 28px; 
+    font-weight: bold; 
+    color: #000; 
+    text-align: center; 
+    margin: 20px 0; 
+    position: relative; 
+  }
+  
+  
+  .auction-title:hover {
+    color: #000; 
+    transition: color 0.3s ease; 
+  }
+  
+  
   /* Opening Auction Styles */
   .auctions {
     width: 100%;

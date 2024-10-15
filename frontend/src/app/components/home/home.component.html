@@ -2,7 +2,8 @@
 <div class="hero">
   <div class="search-bar">
     <div class="search-title">
-      <h1>Explore Auctions Like Never Before</h1>
+      <h1 class="auction-header" style="      text-align: center;
+">Explore Auctions Like Never Before</h1>
     </div>
     <div class="find">
       <div class="auction-search">
@@ -28,12 +29,17 @@
   <div class="categories-content">
     <div class="category-title">Explore Our Categories</div>
     <div class="categories">
-      <div class="category" *ngFor="let category of categories" (click)="onCategoryClick(category.id)">
-        <img [src]="category.image" alt="{{ category.name }}">
-        <p>{{ category.name }}</p>
+      <div class="category-container">
+        <div class="category" *ngFor="let category of categories" (click)="onCategoryClick(category.id)">
+          <img [src]="category.image" alt="{{ category.name }}">
+          <p>{{ category.name }}</p>
+        </div>
       </div>
     </div>
   </div>
+  
+  
+
   <!-- End Categories Section -->
 
   <!-- Selling Section -->
@@ -52,7 +58,8 @@
 
   <!-- Opening Auctions Section -->
   <div class="auctions container">
-    <h2>Auction Listings</h2>
+    <h2 class="auction-title" style="color: #333;;">Auction Listings</h2>
+
     <div *ngIf="filteredAuctions.length > 0; else noAuctions">
       <div class="auction-items">  
         <div *ngFor="let auction of filteredAuctions" class="auction-item"
@@ -99,7 +106,7 @@
       </div>
     </div>
     <ng-template #noAuctions>
-      <p style="font-size: 30px; color: black; text-align: center;">No auctions available at this time.</p>
+      <p style="font-size: 30px; color:  #333; text-align: center;">No auctions available at this time.</p>
     </ng-template>
   </div>
 

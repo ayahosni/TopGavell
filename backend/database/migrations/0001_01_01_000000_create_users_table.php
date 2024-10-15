@@ -21,6 +21,7 @@ return new class extends Migration
             $table->enum('role', ['admin', 'customer', 'moderator'])->default('customer');
             $table->string('profile_picture')->nullable();
             $table->boolean('is_email_verified')->default(false);
+            $table->boolean('banned')->default(false);
             $table->timestamps();
         });
 

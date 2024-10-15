@@ -5,16 +5,12 @@
 </div>
 <form [formGroup]="auctionForm" (ngSubmit)="onSubmit()" enctype="multipart/form-data">
   <label for="category_id">Category</label>
-
-  <!-- <input id="category_id" formControlName="category_id" type="number" required value="3" > -->
-  
+  <!-- <input id="category_id" formControlName="category_id" type="number" required value="3" >   -->
   <select id="category_id" formControlName="category_id" required>
     <option *ngFor="let category of categories" [value]="category.id">
       {{ category.name }}
     </option>
   </select>
-
-  
   <div *ngIf="auctionForm.get('category_id')?.invalid && auctionForm.get('category_id')?.touched">
     <small class="error">Category ID is required.</small>
   </div>
@@ -46,8 +42,14 @@
   <label for="auction_start_time">Auction Start Time</label>
   <input id="auction_start_time" formControlName="auction_start_time" type="datetime-local" required>
   <div *ngIf="auctionForm.get('auction_start_time')?.invalid && auctionForm.get('auction_start_time')?.touched">
-    <small class="error">Auction Start Time is required.</small>
+    <small class="error" *ngIf="auctionForm.get('auction_start_time')?.errors?.['startTimeInvalid']">
+      The auction start time must be at least 24 hours from now.
+    </small>
   </div>
+  <div *ngIf="serverErrorMessage">
+    <small class="error">{{ serverErrorMessage }}</small>
+  </div>
+
 
   <label for="auction_end_time">Auction End Time</label>
   <input id="auction_end_time" formControlName="auction_end_time" type="datetime-local" required>

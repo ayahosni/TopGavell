@@ -2,13 +2,16 @@
   <div class="navbar-content container">
     <a routerLink="/">
       <div class="navbar-logo">
-        <span><span class="gavel">T</span>opgavel</span>
+        <span><span class="gavel">T</span><span class="topgavel">opgavel</span></span>
       </div>
     </a>
+    
 
     <ul class="navbar-menu">
       <li><a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Home</a></li>
       <li><a routerLink="/auctions" routerLinkActive="active">Open Auctions</a></li>
+      <li><a routerLink="/myauctions" routerLinkActive="active">My auctions</a></li>
+
       <li><a routerLink="/guides" routerLinkActive="active">Buying Guides & Tips</a></li>
     </ul>
 

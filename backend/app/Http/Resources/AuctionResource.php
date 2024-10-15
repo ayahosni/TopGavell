@@ -34,10 +34,8 @@ class AuctionResource extends JsonResource
             'item_media' => new ImageResource($this->images),
             'item_country' => $this->item_country,
             'creator' => new CustomerResource($this->customer),
-            'bids' => new BidResource($this->bids),
-            'winning_bidder' => $this->winningBidder ? [
-                'name' => $this->winningBidder->user->name,
-            ] : null,
+            'bids' => new BidResource($this->bids), 
+            'winning_bidder' => $this->winningBidder ? ['name' => $this->winningBidder->user->name,'id' => $this->winningBidder->id,] : null,
             'winning_bid' => $lastBid ? $lastBid->bid_amount : null,
 
         ];
