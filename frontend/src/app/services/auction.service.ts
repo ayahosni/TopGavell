@@ -435,7 +435,7 @@ export class AuctionService {
     if (!headers) {
       return throwError('Token is missing. Please log in.');
     }
-    return this.http.delete(`${environment.apiUrl}/auction/${id}`, { headers })
+    return this.http.delete(`${environment.apiUrl}/auction/${id}/delete`, { headers })
       .pipe(catchError(this.handleError));
   }
 

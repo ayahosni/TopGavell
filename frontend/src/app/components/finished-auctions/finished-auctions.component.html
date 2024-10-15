@@ -12,6 +12,7 @@
       <p class="auction-item-end-time"><strong>End:</strong> {{ auction.auction_end_time | date: 'short'}}</p>
       <p class="auction-winning-bidder"><strong>Winner:</strong> {{ auction.winning_bidder?.name || 'N/A' }}</p>
       <p class="auction-winning-bid"><strong>Winning Bid:</strong> {{ auction.winning_bid !== null ? (auction.winning_bid | currency) : 'N/A' }}</p>
+      
     </div>
   </div>
 </div>

@@ -51,6 +51,25 @@ export class MyAuctionsComponent implements OnInit {
     this.router.navigate(['/auction', auctionId]);
   }
 
+
+  checkAuctionStatus(auction: { auction_end_time: string | number | Date; auction_start_time: string | number | Date; }): string {
+    const currentTime = new Date();
+    const auctionEndTime = new Date(auction.auction_end_time);
+    const isAuctionEnded = currentTime >= auctionEndTime;
+    const auctionStartTime = new Date(auction.auction_start_time);
+    const isAuctionStarted = currentTime >= auctionStartTime;
+    const isAuctionBeforeStarting = currentTime <= auctionStartTime;
+    if (isAuctionBeforeStarting) {
+      return 'before starting';
+    }
+    if (isAuctionStarted && !isAuctionEnded) {
+      return 'opened'
+    }
+    return 'closed'
+  }
+
+  
+
   /**
  */
   nextPage(): void {
@@ -94,7 +113,20 @@ export class MyAuctionsComponent implements OnInit {
   updateAuction(id: any){
     console.log(id);
   }
-  deleteAuction(id: any){
-    console.log(id);
+  // deleteAuction(id: any){
+  //   console.log(id);
+  // }
+
+  deleteAuction(auctionId: string) {
+    this.auctionService.deleteAuction(auctionId).subscribe({
+      next: (response) => {
+        console.log('Auction deleted:', response);
+        this.ngOnInit();
+        // Optionally refresh the list of auctions or perform other actions
+      },
+      error: (error) => {
+        console.error('Error deleting auction:', error);
+      }
+    });
   }
 }

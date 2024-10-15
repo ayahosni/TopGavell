@@ -168,15 +168,23 @@ class PaymentController extends Controller
                         ]);
                     
                     } catch (\Exception $e) {
-                        return response()->json([
-                            'status' => 'error',
-                            'message' => 'Some refunds failed',
+                        $refundErrors[] = [
                             'bidder_id' => $payment->bidder_id,
                             'auction_id' => $payment->auction_id,
-                            'payment_intent_id' => $payment->payment_intent_id,
-                        ], 400); // Bad request status                
+                            'payment_intent_id' => $payment->payment_intent,
+                            'error_message' => $e->getMessage(),
+                        ];
                     }
                 
+                }
+
+                 // If there are refund errors, return them
+                if (!empty($refundErrors)) {
+                    return response()->json([
+                        'status' => 'error',
+                        'message' => 'Some refunds failed',
+                        'refund_errors' => $refundErrors
+                    ], 400); // Bad request status
                 }
             } 
 
