@@ -99,7 +99,7 @@ export class EditAuctionComponent implements OnInit {
 
       // Call update auction API
       this.auctionService.updateAuction(Number(this.auctionId), formData).subscribe({
-        next: () => {
+                next: () => {
           this.router.navigate(['/myAuctions']);
         },
         error: (error) => {

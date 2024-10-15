@@ -172,6 +172,7 @@ export class AuctionService {
 updateAuction(id: number, auctionData: FormData | any): Observable<Auction> {
   const isFormData = auctionData instanceof FormData;
   const headers = this.getAuthHeaders(!isFormData); 
+  // const headers = this.getAuthHeaders(false);
   const options = headers ? { headers } : {};
 
   return this.http.put<Auction>(`${environment.apiUrl}/auction/${id}`, auctionData, options)

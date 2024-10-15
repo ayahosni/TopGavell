@@ -18,6 +18,8 @@ export class MyAuctionsComponent implements OnInit {
   currentPage: number = 1;
   totalPages: number = 0;
   perPage: number = 10;
+  currentTime: Date = new Date(); 
+
   constructor(
     private auctionService: AuctionService,
     private fb: FormBuilder,
@@ -110,6 +112,8 @@ export class MyAuctionsComponent implements OnInit {
     });
   }
 
+  
+
   updateAuction(id: any){
     console.log(id);
     this.router.navigate([`/auction/edit/${id}`]);
@@ -130,5 +134,9 @@ export class MyAuctionsComponent implements OnInit {
         console.error('Error deleting auction:', error);
       }
     });
+  }
+
+  isAuctionActive(auction: Auction): boolean {
+    return new Date() < new Date(auction.auction_start_time); 
   }
 }
