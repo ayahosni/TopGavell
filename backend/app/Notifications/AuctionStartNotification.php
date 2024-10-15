@@ -26,18 +26,20 @@ class AuctionStartNotification extends Notification
     }
 
     public function toMail($notifiable)
-    {
-        return (new MailMessage)
-                    ->subject('Auction Started')
-                    ->line('The auction ' . $this->auction->title . ' has started.')
-                    ->action('View Auction', url('/auctions/' . $this->auction->id));
-    }
+{
+    return (new MailMessage)
+                ->subject('Auction Started')
+                ->line('The auction ' . $this->auction->title . ' has started.')
+                ->action('View Auction', url('/auctions/' . $this->auction->id)); // Ensure $this->auction->id exists
+}
 
-    public function toArray($notifiable)
-    {
-        return [
-            'auction_id' => $this->auction->id,
-            'message' => 'The auction ' . $this->auction->title . ' has started.'
-        ];
-    }
+
+public function toArray($notifiable)
+{
+    return [
+        'auction_id' => $this->auction->id,  
+        'message' => 'The auction ' . $this->auction->title . ' has started.'
+    ];
+}
+
 }

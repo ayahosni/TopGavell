@@ -8,12 +8,14 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 interface Notification {
   id: string;
   data: {
-    auction: string;  // اسم المزاد
-    user: string;       // اسم المستخدم الذي قام بالتعليق
-    content: string;    // محتوى التعليق أو الإشعار
+    auction: string; 
+    auction_id: string;  
+    user: string;       
+    content: string;  
   };
-  created_at: string;   // تاريخ الإشعار
+  created_at: string;  
 }
+
 
 // interface PaginatedNotifications {
 //   current_page: number;

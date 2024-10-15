@@ -4,12 +4,16 @@
 <br>
 <div class="notification-container">
   <h2>Notifications</h2>
-  <div *ngFor="let notification of notifications" class="notification-card">    
-    <h3>{{ notification.data.item }}</h3>
-    <p>{{ notification.data.message }}</p>
-    <p>{{ notification.data.bid_amount }}</p>
-    <a [routerLink]="['/auction', notification.data.auction_id]">View Auction</a>
+  <div *ngFor="let notification of notifications">
+    <div class="notification">
+      <h4>{{ notification.data.auction }}</h4>
+      <span class="notification-user">{{ notification.data.user }}:</span> 
+      <p>{{ notification.data.content }}</p>
+      <a [routerLink]="['/auction', notification.data.auction_id]">View Auction</a>
+    </div>
   </div>
+
+  
 
   <!-- Pagination Controls -->
   <div class="pagination-controls" *ngIf="totalPages > 1;">
