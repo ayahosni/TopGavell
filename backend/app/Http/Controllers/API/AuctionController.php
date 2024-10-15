@@ -19,7 +19,7 @@ class AuctionController extends Controller
 {
   public function __construct()
   {
-    $this->middleware('auth:sanctum')->only('store', 'update', 'destroy', 'pendingAuctions', 'approve', 'rejected',);
+    $this->middleware('auth:sanctum')->only('store', 'update', 'destroy', 'pendingAuctions', 'approve', 'rejected','restore');
   }
 
   public function index(Request $request)
@@ -337,28 +337,16 @@ class AuctionController extends Controller
 
   public function restore($id)
   {
-    // Find the soft-deleted auction by ID
+    $user = Auth::user();
     $auction = Auction::withTrashed()->find($id);
-
-    // return response()->json(['message' => $auction], 200);
-
-
-    // Check if the auction exists and is soft-deleted
     if (!$auction || !$auction->trashed()) {
       return response()->json(['message' => 'Auction not found or not deleted'], 404);
     }
-
-
-    $user = Auth::user();
     $currentTime = Carbon::now('UTC')->setTimezone('Europe/Bucharest')->format('Y-m-d H:i:s');
     // Check if the time is before auction start
     if ($currentTime < $auction->auction_start_time) {
-      // Check if the user is either the owner of the auction or an admin
       if ($user->role === 'admin' || $user->id === $auction->customer->user_id) {
-
-        // Restore the auction
         $auction->restore();
-
         return response()->json(['message' => 'Auction restored successfully'], 200);
       }
     }

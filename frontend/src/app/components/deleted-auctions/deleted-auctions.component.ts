@@ -54,14 +54,14 @@ export class DeletedAuctionsComponent {
   }
 
   restoreAuction(id: string) {
-    this.auctionService.restoreAuction(id).subscribe(
-      response => {
-        console.log('Auction restored successfully:', response);
+    this.auctionService.restoreAuction(id).subscribe({
+      next: (response) => {
+        this.loadDeletedAuctions(this.currentPage);
       },
-      error => {
+      error: (error) => {
         console.error('Error restoring auction:', error);
       }
-    );
+    });
   }
 
   goToAuctionDetails(auctionId: string): void {

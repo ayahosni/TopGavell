@@ -61,6 +61,24 @@
     <h2 class="auction-title" style="color: #333;;">Auction Listings</h2>
 
     <div *ngIf="filteredAuctions.length > 0; else noAuctions">
+      <div class="auction-items">
+        <div *ngFor="let auction of filteredAuctions" class="auction-item">
+          <div (click)="goToAuctionDetails(auction.auction_id)" style="cursor: pointer;">
+            <div *ngIf="auction.item_media && auction.item_media.length > 0">
+              <img [src]="'http://localhost:8000/uploads/images/' + auction.item_media[0].path"
+                alt="{{ auction.item_name }}">
+            </div>
+            <div class="auction-info">
+              <p class="item-description">
+                <span class="item-name">{{ auction.item_name }}</span>
+                <br>
+                <span class="item-price">{{ auction.starting_bid | currency }} $</span>
+              </p>
+              <div class="item-location">
+                <i class="map fa-solid fa-location-dot"></i>
+                <span>{{ auction.item_country }}</span>
+              </div>
+              <p class="auction-end-date">Ends: {{ auction.auction_end_time | date:'short' }}</p>
       <div class="auction-items">  
         <div *ngFor="let auction of filteredAuctions" class="auction-item"
           (click)="goToAuctionDetails(auction.auction_id)" style="cursor: pointer;">
@@ -80,27 +98,21 @@
             </div>
             <p class="auction-end-date">Ends: {{ auction.auction_end_time | date:'short' }}</p>
 
-            <p class="auction-status" [ngClass]="{
+              <p class="auction-status" [ngClass]="{
               'opened': checkAuctionStatus(auction)==='opened',
               'closed': checkAuctionStatus(auction)==='closed'
               }">
-              {{ checkAuctionStatus(auction) | titlecase }}
-            </p>
-
-            <div class="bid-btn"
-              *ngIf="checkAuctionStatus(auction) === 'opened' && !(isAdmin || checkAuctionOwnwer(auction))">
-              <button routerLink="/payment">Bid Now</button>
+                {{ checkAuctionStatus(auction) | titlecase }}
+              </p>
             </div>
-            
-
-            <div *ngIf="isAdmin || checkAuctionOwnwer(auction)">
-              <div class="bid-btn" *ngIf="checkAuctionStatus(auction) === 'before starting'">
-                <button (click)="deleteAuction(auction.auction_id)">Delete</button>
-              </div>
+          </div>
+          <div class="bid-btn" *ngIf="checkAuctionStatus(auction) === 'opened' && !(isAdmin || checkAuctionOwnwer(auction))">
+            <button routerLink="/payment">Bid Now</button>
+          </div>
+          <div *ngIf="isAdmin || checkAuctionOwnwer(auction)">
+            <div class="bid-btn" *ngIf="checkAuctionStatus(auction) === 'not Started'">
+              <button (click)="deleteAuction(auction.auction_id)">Delete</button>
             </div>
-
-
-
           </div>
         </div>
       </div>
