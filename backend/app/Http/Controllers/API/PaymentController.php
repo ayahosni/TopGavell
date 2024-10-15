@@ -138,17 +138,10 @@ class PaymentController extends Controller
     public function refund(Request $request, $auctionID)
     {
         $data = $request->all();
-        // return response()->json([
-        //     'data'=>$data,
-        //     'request'=>$request,
-        //     'id'=>$id
-        // ]);
-        // $auctionID = $data['auction_id'];
-        // return response()->json(['hasPaid' => $auctionID]);
-
+        
         $auction = Auction::findOrFail($auctionID);
         $user = Auth::user();
-        // return response()->json(['role' => $user->role]);
+        
         if ($user->role === 'admin') {
 
             $currentTime = Carbon::now('UTC')->setTimezone('Africa/Cairo')->format('Y-m-d H:i:s');
@@ -157,59 +150,66 @@ class PaymentController extends Controller
 
                 // $paymentsOfAuction = Payment::where('auction_id', $auctionID);
                 $MaxPayment = Payment::where('auction_id', $auctionID)->max('amount');
-
+                
                 $paymentsToRefund = Payment::where('auction_id', $auctionID)
-                    ->where('amount', '!=', $MaxPayment)
-                    ->get();
+                ->where('amount', '!=', $MaxPayment)
+                ->get();
 
                 $stripe = new \Stripe\StripeClient(env('STRIPE_SECRET'));
-
-
+                
                 foreach ($paymentsToRefund as $payment) {
 
+                    // $stripe->refunds->create([
+                    //     'payment_intent' => $payment->payment_intent_id,
+                    // ]);
+                    // $payment->update(['refund_status' => 'refunded']);
+                    
+                    // return response()->json([
+                    //     'message' => 'refunded all insurance of this auction'
+                    // ], 403);
+
                     try {
-                        // Assuming that the payment has a 'payment_intent' column which stores the Stripe PaymentIntent ID
+                        // Attempt to refund via Stripe
                         $stripe->refunds->create([
-                            'payment_intent' => $payment->payment_intent,
+                            'payment_intent' => $payment->payment_intent_id,
                         ]);
-
+            
+                        // Update refund status after successful Stripe refund
                         $payment->update(['refund_status' => 'refunded']);
-                    } catch (\Exception $e) {
-                        $refundErrors[] = [
-                            'bidder_id' => $payment->bidder_id,
-                            'auction_id' => $payment->auction_id,
-                            'payment_intent_id' => $payment->payment_intent,
-                            'error_message' => $e->getMessage(),
-                        ];
-                    }
-                }
-                // If there are refund errors, return them
-                if (!empty($refundErrors)) {
-                    return response()->json([
-                        'status' => 'error',
-                        'message' => 'Some refunds failed',
-                        'refund_errors' => $refundErrors
-                    ], 400); // Bad request status
-                }
-            }
-        } else {
 
+                         
+                        return response()->json([
+                            'message' => 'refunded all insurance of this auction'
+                        ], 200);
+            
+                    } catch (\Exception $e) {
+                        // Handle errors if refund fails
+                        return response()->json([
+                            'status' => 'error',
+                            'message' => 'Failed to refund payment.',
+                            'error' => $e->getMessage(), // Get error message from exception
+                            'payment_intent_id' => $payment->payment_intent_id,
+                            'bidder_id' => $payment->bidder_id
+                        ], 200); 
+                    }
+                            
+                }
+
+                
+            }
+            else {
+                return response()->json([
+                    'message' => 'auction not end yet.'
+                ], 403);
+            }
+
+        } 
+        else {
             return response()->json([
                 'message' => 'Unauthorized.'
             ], 403);
         }
 
-
-        // $stripe = new Stripe();
-        // $stripe = Stripe::make(env('STRIPE_SECRET'));
-        // $stripe =  Stripe::setApiKey(env('STRIPE_SECRET'));
-        // $stripe = new StripeClient('sk_test_51Q3Y1YApxqx10PD5EjHXihoyRwFROlVjObFqB0WCjzjvyY3zGCaHnPwJoxoWS3vLGNqWDugWnXBC5FJhE3uHjkTV00NX2b8B3J');
-
-
-
-        // $stripe = new \Stripe\StripeClient(env('STRIPE_SECRET'));
-        // $stripe->refunds->create(['payment_intent' => 'pi_3Q9WPEApxqx10PD51Np3B3Ub']);
-
-
     }
+
 }
