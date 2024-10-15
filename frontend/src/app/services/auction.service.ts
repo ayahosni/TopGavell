@@ -170,11 +170,12 @@ export class AuctionService {
  * @returns Observable with the updated auction
  */
 updateAuction(id: number, auctionData: FormData | any): Observable<Auction> {
-  const isFormData = auctionData instanceof FormData;
-  const headers = this.getAuthHeaders(!isFormData); 
+  // const isFormData = auctionData instanceof FormData;
+  // const headers = this.getAuthHeaders(!isFormData); 
   // const headers = this.getAuthHeaders(false);
+  // const options = headers ? { headers } : {};
+  const headers = this.getAuthHeaders(false);
   const options = headers ? { headers } : {};
-
   return this.http.put<Auction>(`${environment.apiUrl}/auction/${id}`, auctionData, options)
     .pipe(catchError(this.handleError));
 }
@@ -244,6 +245,15 @@ updateAuction(id: number, auctionData: FormData | any): Observable<Auction> {
       .set('per_page', perPage.toString());
 
     return this.http.get<PaginatedAuctions>(`${environment.apiUrl}/auction/finished`, { params })
+      .pipe(catchError(this.handleError));
+  }
+
+  refund(id: string): Observable<any> {
+    const headers = this.getAuthHeaders(false);
+    if (!headers) {
+      return throwError('Token is missing. Please log in.');
+    }
+    return this.http.get(`${environment.apiUrl}/refund/${id}`, { headers })
       .pipe(catchError(this.handleError));
   }
 

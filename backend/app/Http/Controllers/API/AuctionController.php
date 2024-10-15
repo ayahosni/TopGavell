@@ -119,8 +119,9 @@ class AuctionController extends Controller
   /////////////////////////////////////////////////////////////////////////////////////////////////////////
   public function finishedAuctions()
   {
+    $currentTime = Carbon::now('UTC')->setTimezone('Africa/Cairo')->format('Y-m-d H:i:s');
     $finishedAuctions = Auction::with(['winningBidder.user', 'customer'])
-      ->where('auction_end_time', '<', Carbon::now())
+      ->where('auction_end_time', '<', $currentTime)
       ->where('approval_status', 'approved')
       // ->whereNotNull('winning_bidder_id')
       ->get();

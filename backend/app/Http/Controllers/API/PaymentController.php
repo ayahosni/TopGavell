@@ -41,7 +41,7 @@ class PaymentController extends Controller
             $paymentType = 'Auction Insurance';
             $amount = $auction->starting_bid;
         }
-        
+
 
         $amount = $amount * 100;
         // Create a new checkout session
@@ -89,7 +89,7 @@ class PaymentController extends Controller
 
         // Get the latest Stripe session
         Stripe::setApiKey(env('STRIPE_SECRET'));
-        $session_id = request('session_id'); 
+        $session_id = request('session_id');
         // return response()->json(['data' => $session_id]);
         $stripe = new \Stripe\StripeClient(env('STRIPE_SECRET'));
         $session = \Stripe\Checkout\Session::retrieve($session_id);
@@ -135,17 +135,21 @@ class PaymentController extends Controller
         ]);
     }
 
-    public function refund (Request $request)
+    public function refund(Request $request, $auctionID)
     {
-
-        $data=$request->all();
-        
-        $auctionID = $data['auction_id'];
-        return response()->json(['hasPaid' => $auctionID]);
+        $data = $request->all();
+        // return response()->json([
+        //     'data'=>$data,
+        //     'request'=>$request,
+        //     'id'=>$id
+        // ]);
+        // $auctionID = $data['auction_id'];
+        // return response()->json(['hasPaid' => $auctionID]);
 
         $auction = Auction::findOrFail($auctionID);
-
-        if (Auth::user()->role === 'admin') {
+        $user = Auth::user();
+        // return response()->json(['role' => $user->role]);
+        if ($user->role === 'admin') {
 
             $currentTime = Carbon::now('UTC')->setTimezone('Africa/Cairo')->format('Y-m-d H:i:s');
             // Check if the time is after auction end
@@ -155,14 +159,14 @@ class PaymentController extends Controller
                 $MaxPayment = Payment::where('auction_id', $auctionID)->max('amount');
 
                 $paymentsToRefund = Payment::where('auction_id', $auctionID)
-                ->where('amount', '!=', $maxPayment)
-                ->get();
+                    ->where('amount', '!=', $MaxPayment)
+                    ->get();
 
                 $stripe = new \Stripe\StripeClient(env('STRIPE_SECRET'));
 
 
                 foreach ($paymentsToRefund as $payment) {
-                
+
                     try {
                         // Assuming that the payment has a 'payment_intent' column which stores the Stripe PaymentIntent ID
                         $stripe->refunds->create([
@@ -170,8 +174,6 @@ class PaymentController extends Controller
                         ]);
 
                         $payment->update(['refund_status' => 'refunded']);
-
-                    
                     } catch (\Exception $e) {
                         $refundErrors[] = [
                             'bidder_id' => $payment->bidder_id,
@@ -180,10 +182,8 @@ class PaymentController extends Controller
                             'error_message' => $e->getMessage(),
                         ];
                     }
-                
                 }
-
-                 // If there are refund errors, return them
+                // If there are refund errors, return them
                 if (!empty($refundErrors)) {
                     return response()->json([
                         'status' => 'error',
@@ -191,17 +191,13 @@ class PaymentController extends Controller
                         'refund_errors' => $refundErrors
                     ], 400); // Bad request status
                 }
-            } 
+            }
+        } else {
 
             return response()->json([
                 'message' => 'Unauthorized.'
-              ], 403);
-
+            ], 403);
         }
-        
-        return response()->json([
-            'message' => 'auction not ended yet.'
-          ], 403);
 
 
         // $stripe = new Stripe();

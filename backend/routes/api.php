@@ -53,7 +53,7 @@ Route::get('/cancel', function () {return 'Payment Cancelled';})->name('cancel')
 
 Route::post('/check-payment', [PaymentController::class, 'checkPayment'])->middleware('auth:sanctum');
 
-Route::post('/refund/{id}', [PaymentController::class, 'refund'])->name('refund');
+Route::get('/refund/{id}', [PaymentController::class, 'refund'])->name('refund')->middleware('auth:sanctum');
 
 
 // Notifications and Payment Routes

@@ -6,9 +6,9 @@
   <h2>Notifications</h2>
   <div *ngFor="let notification of notifications">
     <div class="notification">
-      <h4>{{ notification.data.auction }}</h4>
-      <span class="notification-user">{{ notification.data.user }}:</span> 
-      <p>{{ notification.data.content }}</p>
+      <!-- <h4>{{ notification.data.auction }}</h4> -->
+      <!-- <span class="notification-user">{{ notification.data.user }}</span> -->
+      <p>{{ notification.data.message }}</p>
       <a [routerLink]="['/auction', notification.data.auction_id]">View Auction</a>
     </div>
   </div>

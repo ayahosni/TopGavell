@@ -20,9 +20,9 @@ export class EditAuctionComponent implements OnInit {
   auctionId: string = '';
 
   constructor(
-    private fb: FormBuilder, 
-    private auctionService: AuctionService, 
-    private router: Router, 
+    private fb: FormBuilder,
+    private auctionService: AuctionService,
+    private router: Router,
     private route: ActivatedRoute
   ) {
     this.auctionForm = this.fb.group({
@@ -41,12 +41,12 @@ export class EditAuctionComponent implements OnInit {
   ngOnInit(): void {
     // Get auction ID from route parameters
     this.auctionId = this.route.snapshot.paramMap.get('id') || '';
-    
+
 
     // Fetch categories from the backend
     this.auctionService.getCategories().subscribe({
       next: (data) => {
-        this.categories = data; 
+        this.categories = data;
       },
       error: (error) => {
         console.error('Error fetching categories', error);
@@ -56,7 +56,7 @@ export class EditAuctionComponent implements OnInit {
     // Fetch auction details by ID
     this.auctionService.getAuctionById(this.auctionId).subscribe({
       next: (auction) => {
-        this.auctionForm.patchValue(auction);  
+        this.auctionForm.patchValue(auction);
       },
       error: (error) => {
         console.error('Error fetching auction details', error);
@@ -99,7 +99,7 @@ export class EditAuctionComponent implements OnInit {
 
       // Call update auction API
       this.auctionService.updateAuction(Number(this.auctionId), formData).subscribe({
-                next: () => {
+        next: () => {
           this.router.navigate(['/myAuctions']);
         },
         error: (error) => {

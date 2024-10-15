@@ -21,6 +21,7 @@ export class AdminDashboardComponent {
     this.loadPendingAuctions();
     this.loadActiveAuctions();
     this.loadDeletedAuctions();
+    this.loadFinishedAuctions();
   }
     /**
    * 
@@ -55,6 +56,17 @@ export class AdminDashboardComponent {
         },
         error: (err) => {
           console.error('Error loading approved auctions:', err);
+        }
+      });
+    }
+
+    loadFinishedAuctions(page: number = 1): void {
+      this.auctionService.getFinishedAuctions(page).subscribe({
+        next: (response: PaginatedAuctions) => {
+          this.Fauctions = response.data;
+        },
+        error: (err) => {
+          console.error('Error loading auctions:', err);
         }
       });
     }
