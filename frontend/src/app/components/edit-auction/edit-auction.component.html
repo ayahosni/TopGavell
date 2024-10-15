@@ -1,63 +1,74 @@
 <div class="hero-title">
-    <h2 class=" container form-title">Edit Auction</h2> 
-  </div>
+  <h2 class=" container form-title">Edit Auction</h2>
+</div>
 
 <form [formGroup]="auctionForm" (ngSubmit)="onSubmit()" enctype="multipart/form-data">
-    <label for="category_id">Category</label>
-    <select id="category_id" formControlName="category_id" required>
-      <option *ngFor="let category of categories" [value]="category.id">
-        {{ category.name }}
-      </option>
-    </select>
-    <div *ngIf="auctionForm.get('category_id')?.invalid && auctionForm.get('category_id')?.touched">
-      <small class="error">Category is required.</small>
+  <label for="category_id">Category</label>
+  <select id="category_id" formControlName="category_id" required>
+    <option *ngFor="let category of categories" [value]="category.id">
+      {{ category.name }}
+    </option>
+  </select>
+  <div *ngIf="auctionForm.get('category_id')?.invalid && auctionForm.get('category_id')?.touched">
+    <small class="error">Category is required.</small>
+  </div>
+
+  <label for="item_name">Item Name</label>
+  <input id="item_name" formControlName="item_name" type="text" required>
+  <div *ngIf="auctionForm.get('item_name')?.invalid && auctionForm.get('item_name')?.touched">
+    <small class="error">Item Name is required.</small>
+  </div>
+
+  <label for="item_description">Item Description</label>
+  <textarea id="item_description" formControlName="item_description" required></textarea>
+  <div *ngIf="auctionForm.get('item_description')?.invalid && auctionForm.get('item_description')?.touched">
+    <small class="error">Item Description must be at least 15 characters long.</small>
+  </div>
+
+  <label for="starting_bid">Starting Bid</label>
+  <input id="starting_bid" formControlName="starting_bid" type="number" required>
+  <div *ngIf="auctionForm.get('starting_bid')?.invalid && auctionForm.get('starting_bid')?.touched">
+    <small class="error">Starting Bid is required.</small>
+  </div>
+
+  <label for="bid_increment">Bid Increment</label>
+  <input id="bid_increment" formControlName="bid_increment" type="number" required>
+  <div *ngIf="auctionForm.get('bid_increment')?.invalid && auctionForm.get('bid_increment')?.touched">
+    <small class="error">Bid Increment is required.</small>
+  </div>
+
+  <label for="auction_start_time">Auction Start Time</label>
+  <input id="auction_start_time" formControlName="auction_start_time" type="datetime-local" required>
+  <div *ngIf="auctionForm.get('auction_start_time')?.invalid && auctionForm.get('auction_start_time')?.touched">
+    <small class="error">Auction Start Time is required.</small>
+  </div>
+
+  <label for="auction_end_time">Auction End Time</label>
+  <input id="auction_end_time" formControlName="auction_end_time" type="datetime-local" required>
+  <div *ngIf="auctionForm.get('auction_end_time')?.invalid && auctionForm.get('auction_end_time')?.touched">
+    <small class="error">Auction End Time is required and must be after the start time.</small>
+  </div>
+
+  <label for="item_media">Item Media</label>
+  <input id="item_media" formControlName="item_media" type="file" (change)="onFileChange($event)" multiple>
+
+  <div *ngIf="auction?.item_media && auction.item_media.length > 0">
+    <h4>Current Images:</h4>
+    <div class="image-container">
+      <!-- <img *ngFor="let image of auction.item_media"[src]="'http://localhost:8000/uploads/images/' + image"> -->
+      <div style="display: flex; flex-wrap: wrap;">
+        <div *ngFor="let image of images">
+          <img [src]="image" alt="Thumbnail of {{ auction.item_name }}" class="thumbnail-image" width="100"  style="margin: 5px;">
+        </div>
+      </div>
     </div>
-  
-    <label for="item_name">Item Name</label>
-    <input id="item_name" formControlName="item_name" type="text" required>
-    <div *ngIf="auctionForm.get('item_name')?.invalid && auctionForm.get('item_name')?.touched">
-      <small class="error">Item Name is required.</small>
-    </div>
-  
-    <label for="item_description">Item Description</label>
-    <textarea id="item_description" formControlName="item_description" required></textarea>
-    <div *ngIf="auctionForm.get('item_description')?.invalid && auctionForm.get('item_description')?.touched">
-      <small class="error">Item Description must be at least 15 characters long.</small>
-    </div>
-  
-    <label for="starting_bid">Starting Bid</label>
-    <input id="starting_bid" formControlName="starting_bid" type="number" required>
-    <div *ngIf="auctionForm.get('starting_bid')?.invalid && auctionForm.get('starting_bid')?.touched">
-      <small class="error">Starting Bid is required.</small>
-    </div>
-  
-    <label for="bid_increment">Bid Increment</label>
-    <input id="bid_increment" formControlName="bid_increment" type="number" required>
-    <div *ngIf="auctionForm.get('bid_increment')?.invalid && auctionForm.get('bid_increment')?.touched">
-      <small class="error">Bid Increment is required.</small>
-    </div>
-  
-    <label for="auction_start_time">Auction Start Time</label>
-    <input id="auction_start_time" formControlName="auction_start_time" type="datetime-local" required>
-    <div *ngIf="auctionForm.get('auction_start_time')?.invalid && auctionForm.get('auction_start_time')?.touched">
-      <small class="error">Auction Start Time is required.</small>
-    </div>
-  
-    <label for="auction_end_time">Auction End Time</label>
-    <input id="auction_end_time" formControlName="auction_end_time" type="datetime-local" required>
-    <div *ngIf="auctionForm.get('auction_end_time')?.invalid && auctionForm.get('auction_end_time')?.touched">
-      <small class="error">Auction End Time is required and must be after the start time.</small>
-    </div>
-  
-    <label for="item_media">Item Media</label>
-    <input id="item_media" formControlName="item_media" type="file" (change)="onFileChange($event)" multiple>
-    
-    <label for="item_country">Item Country</label>
-    <input id="item_country" formControlName="item_country" type="text" required>
-    <div *ngIf="auctionForm.get('item_country')?.invalid && auctionForm.get('item_country')?.touched">
-      <small class="error">Item Country is required.</small>
-    </div>
-  
-    <button type="submit" [disabled]="auctionForm.invalid">Update Auction</button>
-  </form>
-  
+  </div>
+
+  <label for="item_country">Item Country</label>
+  <input id="item_country" formControlName="item_country" type="text" required>
+  <div *ngIf="auctionForm.get('item_country')?.invalid && auctionForm.get('item_country')?.touched">
+    <small class="error">Item Country is required.</small>
+  </div>
+
+  <button type="submit" [disabled]="auctionForm.invalid">Update Auction</button>
+</form>

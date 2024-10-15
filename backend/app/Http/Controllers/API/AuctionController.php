@@ -245,49 +245,54 @@ class AuctionController extends Controller
 
       $data = $request->all();
 
-      $validation = Validator::make($request->all(), [
-        'category_id' => ['required', 'exists:categories,id'],
-        'item_name' => ['required', 'string', 'min:4', 'max:75'],
-        'item_description' => ['required', 'string', 'min:15', 'max:255'],
-        'starting_bid' => ['required', 'decimal:10,2'],
-        'bid_increment' => ['required', 'decimal:10,2'],
-        'starting_bid' => ['required', 'integer'],
-        'bid_increment' => ['required', 'integer'],
-        // 'auction_start_time' => ['required', 'date'],
-        // 'auction_end_time' => ['required', 'date', 'after:auction_start_time'],
-        'auction_start_time' => ['required', 'date', function ($attribute, $value, $fail) {
-          $startTime = \Carbon\Carbon::parse($value);
-          $minStartTime = \Carbon\Carbon::now()->addDay();
-  
-          if ($startTime->lt($minStartTime)) {
-            $fail('The auction start time must be at least 24 hours from now.');
-          }
-        }],
-        'auction_end_time' => [
-          'required',
-          'date',
-          function ($attribute, $value, $fail) use ($request) {
-            $startTime = \Carbon\Carbon::parse($request->input('auction_start_time'));
-            $endTime = \Carbon\Carbon::parse($value);
-  
-            if ($endTime->lt($startTime->addHour())) {
-              $fail('The auction end time must be at least one hour after the auction start time.');
-            }
-          },
-        ],
-        'item_media' => ['nullable', 'file'],
-        'item_country' => ['required', 'string'],
-      ]);
-      if ($validation->fails()) {
-        return response()->json($validation->messages(), 400);
-      }
+    // Validation for auction data and images
+    $validation = Validator::make($request->all(), [
+      'category_id' => ['required', 'exists:categories,id'],
+      'item_name' => ['required', 'string', 'min:4', 'max:75'],
+      'item_description' => ['required', 'string', 'min:15', 'max:255'],
+      'starting_bid' => ['required', 'integer'],
+      'bid_increment' => ['required', 'integer'],
+      // 'auction_start_time' => ['required', 'date', 'after:now'],
+      'auction_start_time' => ['required', 'date', function ($attribute, $value, $fail) {
+        $startTime = \Carbon\Carbon::parse($value);
+        $minStartTime = \Carbon\Carbon::now()->addDay();
 
-      if ($request->hasFile('item_media')) {
-        $file = $request->file('item_media');
-        $filename = time() . '.' . $file->getClientOriginalExtension();
-        $file->move(public_path('uploads/item_media'), $filename);
-        $data['item_media']  = $filename;
+        if ($startTime->lt($minStartTime)) {
+          $fail('The auction start time must be at least 24 hours from now.');
+        }
+      }],
+      // 'auction_end_time' => ['required', 'date'],
+      'auction_end_time' => [
+        'required',
+        'date',
+        function ($attribute, $value, $fail) use ($request) {
+          $startTime = \Carbon\Carbon::parse($request->input('auction_start_time'));
+          $endTime = \Carbon\Carbon::parse($value);
+
+          if ($endTime->lt($startTime->addHour())) {
+            $fail('The auction end time must be at least one hour after the auction start time.');
+          }
+        },
+      ],
+      'item_country' => ['required', 'string'],
+      'item_media.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+    ]);
+
+    // Return validation errors if any
+    if ($validation->fails()) {
+      return response()->json($validation->messages(), 400);
+    }
+
+    if ($request->hasFile('item_media')) {
+      $files = $request->file('item_media');
+
+      foreach ($files as $file) {
+        $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+        $file->move(public_path('uploads/images'), $filename);
+        $data['item_media'][] = $filename;
+        Image::create(['auction_id' => $auction->id, 'path' => $filename]);
       }
+    }
       $auction->approval_status="pending";
       $auction->update($data);
 
