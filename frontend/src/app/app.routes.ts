@@ -27,6 +27,8 @@ import { FinishedAuctionsComponent } from './components/finished-auctions/finish
 import { NotificationComponent } from './components/notifications/notifications.component';
 import { CustomersComponent } from './components/customers/customers.component';
 import { NonAdminGuard } from './guards/non-admin.guard'; 
+import { EditAuctionComponent } from './components/edit-auction/edit-auction.component';
+
 
 export const routes: Routes = [
     { path: '', component: HomeComponent },
@@ -53,5 +55,8 @@ export const routes: Routes = [
     { path: 'notifications', component: NotificationComponent, canActivate: [verifyemailGuard] },
     { path: 'customers', component: CustomersComponent, canActivate: [verifyemailGuard] },
     { path: 'errors', component: ErrorsComponent },
+    { path: 'auction/edit/:id', component: EditAuctionComponent, canActivate: [verifyemailGuard]  },  
     { path: '**', redirectTo: '/errors' },
+
+
 ];

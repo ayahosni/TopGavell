@@ -83,7 +83,17 @@ p {
   border-radius: 15px;
 }
 
-/* .card:hover:before {
-  background-image: linear-gradient(180deg, rgb(81, 255, 0), purple);
-  animation: rotBGimg 3.5s linear infinite;
-} */
+.submit-bid-button {
+  background-color: var(--accent-color); 
+  color: var(--background-color);
+  padding: 10px 15px;
+  border: none; 
+  border-radius: 5px; 
+  font-size: 16px; 
+  cursor: pointer; 
+  transition: background-color 0.3s; 
+}
+
+.submit-bid-button:hover {
+  background-color: var(--dark-color); 
+}

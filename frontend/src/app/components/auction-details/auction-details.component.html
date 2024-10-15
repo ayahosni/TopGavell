@@ -30,7 +30,7 @@
         'opened': checkAuctionStatus(auction.auction_end_time) === 'opened', 
         'closed': checkAuctionStatus(auction.auction_end_time) === 'closed'
       }">
-      Status: {{ checkAuctionStatus(auction.auction_end_time) | titlecase }}
+      <!-- Status: {{ checkAuctionStatus(auction.auction_end_time) | titlecase }} -->
     </p>
     
     <p><strong>Country:</strong> {{ auction.item_country }}</p>

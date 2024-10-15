@@ -13,6 +13,9 @@ class Payment extends Model
         'amount',
         'bidder_id', 
         'auction_id', 
+        'type',
+        'payment_intent_id',
+        'refund_status',
     ];
 
 

@@ -55,6 +55,10 @@ Route::get('/success/{auctionID}/{bidderID}', [PaymentController::class, 'succes
 Route::get('/cancel', function () {return 'Payment Cancelled';})->name('cancel');
 
 Route::post('/check-payment', [PaymentController::class, 'checkPayment'])->middleware('auth:sanctum');
+
+Route::get('/refund/{id}', [PaymentController::class, 'refund'])->name('refund')->middleware('auth:sanctum');
+
+
 // Notifications and Payment Routes
 Route::get('/notifications', [NotificationController::class, 'index'])->middleware('auth:sanctum');
 

@@ -1,5 +1,3 @@
-
-
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuctionService, Auction, PaginatedAuctions } from '../../services/auction.service';
@@ -19,6 +17,11 @@ export class FinishedAuctionsComponent implements OnInit {
   totalPages: number = 0;
   perPage: number = 10;
 
+  isLoggedIn: boolean = false;
+  isRegistered: boolean = false;
+  userName: string = '';
+  isAdmin: boolean = false;
+
   constructor(
     private auctionService: AuctionService,
     private router: Router
@@ -26,6 +29,17 @@ export class FinishedAuctionsComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadAuctions(this.currentPage);
+    const userData = localStorage.getItem('user');
+    if (userData) {
+      const user = JSON.parse(userData);
+      this.userName = user.name;
+      this.isLoggedIn = true;
+      this.isRegistered = true;
+      if (user.role == "admin") {
+        this.isAdmin = true;
+      }
+    }
+    console.log(this.isAdmin);
   }
 
   loadAuctions(page: number): void {
@@ -67,5 +81,33 @@ export class FinishedAuctionsComponent implements OnInit {
     if (this.currentPage < this.totalPages) {
       this.loadAuctions(this.totalPages);  
     }
+  }
+
+  checkAuctionStatus(auction: { auction_end_time: string | number | Date; auction_start_time: string | number | Date; }): string {
+    const currentTime = new Date();
+    const auctionEndTime = new Date(auction.auction_end_time);
+    const isAuctionEnded = currentTime >= auctionEndTime;
+    const auctionStartTime = new Date(auction.auction_start_time);
+    const isAuctionStarted = currentTime >= auctionStartTime;
+    const isAuctionBeforeStarting = currentTime <= auctionStartTime;
+    if (isAuctionBeforeStarting) {
+      return 'before starting';
+    }
+    if (isAuctionStarted && !isAuctionEnded) {
+      return 'opened'
+    }
+    return 'closed'
+  }
+
+  refund(auctionId: string) {
+    this.auctionService.refund(auctionId).subscribe({
+      next: (response) => {
+        console.log('refunded:', response);
+        // Optionally refresh the list of auctions or perform other actions
+      },
+      error: (error) => {
+        console.error('Error refunded:', error);
+      }
+    });
   }
 }

@@ -31,7 +31,11 @@
           </div>
           <p class="date">Starts: {{ auction.auction_start_time | date:'short' }}</p>
           <p class="date">Ends: {{ auction.auction_end_time | date:'short' }}</p>
-          <div class="bid-btn">
+
+          <button class="Details" (click)="goToAuctionDetails(auction.auction_id)">View Details</button>
+
+          <div class="bid-btn" *ngIf="isAuctionActive(auction)">
+            <br>
             <button class="Approve" (click)="updateAuction(auction.auction_id)">Edit</button>
             <button class="Deny" (click)="deleteAuction(auction.auction_id)">Delete</button>
           </div>

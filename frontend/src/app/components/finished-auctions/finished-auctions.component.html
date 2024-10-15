@@ -1,17 +1,26 @@
-<div class="auction-cards-container">
+<div class="auction-cards-container" style="margin-bottom: 20px;">
 
   <div *ngFor="let auction of filteredAuctions" class="auction-card">
 
     <div class="auction-card-body">
       
       <h3 class="auction-item-title">{{ auction.item_name }}</h3>
-      <img class="auction-item-image" [src]="auction.item_media[0]" alt="Auction image">
+      <!-- <img class="auction-item-image" [src]="auction.item_media[0]" alt="Auction image"> -->
+      <div *ngIf="auction.item_media && auction.item_media.length > 0">
+        <img class="image" [src]="'http://localhost:8000/uploads/images/' + auction.item_media[0].path" alt="{{ auction.item_name }}">
+      </div>
       <p class="auction-item-description">{{ auction.item_description }}</p>
       <p class="auction-item-category"><strong>Category:</strong> {{ auction.item_category }}</p>
       <p class="auction-item-start-time"><strong>Start:</strong> {{ auction.auction_start_time | date: 'short'}}</p>
       <p class="auction-item-end-time"><strong>End:</strong> {{ auction.auction_end_time | date: 'short'}}</p>
       <p class="auction-winning-bidder"><strong>Winner:</strong> {{ auction.winning_bidder?.name || 'N/A' }}</p>
       <p class="auction-winning-bid"><strong>Winning Bid:</strong> {{ auction.winning_bid !== null ? (auction.winning_bid | currency) : 'N/A' }}</p>
+    
+    </div>
+    <div *ngIf="isAdmin">
+      <div class="bid-btn" *ngIf="checkAuctionStatus(auction) === 'closed'">
+        <button (click)="refund(auction.auction_id)">Refund</button>
+      </div>
     </div>
   </div>
 </div>

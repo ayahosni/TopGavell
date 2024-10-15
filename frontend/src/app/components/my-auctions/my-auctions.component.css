@@ -152,3 +152,14 @@
   border-radius: 10px 0 10px 0;
   color: green;
 }
+
+.Details{
+  background-color: #266296;
+  color: white;
+  display: block;
+
+}
+
+button{
+  height: 50px;
+}

@@ -31,10 +31,12 @@ export class PaymentService {
     return this.http.post<{ id: string }>(`${environment.apiUrl}/create-checkout-session`, body, options);
   }
 
-  checkPayment(auctionId: any): Observable<{ hasPaid: boolean }> {
+  checkPayment(auctionId: any): Observable<{
+    payment_type: string; hasPaid: boolean 
+}> {
     const headers = this.getAuthHeaders();
     const options = headers ? { headers } : {};
     const body = {auction_id: auctionId,};
-    return this.http.post<{ hasPaid: boolean }>(`${environment.apiUrl}/check-payment`, body,options);
+    return this.http.post<{ hasPaid: boolean ,payment_type:string}>(`${environment.apiUrl}/check-payment`, body,options);
   }
 }

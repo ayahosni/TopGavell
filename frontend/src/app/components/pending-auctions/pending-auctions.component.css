@@ -139,3 +139,10 @@
 .item-description, .item-location, .auction-end-date, .auction-status {
   margin-bottom: 5px;
 }
+
+.Details{
+  background-color: #266296;
+  color: white;
+  display: block;
+
+}
