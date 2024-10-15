@@ -139,7 +139,9 @@ class PaymentController extends Controller
     {
 
         $data=$request->all();
+        
         $auctionID = $data['auction_id'];
+        return response()->json(['hasPaid' => $auctionID]);
 
         $auction = Auction::findOrFail($auctionID);
 
@@ -166,6 +168,9 @@ class PaymentController extends Controller
                         $stripe->refunds->create([
                             'payment_intent' => $payment->payment_intent,
                         ]);
+
+                        $payment->update(['refund_status' => 'refunded']);
+
                     
                     } catch (\Exception $e) {
                         $refundErrors[] = [
