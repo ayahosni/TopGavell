@@ -135,19 +135,71 @@ class PaymentController extends Controller
         ]);
     }
 
-    public function refund ()
+    public function refund (Request $request)
     {
+
+        $data=$request->all();
+        $auctionID = $data['auction_id'];
+
+        $auction = Auction::findOrFail($auctionID);
+
+        if (Auth::user()->role === 'admin') {
+
+            $currentTime = Carbon::now('UTC')->setTimezone('Africa/Cairo')->format('Y-m-d H:i:s');
+            // Check if the time is after auction end
+            if ($currentTime > $auction->auction_actual_end_time) {
+
+                // $paymentsOfAuction = Payment::where('auction_id', $auctionID);
+                $MaxPayment = Payment::where('auction_id', $auctionID)->max('amount');
+
+                $paymentsToRefund = Payment::where('auction_id', $auctionID)
+                ->where('amount', '!=', $maxPayment)
+                ->get();
+
+                $stripe = new \Stripe\StripeClient(env('STRIPE_SECRET'));
+
+
+                foreach ($paymentsToRefund as $payment) {
+                
+                    try {
+                        // Assuming that the payment has a 'payment_intent' column which stores the Stripe PaymentIntent ID
+                        $stripe->refunds->create([
+                            'payment_intent' => $payment->payment_intent,
+                        ]);
+                    
+                    } catch (\Exception $e) {
+                        return response()->json([
+                            'status' => 'error',
+                            'message' => 'Some refunds failed',
+                            'bidder_id' => $payment->bidder_id,
+                            'auction_id' => $payment->auction_id,
+                            'payment_intent_id' => $payment->payment_intent_id,
+                        ], 400); // Bad request status                
+                    }
+                
+                }
+            } 
+
+            return response()->json([
+                'message' => 'Unauthorized.'
+              ], 403);
+
+        }
+        
+        return response()->json([
+            'message' => 'auction not ended yet.'
+          ], 403);
+
 
         // $stripe = new Stripe();
         // $stripe = Stripe::make(env('STRIPE_SECRET'));
         // $stripe =  Stripe::setApiKey(env('STRIPE_SECRET'));
-
-
         // $stripe = new StripeClient('sk_test_51Q3Y1YApxqx10PD5EjHXihoyRwFROlVjObFqB0WCjzjvyY3zGCaHnPwJoxoWS3vLGNqWDugWnXBC5FJhE3uHjkTV00NX2b8B3J');
 
-        $stripe = new \Stripe\StripeClient(env('STRIPE_SECRET'));
 
-        $stripe->refunds->create(['payment_intent' => 'pi_3Q9WPEApxqx10PD51Np3B3Ub']);
+
+        // $stripe = new \Stripe\StripeClient(env('STRIPE_SECRET'));
+        // $stripe->refunds->create(['payment_intent' => 'pi_3Q9WPEApxqx10PD51Np3B3Ub']);
 
 
     }
