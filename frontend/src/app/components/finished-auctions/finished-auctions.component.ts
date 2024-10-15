@@ -108,7 +108,7 @@ export class FinishedAuctionsComponent implements OnInit {
         console.log('refunded:', response);
         this.refundResponse = response;
         // {myVar === "two" ? "it's true" : "it's false"}
-        alert(`Refund: ${response.error?response.error : response.message}`);
+        alert(` ${response.error?"payment has already been refunded" : response.message}`);
 
         // Optionally refresh the list of auctions or perform other actions
       },
