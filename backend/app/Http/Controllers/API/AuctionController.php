@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use App\Models\User;
 use App\Notifications\NewAuctionNotification;
+use App\Notifications\UpdateAuctionNotification;
 use Illuminate\Support\Facades\Notification;
 
 class AuctionController extends Controller
@@ -226,7 +227,7 @@ class AuctionController extends Controller
   /////////////////////////////////////////////////////////////////////////////////////////////////////////
   public function update(Request $request, Auction $auction)
   {
-    if (Auth::id() !== $auction->user_id) {
+    if (Auth::id() !== $auction->customer->user_id) {
       return response()->json(['message' => 'Unauthorized'], 403);
     }
     if (Auth::user()->banned === 1) {
@@ -235,8 +236,11 @@ class AuctionController extends Controller
       ], 403);
     }
     $currentTime = Carbon::now('UTC')->setTimezone('Africa/Cairo')->format('Y-m-d H:i:s');
-    // Check if the time is before auction start
-    if ($auction->auction_start_time > $currentTime ) {
+
+    if ($currentTime > $auction->auction_start_time) {
+      return response()->json(['message' => 'You can\'t edit a running auction'], 403);
+    }
+    if ($currentTime < $auction->auction_start_time) {
 
       $data = $request->all();
 
@@ -248,8 +252,28 @@ class AuctionController extends Controller
         'bid_increment' => ['required', 'decimal:10,2'],
         'starting_bid' => ['required', 'integer'],
         'bid_increment' => ['required', 'integer'],
-        'auction_start_time' => ['required', 'date'],
-        'auction_end_time' => ['required', 'date', 'after:auction_start_time'],
+        // 'auction_start_time' => ['required', 'date'],
+        // 'auction_end_time' => ['required', 'date', 'after:auction_start_time'],
+        'auction_start_time' => ['required', 'date', function ($attribute, $value, $fail) {
+          $startTime = \Carbon\Carbon::parse($value);
+          $minStartTime = \Carbon\Carbon::now()->addDay();
+  
+          if ($startTime->lt($minStartTime)) {
+            $fail('The auction start time must be at least 24 hours from now.');
+          }
+        }],
+        'auction_end_time' => [
+          'required',
+          'date',
+          function ($attribute, $value, $fail) use ($request) {
+            $startTime = \Carbon\Carbon::parse($request->input('auction_start_time'));
+            $endTime = \Carbon\Carbon::parse($value);
+  
+            if ($endTime->lt($startTime->addHour())) {
+              $fail('The auction end time must be at least one hour after the auction start time.');
+            }
+          },
+        ],
         'item_media' => ['nullable', 'file'],
         'item_country' => ['required', 'string'],
       ]);
@@ -263,9 +287,13 @@ class AuctionController extends Controller
         $file->move(public_path('uploads/item_media'), $filename);
         $data['item_media']  = $filename;
       }
-
+      $auction->approval_status="pending";
       $auction->update($data);
 
+      $admins = User::where('role', 'admin')->get();
+      if ($admins->isNotEmpty()) {
+        Notification::send($admins, new UpdateAuctionNotification($auction));
+      }
       return response()->json([
         'message' => 'Auction updated successfully',
         'auction' => new AuctionResource($auction)
