@@ -236,7 +236,7 @@ class AuctionController extends Controller
     }
     $currentTime = Carbon::now('UTC')->setTimezone('Africa/Cairo')->format('Y-m-d H:i:s');
     // Check if the time is before auction start
-    if ($currentTime < $auction->auction_start_time) {
+    if ($auction->auction_start_time > $currentTime ) {
 
       $data = $request->all();
 

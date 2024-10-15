@@ -16,6 +16,7 @@ return new class extends Migration
             $table->decimal('amount', 10, 2);
             $table->foreignId('bidder_id')->constrained('customers')->onDelete('cascade');
             $table->foreignId('auction_id')->constrained('auctions')->onDelete('cascade');
+            $table->enum('type', ['insurance', 'full']);
             $table->timestamps();
         });
     }

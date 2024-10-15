@@ -1,11 +1,13 @@
 <?php
 
 namespace App\Http\Controllers\API;
+
 use App\Http\Controllers\Controller;
 use App\Models\Auction;
 use App\Models\Bid;
 use App\Models\Customer;
 use App\Models\Payment;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -15,65 +17,80 @@ use Stripe\Checkout\Session;
 class PaymentController extends Controller
 {
     public function createCheckoutSession(Request $request)
-    {   
-        $data=$request->all();
+    {
+        $data = $request->all();
         $auctionID = $data['auction_id'];
-        
-        $bidder=Customer::where('user_id', Auth::id())->first();
 
-        // return response()->json(['id' => $bidderID]);
+        $bidder = Customer::where('user_id', Auth::id())->first();
+
         $auction = Auction::findOrFail($auctionID);
         Stripe::setApiKey(env('STRIPE_SECRET'));
+        $winnerId = null;
+        $Totalprice = null;
 
-        $item_name = $auction->item_name;
+        if ($auction->winningBidder) {
+            $winnerId = $auction->winningBidder->user->id;
+        }
+        $currentTime = Carbon::now('UTC')->setTimezone('Europe/Bucharest')->format('Y-m-d H:i:s');
 
+        if ($winnerId === Auth::id() && $currentTime > $auction->auction_end_time) {
+            $Totalprice = Bid::where('auction_id', $auction->id)->max('bid_amount');
+            $paymentType = 'Complete Payment Process';
+            $amount = $Totalprice - $auction->starting_bid;
+        } else {
+            $paymentType = 'Auction Insurance';
+            $amount = $auction->starting_bid;
+        }
         
-            $amount = Bid::where('auction_id', $auction->id)->max('bid_amount');
-            if(!$amount){
-                $amount = $auction->starting_bid;
-            }
-        
-        $amount = $amount*100;
+
+        $amount = $amount * 100;
         // Create a new checkout session
-        $session = Session::create([
-            'payment_method_types' => ['card'],
-            'line_items' => [
-                [
-                    'price_data' => [
-                        'currency' => 'usd',
-                        'product_data' => [
-                            'name' => 'Auction Insurance',
+        $session = Session::create(
+            [
+                'payment_method_types' => ['card'],
+                'line_items' => [
+                    [
+                        'price_data' => [
+                            'currency' => 'usd',
+                            'product_data' => [
+                                'name' => $paymentType,
+                            ],
+                            'unit_amount' => $amount,
                         ],
-                        'unit_amount' => $amount, // Amount in cents
+                        'quantity' => 1,
                     ],
-                    'quantity' => 1,
                 ],
-            ],
-            'mode' => 'payment',
-            'success_url' => route('success',['auctionID' => $auctionID,'bidderID'=> $bidder->id]),
-            'cancel_url' => route('cancel'),   // URL after payment cancellation
-        ]);
+                'mode' => 'payment',
+                'success_url' => route('success', ['auctionID' => $auctionID, 'bidderID' => $bidder->id]),
+                'cancel_url' => route('cancel'),
+            ]
+        );
 
         return response()->json(['id' => $session->id]);
     }
-    public function success($auctionID,$bidderID)
+    public function success($auctionID, $bidderID)
     {
 
         $auction = Auction::findOrFail($auctionID);
-        $amount =$auction->starting_bid;
 
+        $Totalprice = null;
 
-        if($auction->auction_status == "Closed") {
-            $amount = Bid::where('auction_id', $auction->id)->max('bid_amount');
-            if(!$amount){
-                $amount = $auction->starting_bid;
-            }
+        $currentTime = Carbon::now('UTC')->setTimezone('Europe/Bucharest')->format('Y-m-d H:i:s');
+
+        if ($currentTime > $auction->auction_end_time) {
+            $Totalprice = Bid::where('auction_id', $auction->id)->max('bid_amount');
+            $paymentType = 'full';
+            $amount = $Totalprice - $auction->starting_bid;
+        } else {
+            $paymentType = 'insurance';
+            $amount = $auction->starting_bid;
         }
 
-        $data=[
+        $data = [
             "amount" => $amount,
             "auction_id" => $auctionID,
-            'bidder_id'=>$bidderID
+            'bidder_id' => $bidderID,
+            'type' => $paymentType
         ];
 
         Payment::create($data);
@@ -85,12 +102,19 @@ class PaymentController extends Controller
         $request->validate([
             'auction_id' => 'required|exists:auctions,id',
         ]);
-        $bidder=Customer::where('user_id', Auth::id())->first();
-        $paymentExists = DB::table('payments')
-            ->where('bidder_id', $bidder->id)
-            ->where('auction_id', $request->auction_id)
-            ->exists();
 
-        return response()->json(['hasPaid' => $paymentExists]);
+        $bidder = Customer::where('user_id', Auth::id())->first();
+        $payment = Payment::where('bidder_id', $bidder->id)->where('auction_id', $request->auction_id)->latest()->first();
+
+        if ($payment) {
+            $paymentExists = true;
+        } else {
+            $paymentExists = false;
+        }
+
+        return response()->json([
+            'hasPaid' => $paymentExists,
+            'payment_type' => $payment->type
+        ]);
     }
 }

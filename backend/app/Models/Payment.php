@@ -13,6 +13,7 @@ class Payment extends Model
         'amount',
         'bidder_id', 
         'auction_id', 
+        'type'
     ];
 
 
