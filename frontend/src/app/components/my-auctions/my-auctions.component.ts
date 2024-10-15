@@ -112,6 +112,8 @@ export class MyAuctionsComponent implements OnInit {
 
   updateAuction(id: any){
     console.log(id);
+    this.router.navigate([`/auction/edit/${id}`]);
+
   }
   // deleteAuction(id: any){
   //   console.log(id);
