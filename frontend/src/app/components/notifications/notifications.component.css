@@ -22,4 +22,14 @@
   .notification-card a:hover {
     text-decoration: underline;
   }
+  .notification h4 {
+    font-weight: 500; 
+  }
+  
+  .notification-user {
+    font-weight: 500; 
+    margin-right: 5px; 
+  }
+  
+  
   

@@ -35,8 +35,7 @@ export class HomeComponent implements OnInit {
   isRegistered: boolean = false;
   userName: string = '';
   isAdmin: boolean = false;
-
-
+  isBanned : boolean = false;
   auctions: Auction[] = [];
   filteredAuctions: Auction[] = [];
   searchTerm: string = '';

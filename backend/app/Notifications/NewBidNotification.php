@@ -40,7 +40,7 @@ class NewBidNotification extends Notification
         return[
             "auction_id"=>$this->auction->id,
             "item"=>$this->auction->item_name,
-            "message"=> $this->bid->customer->user->name . " placed a bid on this auction",
+            "message"=> $this->bid->customer->user->name ." ". " placed a bid on this auction",
             "bid_amount"=>$this->auction->id
         ];
         
