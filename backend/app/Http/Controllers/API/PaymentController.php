@@ -28,6 +28,7 @@ class PaymentController extends Controller
         $winnerId = null;
         $Totalprice = null;
 
+
         if ($auction->winningBidder) {
             $winnerId = $auction->winningBidder->user->id;
         }
@@ -141,6 +142,9 @@ class PaymentController extends Controller
         
         $auction = Auction::findOrFail($auctionID);
         $user = Auth::user();
+
+        $winning_bidder_id = $auction->winning_bidder_id;
+
         
         if ($user->role === 'admin') {
 
@@ -149,10 +153,10 @@ class PaymentController extends Controller
             if ($currentTime > $auction->auction_actual_end_time) {
 
                 // $paymentsOfAuction = Payment::where('auction_id', $auctionID);
-                $MaxPayment = Payment::where('auction_id', $auctionID)->max('amount');
+                // $MaxPayment = Payment::where('auction_id', $auctionID)->max('amount');
                 
                 $paymentsToRefund = Payment::where('auction_id', $auctionID)
-                ->where('amount', '!=', $MaxPayment)
+                ->where('winning_bidder_id', '!=', $winning_bidder_id)
                 ->get();
 
                 $stripe = new \Stripe\StripeClient(env('STRIPE_SECRET'));
