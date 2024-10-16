@@ -1,10 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule, AbstractControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuctionService } from '../../services/auction.service';
 import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { AbstractControl } from '@angular/forms';
 
 @Component({
   selector: 'app-edit-auction',
@@ -18,6 +16,8 @@ export class EditAuctionComponent implements OnInit {
   selectedFiles: File[] = [];
   categories: any[] = [];
   auctionId: string = '';
+  auction:any;
+  images: string[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -56,7 +56,28 @@ export class EditAuctionComponent implements OnInit {
     // Fetch auction details by ID
     this.auctionService.getAuctionById(this.auctionId).subscribe({
       next: (auction) => {
-        this.auctionForm.patchValue(auction);
+        this.auction=auction
+        if (auction.item_media && auction.item_media.length > 0) {
+          auction.item_media.forEach((item: { path: string; }) => {
+            this.images.push('http://localhost:8000/uploads/images/' + item.path);
+          });
+        }
+        // this.auctionForm.patchValue(auction);
+        this.auctionForm.patchValue({
+          category_id: auction.category_id || '',
+          item_name: auction.item_name || '',
+          item_description: auction.item_description || '',
+          starting_bid: auction.starting_bid || '',
+          bid_increment: auction.bid_increment || '',
+          auction_start_time: auction.auction_start_time || '',
+          auction_end_time: auction.auction_end_time || '',
+          item_country: auction.item_country || ''
+        });
+
+        if (auction.item_media) {
+          this.selectedFiles = auction.item_media;
+        }
+
       },
       error: (error) => {
         console.error('Error fetching auction details', error);
@@ -88,19 +109,21 @@ export class EditAuctionComponent implements OnInit {
       const formData = new FormData();
       Object.keys(this.auctionForm.value).forEach(key => {
         const value = this.auctionForm.get(key)?.value;
-        if (key === 'item_media' && this.selectedFiles.length > 0) {
-          this.selectedFiles.forEach(file => {
-            formData.append('item_media[]', file, file.name);
-          });
+        if (key === 'item_media') {
+          if (this.selectedFiles.length > 0) {
+            this.selectedFiles.forEach(file => {
+              formData.append('item_media[]', file, file.name); // Append files
+            });
+          }
         } else {
-          formData.append(key, value || '');
+          formData.append(key, value || ''); // Append other form values
         }
       });
 
       // Call update auction API
       this.auctionService.updateAuction(Number(this.auctionId), formData).subscribe({
         next: () => {
-          this.router.navigate(['/myAuctions']);
+          this.router.navigate(['/myauctions']);
         },
         error: (error) => {
           console.error('Error updating auction', error);

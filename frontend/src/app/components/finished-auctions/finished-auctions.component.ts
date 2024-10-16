@@ -22,6 +22,9 @@ export class FinishedAuctionsComponent implements OnInit {
   userName: string = '';
   isAdmin: boolean = false;
 
+  refundResponse: any = null;
+
+
   constructor(
     private auctionService: AuctionService,
     private router: Router
@@ -103,6 +106,10 @@ export class FinishedAuctionsComponent implements OnInit {
     this.auctionService.refund(auctionId).subscribe({
       next: (response) => {
         console.log('refunded:', response);
+        this.refundResponse = response;
+        // {myVar === "two" ? "it's true" : "it's false"}
+        alert(` ${response.error?"payment has already been refunded" : response.message}`);
+
         // Optionally refresh the list of auctions or perform other actions
       },
       error: (error) => {

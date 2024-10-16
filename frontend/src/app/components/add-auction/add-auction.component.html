@@ -1,7 +1,8 @@
 <div class="hero-title">
   <h2 class=" container form-title">Thank you for participating in
     <span class="t">T</span><span class="gavel">OPGAVEL</span>'s online auctions<br>
-    Join the Auction Revolution, Showcase Your Exceptional Items and Connect with Enthusiastic Bidders</h2> 
+    Join the Auction Revolution, Showcase Your Exceptional Items and Connect with Enthusiastic Bidders
+  </h2>
 </div>
 <form [formGroup]="auctionForm" (ngSubmit)="onSubmit()" enctype="multipart/form-data">
   <label for="category_id">Category</label>
@@ -62,7 +63,8 @@
 
   <label for="item_media">Item Media</label>
   <input id="item_media" formControlName="item_media" type="file" (change)="onFileChange($event)" required multiple>
-  <div *ngIf="auctionForm.get('item_media')?.invalid && (auctionForm.get('item_media')?.touched || auctionForm.get('item_media')?.dirty)">
+  <div
+    *ngIf="auctionForm.get('item_media')?.invalid && (auctionForm.get('item_media')?.touched || auctionForm.get('item_media')?.dirty)">
     <small class="error">Item Media is required.</small>
   </div>
 
@@ -71,21 +73,27 @@
   <div *ngIf="auctionForm.get('item_country')?.invalid && auctionForm.get('item_country')?.touched">
     <small class="error">Item Country is required.</small>
   </div>
- <!-- Conditions Section -->
- <div class="conditions">
-  <h2>Terms and Conditions</h2>
-  <ul>
-    <h3>By proceeding with the creation of an auction on our platform, you agree to the following terms and conditions</h3>
-    <li>You must be at least 18 years of age to create an auction on this platform. By submitting your auction for approval, you confirm that you meet this age requirement and acknowledge that we may request additional documentation to verify your age if necessary.</li>
-    <li>All items listed for auction must fully comply with local, national, and international laws.</li>
-    <li>You are required to provide complete and accurate information about the item being auctioned, including its name, description, condition, origin, and any relevant history or documentation.</li>
-    <li>As the seller, you are responsible for ensuring the item's safe handling and shipment to the winning bidder upon the auction’s completion.</li>
-    <li>Once you have submitted your auction, it will undergo a review by our team to ensure that it complies with our guidelines and legal requirements.</li>
-    <label>
-      <input type="checkbox" required> 
-      <p class="agree-conditions"> I agree to the terms and conditions</p>
-    </label>
-  </ul>
-</div>
+  <!-- Conditions Section -->
+  <div class="conditions">
+    <h2>Terms and Conditions</h2>
+    <ul>
+      <h3>By proceeding with the creation of an auction on our platform, you agree to the following terms and conditions
+      </h3>
+      <li>You must be at least 18 years of age to create an auction on this platform. By submitting your auction for
+        approval, you confirm that you meet this age requirement and acknowledge that we may request additional
+        documentation to verify your age if necessary.</li>
+      <li>All items listed for auction must fully comply with local, national, and international laws.</li>
+      <li>You are required to provide complete and accurate information about the item being auctioned, including its
+        name, description, condition, origin, and any relevant history or documentation.</li>
+      <li>As the seller, you are responsible for ensuring the item's safe handling and shipment to the winning bidder
+        upon the auction’s completion.</li>
+      <li>Once you have submitted your auction, it will undergo a review by our team to ensure that it complies with our
+        guidelines and legal requirements.</li>
+      <label>
+        <input type="checkbox" required>
+        <p class="agree-conditions"> I agree to the terms and conditions</p>
+      </label>
+    </ul>
+  </div>
   <button type="submit" [disabled]="auctionForm.invalid">Create Auction</button>
 </form>
