@@ -13,6 +13,15 @@
   
   <form (ngSubmit)="submitComment()">
     <textarea [(ngModel)]="newComment.comment_text" placeholder="Write a comment ..."  name="commentText" required></textarea>
+    <div *ngIf="loading">
+      <div class="loading">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
     <button type="submit">{{ editMode ? 'Update' : 'Send' }}</button>
   </form>
 </div>

@@ -17,6 +17,7 @@ export class CommentsComponent implements OnInit {
   newComment = { comment_text: '' };
   editMode: boolean = false;
   currentCommentId: string | null = null;
+  loading = false;
 
 
   constructor(private commentsService: CommentsService) {}
@@ -30,12 +31,15 @@ export class CommentsComponent implements OnInit {
   }
 
   loadComments() {
+    this.loading = true;
     this.commentsService.getCommentsByAuctionId(this.auctionId).subscribe({
       next: (response) => {
+        this.loading = false;
         this.comments = response.comments;
         console.log('Comments loaded:', this.comments);
       },
       error: (error) => {
+        this.loading = false;
         console.error('Error loading comments:', error);
       }
     });
@@ -44,8 +48,10 @@ export class CommentsComponent implements OnInit {
   submitComment(): void {
     if (this.newComment.comment_text.trim() !== '') {
       if (this.editMode) {
+        this.loading = true;
         this.commentsService.updateComment(this.auctionId, this.currentCommentId!, { comment_text: this.newComment.comment_text }).subscribe({
           next: (response) => {
+            this.loading = false;
             const index = this.comments.findIndex(comment => comment.comment_id === this.currentCommentId);
             if (index !== -1) {
               this.comments[index] = response.comment;
@@ -53,16 +59,20 @@ export class CommentsComponent implements OnInit {
             this.resetForm();
           },
           error: (error) => {
+            this.loading = false;
             console.error('Error updating comment:', error);
           }
         });
       } else {
+        this.loading = true;
         this.commentsService.createComment(this.auctionId, this.newComment).subscribe({
           next: (response) => {
+            this.loading = false;
             this.comments.push(response.comment);
             this.resetForm();
           },
           error: (error) => {
+            this.loading = false;
             console.error('Error submitting comment:', error);
           }
         });
@@ -79,12 +89,15 @@ export class CommentsComponent implements OnInit {
   }
 
   deleteComment(commentId: string) {
+    this.loading = true;
     this.commentsService.deleteComment(this.auctionId, commentId).subscribe({
       next: (response) => {
+        this.loading = false;
         this.comments = this.comments.filter(comment => comment.comment_id !== commentId);
         console.log('Comment deleted:', response);
       },
       error: (error) => {
+        this.loading = false;
         console.error('Error deleting comment:', error);
       }
     });

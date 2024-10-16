@@ -1,84 +1,86 @@
 .bids-container {
-  max-width: 500px; 
+  max-width: 500px;
   margin-left: 50px;
-  padding: 15px; 
+  padding: 15px;
   margin-bottom: 50px;
 }
 
 .bids-title {
-  font-size: 24px; 
-  color: #333; 
-  margin-bottom: 10px; 
+  font-size: 24px;
+  color: #333;
+  margin-bottom: 10px;
   margin-top: 0px;
 }
 
 .bids-list {
-  margin-bottom: 20px; 
+  margin-bottom: 20px;
 }
 
 .bid-card {
-  background-color: #ffffff; 
-  padding: 15px; 
+  background-color: #ffffff;
+  padding: 15px;
   border: 1px solid #ddd;
-  border-radius: 5px; 
-  margin-bottom: 10px; 
-  transition: box-shadow 0.3s; 
+  border-radius: 5px;
+  margin-bottom: 10px;
+  transition: box-shadow 0.3s;
 }
 
 .bid-card:hover {
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15); 
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
 }
 
-.bid-amount, .bid-by, .bid-time {
-  font-size: 16px; 
-  color: #555; 
-  margin: 5px 0; 
+.bid-amount,
+.bid-by,
+.bid-time {
+  font-size: 16px;
+  color: #555;
+  margin: 5px 0;
 }
 
 .no-bids-message {
-  font-size: 16px; 
-  color: #e74c3c; 
-  margin: 15px 0; 
+  font-size: 16px;
+  color: #e74c3c;
+  margin: 15px 0;
 }
 
 .bid-form {
-  margin-top: 20px; 
-  display: flex; 
-  flex-direction: column; 
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
 }
 
 .bid-label {
-  font-weight: bold; 
-  margin-bottom: 5px; 
+  font-weight: bold;
+  margin-bottom: 5px;
 }
 
 .bid-input {
   padding: 10px;
-  border: 1px solid #ccc; 
-  border-radius: 4px; 
-  margin-bottom: 10px; 
-  font-size: 16px; 
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  font-size: 16px;
 }
 
 .submit-bid-button {
-  background-color: var(--accent-color); 
+  background-color: var(--accent-color);
   color: var(--background-color);
   padding: 10px 15px;
-  border: none; 
-  border-radius: 5px; 
-  font-size: 16px; 
-  cursor: pointer; 
-  transition: background-color 0.3s; 
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
 }
 
 .submit-bid-button:hover {
-  background-color: var(--dark-color); 
+  background-color: var(--dark-color);
 }
 
 .loading-message {
-  text-align: center; 
-  font-size: 18px; 
-  color: #777; 
+  text-align: center;
+  font-size: 18px;
+  color: #777;
 }
 
 .message {
@@ -96,10 +98,11 @@
   color: green;
   background-color: #d4edda;
 }
+
 .error {
-  color: #d8000c; 
-  background-color: #ffbaba; 
-  border: 1px solid #d8000c; 
+  color: #d8000c;
+  background-color: #ffbaba;
+  border: 1px solid #d8000c;
   padding: 8px;
   margin-top: 5px;
   border-radius: 4px;
@@ -119,51 +122,66 @@
     opacity: 0;
     transform: translateY(-10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
   }
 }
 
-.loading-wave {
-  width: 300px;
-  height: 100px;
+/* ##################################### */
+.loading {
+  --speed-of-animation: 0.9s;
+  --gap: 6px;
+  --first-color: #4c86f9;
+  --second-color: #49a84c;
+  --third-color: #f6bb02;
+  --fourth-color: #f6bb02;
+  --fifth-color: #2196f3;
   display: flex;
   justify-content: center;
-  align-items: flex-end;
+  align-items: center;
+  width: 100px;
+  gap: 6px;
+  height: 100px;
 }
 
-.loading-bar {
-  width: 20px;
-  height: 10px;
-  margin: 0 5px;
-  background-color: #3498db;
-  border-radius: 5px;
-  animation: loading-wave-animation 1s ease-in-out infinite;
+.loading span {
+  width: 4px;
+  height: 50px;
+  background: var(--first-color);
+  animation: scale var(--speed-of-animation) ease-in-out infinite;
 }
 
-.loading-bar:nth-child(2) {
-  animation-delay: 0.1s;
+.loading span:nth-child(2) {
+  background: var(--second-color);
+  animation-delay: -0.8s;
 }
 
-.loading-bar:nth-child(3) {
-  animation-delay: 0.2s;
+.loading span:nth-child(3) {
+  background: var(--third-color);
+  animation-delay: -0.7s;
 }
 
-.loading-bar:nth-child(4) {
-  animation-delay: 0.3s;
+.loading span:nth-child(4) {
+  background: var(--fourth-color);
+  animation-delay: -0.6s;
 }
 
-@keyframes loading-wave-animation {
-  0% {
-    height: 10px;
-  }
+.loading span:nth-child(5) {
+  background: var(--fifth-color);
+  animation-delay: -0.5s;
+}
 
-  50% {
-    height: 50px;
-  }
+@keyframes scale {
 
+  0%,
+  40%,
   100% {
-    height: 10px;
+    transform: scaleY(0.05);
+  }
+
+  20% {
+    transform: scaleY(1);
   }
 }

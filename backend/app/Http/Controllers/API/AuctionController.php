@@ -244,9 +244,14 @@ class AuctionController extends Controller
     if ($currentTime < $auction->auction_start_time) {
 
       $data = $request->all();
+      // return response()->json(['data'=>$data],400);
+      $data['starting_bid']=intval($data['starting_bid']);
+      $data['bid_increment']=intval($data['bid_increment']);
+
+      // return response()->json(['data'=>$data],500);
 
     // Validation for auction data and images
-    $validation = Validator::make($request->all(), [
+    $validation = Validator::make($data, [
       'category_id' => ['required', 'exists:categories,id'],
       'item_name' => ['required', 'string', 'min:4', 'max:75'],
       'item_description' => ['required', 'string', 'min:15', 'max:255'],
@@ -283,16 +288,41 @@ class AuctionController extends Controller
       return response()->json($validation->messages(), 400);
     }
 
+    // if ($request->hasFile('item_media')) {
+    //   $files = $request->file('item_media');
+
+    //   foreach ($files as $file) {
+    //     $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+    //     $file->move(public_path('uploads/images'), $filename);
+    //     $data['item_media'][] = $filename;
+    //     Image::create(['auction_id' => $auction->id, 'path' => $filename]);
+    //   }
+    // }
+
     if ($request->hasFile('item_media')) {
       $files = $request->file('item_media');
-
-      foreach ($files as $file) {
-        $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-        $file->move(public_path('uploads/images'), $filename);
-        $data['item_media'][] = $filename;
-        Image::create(['auction_id' => $auction->id, 'path' => $filename]);
+  
+      // Delete old images
+      $oldImages = Image::where('auction_id', $auction->id)->get();
+      foreach ($oldImages as $oldImage) {
+          $oldImagePath = public_path('uploads/images/' . $oldImage->path);
+          if (file_exists($oldImagePath)) {
+              unlink($oldImagePath); // Delete file from server
+          }
+          $oldImage->delete(); // Delete record from the database
       }
-    }
+  
+      // Upload new images
+      foreach ($files as $file) {
+          $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+          $file->move(public_path('uploads/images'), $filename);
+          $data['item_media'][] = $filename;
+  
+          // Insert new image paths into the database
+          Image::create(['auction_id' => $auction->id, 'path' => $filename]);
+      }
+  }
+  
       $auction->approval_status="pending";
       $auction->update($data);
 

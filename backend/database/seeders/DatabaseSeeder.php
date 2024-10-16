@@ -181,7 +181,7 @@ class DatabaseSeeder extends Seeder
                 'starting_bid' => 1000.00,
                 'bid_increment' => 50.00,
                 'auction_start_time' => $currentTime->copy()->subDay()->setTime(10, 0), // Started yesterday at 10:00 AM
-                'auction_end_time' => $currentTime->copy()->addMinutes(5), // Ends in 5 minutes
+                'auction_end_time' => $currentTime->copy()->addMinutes(15), // Ends in 5 minutes
                 'auction_actual_end_time' => null,
                 'auction_status' => 'Open',
                 'approval_status' => 'approved',

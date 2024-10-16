@@ -42,6 +42,9 @@
   <div *ngIf="auctionForm.get('auction_start_time')?.invalid && auctionForm.get('auction_start_time')?.touched">
     <small class="error">Auction Start Time is required.</small>
   </div>
+  <div *ngIf="auctionForm.hasError('startTimeLessThan24Hours','auction_start_time')">
+    <small class="error">The auction start time must be at least 24h from now</small>
+  </div>
 
   <label for="auction_end_time">Auction End Time</label>
   <input id="auction_end_time" formControlName="auction_end_time" type="datetime-local" required>
@@ -69,6 +72,14 @@
   <div *ngIf="auctionForm.get('item_country')?.invalid && auctionForm.get('item_country')?.touched">
     <small class="error">Item Country is required.</small>
   </div>
-
+  <div *ngIf="loading">
+    <div class="loading">
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+  </div>
   <button type="submit" [disabled]="auctionForm.invalid">Update Auction</button>
 </form>

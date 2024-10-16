@@ -18,13 +18,15 @@
   </div>
 
   <div *ngIf="loading">
-    <div class="loading-wave">
-      <div class="loading-bar"></div>
-      <div class="loading-bar"></div>
-      <div class="loading-bar"></div>
-      <div class="loading-bar"></div>
+    <div class="loading">
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
     </div>
   </div>
+  
   <div *ngIf="canBid; else can_not_bid">
     <div *ngIf="!isAuctionEnded; else ended">
       <div *ngIf="isAuctionStarted; else notstarted">
