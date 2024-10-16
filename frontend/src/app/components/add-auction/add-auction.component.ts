@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuctionService } from '../../services/auction.service';
+import { AuthService } from '../../services/auth.service'; 
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -16,9 +17,10 @@ export class AddAuctionComponent implements OnInit {
   selectedFiles: File[] = [];
   categories: any[] = [];
   loading = false;
-
-
+  serverErrorMessage: string = '';
+  
   constructor(private fb: FormBuilder, private auctionService: AuctionService, private router: Router) {
+  
     this.auctionForm = this.fb.group({
       category_id: ['', Validators.required],
       item_name: ['', Validators.required],
@@ -33,7 +35,6 @@ export class AddAuctionComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
     // Fetch categories from the backend
     this.auctionService.getCategories().subscribe({
       next: (data) => {
@@ -45,10 +46,7 @@ export class AddAuctionComponent implements OnInit {
     });
   }
 
-  onFileChange(event: any) {
-    this.selectedFiles = Array.from(event.target.files);
-  }
-
+  // Validator to ensure end time is after start time
   endTimeAfterStartTime() {
     return (control: AbstractControl) => {
       const formGroup = control.parent as FormGroup;
@@ -85,6 +83,10 @@ export class AddAuctionComponent implements OnInit {
     };
   }
 
+  onFileChange(event: any) {
+    this.selectedFiles = Array.from(event.target.files);
+  }
+
   onSubmit() {
     this.loading = true;
     if (this.auctionForm.valid) {
@@ -110,6 +112,9 @@ export class AddAuctionComponent implements OnInit {
         },
         error: (error) => {
           this.loading = false;
+          if (error.error.auction_start_time) {
+            this.serverErrorMessage = error.error.auction_start_time[0];
+          }
         }
       });
     }

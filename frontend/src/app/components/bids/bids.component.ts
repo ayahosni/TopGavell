@@ -6,6 +6,7 @@ import { AuctionService } from '../../services/auction.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PaymentService } from '../../services/payment.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-bids',
@@ -30,19 +31,21 @@ export class BidsComponent implements OnInit {
   auctionStartTime: Date | null = null;
   isAuctionEnded: boolean = false;
   isAuctionStarted: boolean = false;
-
+  isUserBanned: boolean = false;
   constructor(
     private auctionService: AuctionService,
     private route: ActivatedRoute,
     private bidService: BidService,
     private router: Router,
-    private paymentService: PaymentService
+    private paymentService: PaymentService,
+    private authService: AuthService 
   ) { }
 
   ngOnInit(): void {
     this.loadAuctionDetails();
     this.loadAuctionBids();
     this.checkIfBidderPaid(this.auctionId);
+    this.checkIfUserCanBid();
   }
 
   checkIfBidderPaid(auctionId: any) {
@@ -133,5 +136,21 @@ export class BidsComponent implements OnInit {
       }
     }
   }
-
+  checkIfUserCanBid() {
+    const userData = localStorage.getItem('user');
+    if (userData) {
+      const user = JSON.parse(userData);
+      if (this.authService.isUserBanned()) {
+        this.isUserBanned = true;
+        this.canBid = false;
+      } else if (user.role === 'admin' || user.id === this.creatorID) {
+        this.canBid = false;
+      } else {
+        this.canBid = true;
+      }
+    } else {
+      this.canBid = false;
+    }
+  }
+  
 }

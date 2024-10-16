@@ -15,7 +15,10 @@ Route::post('/login', [UserController::class, 'login'])->name('login');
 Route::get('/logout', [UserController::class, 'logout'])->name('logout')->middleware('auth:sanctum');
 
 
-
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/profile', [UserController::class, 'profile']);
+    Route::put('/profile', [UserController::class, 'updateProfile']);
+});
 Route::apiResource('user', UserController::class);
 // Auction Routes - specific first
 Route::get('/auction/active-auctions', [AuctionController::class, 'showActiveAuctions']); 

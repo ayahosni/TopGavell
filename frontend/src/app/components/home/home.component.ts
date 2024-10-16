@@ -6,7 +6,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { SafeUrlPipe } from '../../pipes/safe-url.pipe';
-
+import { AuthService } from '../../services/auth.service';
 interface Category {
   id: number;
   name: string;
@@ -35,7 +35,8 @@ export class HomeComponent implements OnInit {
   isRegistered: boolean = false;
   userName: string = '';
   isAdmin: boolean = false;
-  isBanned : boolean = false;
+  isBanned: boolean = false;
+
   auctions: Auction[] = [];
   filteredAuctions: Auction[] = [];
   searchTerm: string = '';
@@ -76,25 +77,33 @@ export class HomeComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private auctionService: AuctionService,
+    private authService: AuthService, 
+
     private router: Router
   ) { }
 
   ngOnInit(): void {
     this.loadApprovedAuctions(this.currentPage);
-
+    
     const userData = localStorage.getItem('user');
+    
     if (userData) {
       const user = JSON.parse(userData);
       this.userName = user.name;
       this.isLoggedIn = true;
       this.isRegistered = true;
+
+
+      this.isBanned = user.isBanned === 1; 
+
       if (user.role == "admin") {
         this.isAdmin = true;
       }
     }
     console.log(this.isAdmin);
+    console.log(this.isBanned);  
+}
 
-  }
 
   /**
    * 

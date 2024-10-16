@@ -2,81 +2,79 @@
     max-width: 600px;
     margin: 20px auto;
     padding: 20px;
-    border: 1px solid #ccc;
+    background-color: #f0f2f5; 
     border-radius: 8px;
-    background-color: #f9f9f9;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
-.comment {
-    border-bottom: 1px solid #ddd;
-    padding: 10px 0;
+.comment-item {
+    background-color: #ffffff; 
+    padding: 12px; 
+    margin-bottom: 10px; 
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
 }
 
-.comment:last-child {
-    border-bottom: none;
-    /* Remove border for the last comment */
-}
-
-.content {
-    margin-bottom: 10px;
+.comment-item:last-child {
+    margin-bottom: 0; 
 }
 
 .creator-name {
-    font-size: 1.1em;
-    color: #333;
+    font-weight: bold;
+    color: #1a1a1a;
 }
 
 .comment-content {
-    font-size: 0.95em;
-    color: #555;
+    margin-top: 5px;
+    color: #333;
+    background-color: #e9ecef; 
+    padding: 10px; 
+    border-radius: 10px; 
+    width:25%;
 }
 
 .btns {
     display: flex;
-    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 10px;
 }
 
 button {
-    padding: 6px 12px;
-    font-size: 0.9em;
+    background-color: #e4e6eb;
     border: none;
     border-radius: 5px;
+    padding: 6px 10px; 
     cursor: pointer;
+    margin-left: 10px;
     transition: background-color 0.3s;
+    font-size: 14px; 
 }
 
 button:hover {
-    background-color: #f0f0f0;
+    background-color: #d1d3d4;
 }
 
 .comment-form {
     margin-top: 20px;
 }
 
-textarea {
+.comment-form textarea {
     width: 100%;
-    height: 80px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+    height: 60px;
+    border: 1px solid #e4e6eb;
+    border-radius: 20px;
     padding: 10px;
-    font-size: 0.95em;
     resize: none;
-    /* Disable resizing */
-}
+    font-size: 14px; 
+    background-color: rgb(184, 184, 184)#333;
 
-textarea:focus {
-    outline: none;
-    border-color: #66afe9;
-    /* Change border color on focus */
 }
 
 .comment-form button {
-    width: 100%;
-    margin-top: 10px;
     background-color: #007bff;
-    color: white;
-    font-size: 1em;
+    color: #fff;
+    margin-top: 10px;
+    border: none; 
+    border-radius: 5px; 
+    padding: 8px 12px; 
 }
 
 .comment-form button:hover {
@@ -139,4 +137,9 @@ textarea:focus {
     20% {
         transform: scaleY(1);
     }
+}
+.banned-message {
+    color: red;
+    font-weight: bold;
+    margin-top: 10px; 
 }

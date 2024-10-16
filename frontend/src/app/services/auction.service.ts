@@ -4,7 +4,7 @@ import { HttpClient, HttpHeaders, HttpErrorResponse, HttpParams } from '@angular
 import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { environment } from '../environments/environment';
-
+import { AuthService } from '../services/auth.service';
 export interface Image {
   id: number;
   auction_id: number;
@@ -43,7 +43,11 @@ export interface PaginatedAuctions {
   providedIn: 'root',
 })
 export class AuctionService {
-  constructor(private http: HttpClient) { }
+
+private apiUrl = 'http://localhost:8000/api/auction';
+/*   private apiUrl = 'http://172.18.0.4:80/api/auction';
+ */
+  constructor(private http: HttpClient, private authService: AuthService) { }
 
   /**
    * @param error 
@@ -159,6 +163,11 @@ export class AuctionService {
     const headers = this.getAuthHeaders(false);
     // const headers = this.getAuthHeaders();
     const options = headers ? { headers } : {};
+
+    if (this.authService.isUserBanned()) {
+        return throwError({ message: "You can't create an auction, You are banned" });
+    }
+
     return this.http.post<Auction>(`${environment.apiUrl}/auction`, auctionData, options)
       .pipe(catchError(this.handleError));
   }

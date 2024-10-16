@@ -37,18 +37,25 @@ export class AuthService {
           const userData = {
             token: response.token,
             role: response.user.role,
-            id:response.user.id,
+            id: response.user.id,
             is_email_verified: response.user.is_email_verified,
             email: response.user.email,
             name: response.user.name,
-            
+            isBanned: response.user.banned
           };
+  
           localStorage.setItem('user', JSON.stringify(userData));
+  
+          return response;
         }
         return response;
+      }),
+      catchError((error) => {
+        return throwError(error);
       })
     );
   }
+  
 
   logOut(): Observable<any> {
     const user = localStorage.getItem('user');
@@ -100,4 +107,21 @@ export class AuthService {
     const user = localStorage.getItem('user');
     return user !== null;
   }
+  getUserData() {
+    const userJson = localStorage.getItem('user');
+    return userJson ? JSON.parse(userJson) : null;    
+  }
+  isUserBanned(): boolean {
+    const userData = localStorage.getItem('user'); 
+    if (userData) {
+      const user = JSON.parse(userData); 
+  
+      return user.isBanned === 1;
+    }
+    return false;
+  }
+getCurrentUserId(): string {
+  return localStorage.getItem('currentUserId') || ''; 
+}
+
 }

@@ -43,8 +43,14 @@
   <label for="auction_start_time">Auction Start Time</label>
   <input id="auction_start_time" formControlName="auction_start_time" type="datetime-local" required>
   <div *ngIf="auctionForm.get('auction_start_time')?.invalid && auctionForm.get('auction_start_time')?.touched">
-    <small class="error">Auction Start Time is required.</small>
+    <small class="error" *ngIf="auctionForm.get('auction_start_time')?.errors?.['startTimeInvalid']">
+      The auction start time must be at least 24 hours from now.
+    </small>
   </div>
+  <div *ngIf="serverErrorMessage">
+    <small class="error">{{ serverErrorMessage }}</small>
+  </div>
+
 
   <div *ngIf="auctionForm.hasError('startTimeLessThan24Hours','auction_start_time')">
     <small class="error">The auction start time must be at least 24h from now</small>

@@ -8,6 +8,9 @@ import { environment } from '../environments/environment';
   providedIn: 'root'
 })
 export class UserService {
+  public apiUrl = 'http://localhost:8000/api'; 
+  /*   private apiUrl = 'http://172.18.0.4:80/api'; */
+
   constructor(private http: HttpClient) { }
 
   /**
@@ -104,5 +107,5 @@ export class UserService {
     return this.http.post(`${environment.apiUrl}/users/${userId}/unban`, {}, { headers })
       .pipe(catchError(this.handleError));
   }
-  
+
 }

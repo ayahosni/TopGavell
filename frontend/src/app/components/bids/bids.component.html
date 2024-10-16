@@ -11,7 +11,7 @@
   <div *ngIf="auction.bids.length === 0">
     <p class="no-bids-message">This auction has no bids</p>
   </div>
-  <!-- ############################################################################################## -->
+
   <div *ngIf="message" class="message"
     [ngClass]="{'error': message.includes('Error'), 'success': message.includes('success')}">
     {{ message }}
@@ -26,8 +26,8 @@
       <span></span>
     </div>
   </div>
-  
-  <div *ngIf="canBid; else can_not_bid">
+
+  <div *ngIf="canBid && !isUserBanned; else can_not_bid">
     <div *ngIf="!isAuctionEnded; else ended">
       <div *ngIf="isAuctionStarted; else notstarted">
         <div *ngIf="!hasPaid else placeyourbid">
@@ -45,14 +45,16 @@
         </ng-template>
       </div>
       <ng-template #notstarted>
-        <p>You Can't Bid on this auction, This auction Not started yet</p>
+        <p>You can't bid on this auction, it hasn't started yet.</p>
       </ng-template>
     </div>
     <ng-template #ended>
-      <p>You Can't Bid on this auction, This auction has ended</p>
+      <p>You can't bid on this auction, it has ended.</p>
     </ng-template>
   </div>
+
   <ng-template #can_not_bid>
-    <p>You Can't Bid on this auction</p>
+    <p *ngIf="isUserBanned">You are banned and cannot place bids.</p>
+    <p *ngIf="!isUserBanned && !canBid">You can't bid on this auction.</p>
   </ng-template>
 </div>

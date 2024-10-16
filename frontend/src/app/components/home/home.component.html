@@ -28,9 +28,11 @@
   <div class="categories-content">
     <div class="category-title">Explore Our Categories</div>
     <div class="categories">
-      <div class="category" *ngFor="let category of categories" (click)="onCategoryClick(category.id)">
-        <img [src]="category.image" alt="{{ category.name }}">
-        <p>{{ category.name }}</p>
+      <div class="category-container">
+        <div class="category" *ngFor="let category of categories" (click)="onCategoryClick(category.id)">
+          <img [src]="category.image" alt="{{ category.name }}">
+          <p>{{ category.name }}</p>
+        </div>
       </div>
     </div>
     
@@ -82,7 +84,7 @@
 
     <!-- No Auctions Message -->
     <ng-template #noAuctions>
-      <p style="font-size: 30px; color: black; text-align: center;">No auctions available at this time.</p>
+      <p style="font-size: 30px; color:  #333; text-align: center;">No auctions available at this time.</p>
     </ng-template>
   </div>
 
