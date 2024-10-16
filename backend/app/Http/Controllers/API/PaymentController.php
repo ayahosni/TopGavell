@@ -156,7 +156,7 @@ class PaymentController extends Controller
                 // $MaxPayment = Payment::where('auction_id', $auctionID)->max('amount');
                 
                 $paymentsToRefund = Payment::where('auction_id', $auctionID)
-                ->where('winning_bidder_id', '!=', $winning_bidder_id)
+                ->where('bidder_id', '!=', $winning_bidder_id)
                 ->get();
 
                 $stripe = new \Stripe\StripeClient(env('STRIPE_SECRET'));
