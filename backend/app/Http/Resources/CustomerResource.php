@@ -23,6 +23,7 @@ class CustomerResource extends JsonResource
             'phone_number' => $this->phone_number,
             'profile_picture' => $this->profile_picture,
             'address' => $this->address,
+            'role'=>$this->user->role,
             "banned"=>$this->user->banned
         ];
     }

@@ -20,7 +20,16 @@
         <span>Password is required</span>
       </div>
     </div>
-
+    <div *ngIf="loading">
+      <div class="loading">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+    
     <button type="submit" class="login-form-btn btn-primary" [disabled]="loginForm.invalid">
       Sign In
     </button>

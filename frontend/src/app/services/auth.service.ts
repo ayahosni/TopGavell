@@ -17,7 +17,7 @@ export class AuthService {
           const userData = {
             token: response.token,
             role: response.user.role,
-            id:response.user.id,
+            id: response.user.id,
             is_email_verified: response.user.is_email_verified,
             email: response.user.email,
             name: response.user.name
@@ -43,9 +43,9 @@ export class AuthService {
             name: response.user.name,
             isBanned: response.user.banned
           };
-  
+
           localStorage.setItem('user', JSON.stringify(userData));
-  
+
           return response;
         }
         return response;
@@ -55,7 +55,7 @@ export class AuthService {
       })
     );
   }
-  
+
 
   logOut(): Observable<any> {
     const user = localStorage.getItem('user');
@@ -64,7 +64,7 @@ export class AuthService {
       const headers = new HttpHeaders({
         'Authorization': `Bearer ${token}` // Add token to Authorization header
       });
-  
+
       return this.http.get(`${environment.apiUrl}/logout`, { headers }).pipe(
         tap(() => {
           localStorage.removeItem('user'); // Clear local storage after successful logout
@@ -87,7 +87,7 @@ export class AuthService {
 
   is_email_verified(): boolean {
     const userJson = localStorage.getItem('user');
-    if (userJson){
+    if (userJson) {
       const user = JSON.parse(userJson);
       return user.is_email_verified == 1;
     }
@@ -96,7 +96,7 @@ export class AuthService {
 
   is_admin(): boolean {
     const userJson = localStorage.getItem('user');
-    if (userJson){
+    if (userJson) {
       const user = JSON.parse(userJson);
       return user.role == 'admin';
     }
@@ -109,19 +109,23 @@ export class AuthService {
   }
   getUserData() {
     const userJson = localStorage.getItem('user');
-    return userJson ? JSON.parse(userJson) : null;    
+    return userJson ? JSON.parse(userJson) : null;
   }
   isUserBanned(): boolean {
-    const userData = localStorage.getItem('user'); 
+    const userData = localStorage.getItem('user');
     if (userData) {
-      const user = JSON.parse(userData); 
-  
+      const user = JSON.parse(userData);
+
       return user.isBanned === 1;
     }
     return false;
   }
-getCurrentUserId(): string {
-  return localStorage.getItem('currentUserId') || ''; 
-}
 
+  getCurrentUserName() {
+    const userData = localStorage.getItem('user');
+    if (userData) {
+      const user = JSON.parse(userData);
+      return user.name
+    }
+  }
 }

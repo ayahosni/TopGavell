@@ -20,13 +20,15 @@ export class CommentsComponent implements OnInit {
   currentCommentId: string | null = null;
   loading = false;
   isBanned: boolean = false;
-  currentUserId: string = '';
+  currentUserName: string = '';
+  isadmin :any;
 
   constructor(private commentsService: CommentsService, private authService: AuthService) {}
 
   ngOnInit(): void {
     this.isBanned = this.authService.isUserBanned();
-    this.currentUserId = this.authService.getCurrentUserId(); 
+    this.currentUserName = this.authService.getCurrentUserName();
+    this.isadmin = this.authService.is_admin();
 
     if (this.auctionId) { 
       this.loadComments();

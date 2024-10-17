@@ -5,8 +5,8 @@
       <p class="comment-content">{{ comment.content }}</p>
     </div>
     <div class="btns">
-      <button class="edit-btn" *ngIf="comment.creator_id === currentUserId" (click)="editComment(comment)">Edit</button>
-      <button class="delete-btn" *ngIf="comment.creator_id === currentUserId" (click)="deleteComment(comment.comment_id)">Delete</button>
+      <button class="edit-btn" *ngIf="comment.creator_name === currentUserName" (click)="editComment(comment)">Edit</button>
+      <button class="delete-btn" *ngIf="comment.creator_name === currentUserName || isadmin" (click)="deleteComment(comment.comment_id)">Delete</button>
     </div>
   </div>
 
