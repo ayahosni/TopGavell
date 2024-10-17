@@ -42,7 +42,7 @@ export class HomeComponent implements OnInit {
   searchTerm: string = '';
   currentPage: any;
   totalPages: any;
-  perPage: number = 10;
+  perPage: number = 3;
 
   categories: Category[] = [
     { id: 1, name: 'Furniture', image: 'assets/images/furniture.jpg' },

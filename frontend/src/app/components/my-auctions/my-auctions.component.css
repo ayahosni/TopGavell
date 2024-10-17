@@ -107,12 +107,14 @@
   display: flex;
   gap: 5px;
   text-align: center;
+  justify-content: center;
+  align-items: center;
 }
 
 .bid-btn button {
-  width: 50%;
+  width: 33%;
   border-radius: 10px;
-  padding: 10px 20px;
+  padding: 5px;
   border: none;
   font-size: 1rem;
   color: white;

@@ -43,7 +43,7 @@ export class AuthService {
             name: response.user.name,
             isBanned: response.user.banned
           };
-
+          
           localStorage.setItem('user', JSON.stringify(userData));
 
           return response;

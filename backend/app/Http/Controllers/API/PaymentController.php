@@ -137,14 +137,11 @@ class PaymentController extends Controller
     }
 
     public function refund(Request $request, $auctionID)
-    {
-        $data = $request->all();
-        
+    {        
         $auction = Auction::findOrFail($auctionID);
         $user = Auth::user();
 
         $winning_bidder_id = $auction->winning_bidder_id;
-
         
         if ($user->role === 'admin') {
 
@@ -181,7 +178,7 @@ class PaymentController extends Controller
                         // Update refund status after successful Stripe refund
                         $payment->update(['refund_status' => 'refunded']);
 
-                         
+                        
                         return response()->json([
                             'message' => 'refunded all insurance of this auction'
                         ], 200);

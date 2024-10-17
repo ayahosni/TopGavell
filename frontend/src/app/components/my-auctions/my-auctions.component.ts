@@ -3,6 +3,7 @@ import { AuctionService, Auction, PaginatedAuctions } from '../../services/aucti
 import { CommonModule } from '@angular/common';
 import { FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-my-auctions',
@@ -18,16 +19,29 @@ export class MyAuctionsComponent implements OnInit {
   currentPage: number = 1;
   totalPages: number = 0;
   perPage: number = 10;
-  currentTime: Date = new Date(); 
+  currentTime: Date = new Date();
+  isBanned: boolean = false;
+  isRegistered: boolean = false;
+  userName: string = '';
+  isAdmin: boolean = false;
 
   constructor(
     private auctionService: AuctionService,
     private fb: FormBuilder,
+    private authService: AuthService,
     private router: Router
   ) { }
 
   ngOnInit(): void {
     this.loadmyAuctions();
+    const userData = this.authService.getUserData();
+
+    if (userData) {
+      this.userName = userData.name; 
+      this.isRegistered = true;  
+      this.isAdmin = this.authService.is_admin();
+      this.isBanned = this.authService.isUserBanned();
+    }
   }
 
   /**
@@ -139,4 +153,5 @@ export class MyAuctionsComponent implements OnInit {
   isAuctionActive(auction: Auction): boolean {
     return new Date() < new Date(auction.auction_start_time); 
   }
+  
 }

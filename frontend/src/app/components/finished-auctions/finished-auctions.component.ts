@@ -103,6 +103,7 @@ export class FinishedAuctionsComponent implements OnInit {
   }
 
   refund(auctionId: string) {
+    console.log(auctionId);
     this.auctionService.refund(auctionId).subscribe({
       next: (response) => {
         console.log('refunded:', response);

@@ -39,7 +39,7 @@ p {
 .card {
   width: 400px;
   height: 190px;
-  background: #07182E;
+  background: #f6bb02;
   position: relative;
   display: flex;
   place-content: center;
@@ -50,7 +50,7 @@ p {
 
 .card h2 {
   z-index: 1;
-  color: white;
+  color: rgb(2, 0, 92);
   font-size: 2em;
 }
 
@@ -77,7 +77,7 @@ p {
 .card::after {
   content: '';
   position: absolute;
-  background: #07182E;
+  background: #ffffff;
   ;
   inset: 5px;
   border-radius: 15px;
